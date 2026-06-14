@@ -1,6 +1,18 @@
 # sfs-cn-mod
 
-This template should help get you started developing with Vue 3 in Vite.
+[Chinese-localization-download-site](https://github.com/aaaa111ssf/Chinese-localization-download-site) 的 Vue3 重写版
+
+对比原站缺失如下功能：
+
+1. 图片预览器
+2. 模组检索
+3. 教程板块
+
+目前尚有如下问题：
+
+1. 首页样式不够美观
+2. 路由切换动画过于简陋
+3. 首页提示换行失效
 
 ## Recommended IDE Setup
 

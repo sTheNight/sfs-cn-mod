@@ -11,10 +11,9 @@ const isSponseDialogShow = ref(false)
 </script>
 <template>
   <div class="w-full h-full">
-    <div class="fixed bottom-8 right-8 p-8">
-      <div class="bg-blue-600 rounded-full p-4 z-100" @click="isSponseDialogShow = !isSponseDialogShow">
-        <CircleDollarSign color="#fff" />
-      </div>
+    <div class="fixed bottom-10 right-10 bg-blue-600 rounded-full p-4 z-100 cursor-pointer"
+      @click="isSponseDialogShow = !isSponseDialogShow">
+      <CircleDollarSign color="#fff" />
     </div>
     <Dialog v-model:open="isSponseDialogShow">
       <DialogContent>
@@ -32,7 +31,7 @@ const isSponseDialogShow = ref(false)
     </Dialog>
     <div class="w-full max-w-6xl h-full ml-auto mr-auto pl-2 pr-2">
       <header class="w-full py-8 box-border flex items-center justify-center flex-col">
-        <h2 class=" text-3xl font-bold">SFS Mod Center</h2>
+        <h2 class=" text-3xl font-bold">汉化模组下载中心</h2>
       </header>
       <div class="flex gap-1 items-center justify-center">
         <Button id="home" variant="ghost" @click="router.push('/')">首页</Button>
