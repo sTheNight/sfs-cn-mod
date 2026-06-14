@@ -5,11 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
 import { files, type ModInfo } from '@/data/modInfo';
 import { Calendar, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X } from '@lucide/vue';
-import { onMounted, ref, watchEffect } from 'vue';
+import { nextTick, onMounted, ref, watchEffect } from 'vue';
 
 const shownList = ref<ModInfo[]>([] as ModInfo[])
 const penddingFile = ref<ModInfo>({} as ModInfo)
 const isModDetailDialogShow = ref(false)
+const activeModTitleTransitionName = ref("none")
+const activeModTitleOwner = ref<"none" | "list" | "dialog">("none")
 const categoryFilter = ref("none")
 const searchText = ref("")
 
@@ -21,9 +23,75 @@ const categoryRecord: Record<string, string> = {
   "skin": "涂装包",
 }
 
-function openModDetail(mod: ModInfo) {
-  penddingFile.value = mod;
-  isModDetailDialogShow.value = true;
+function getModTitleTransitionName(index: number) {
+  return `mod-title-${index}`
+}
+
+function runViewTransition(update: () => void | Promise<void>, resetAfter = false) {
+  const documentWithTransition = document as Document & {
+    startViewTransition?: (updateCallback: () => void | Promise<void>) => { finished: Promise<void> }
+  }
+
+  if (!documentWithTransition.startViewTransition) {
+    void update()
+    if (resetAfter) {
+      activeModTitleTransitionName.value = "none"
+      activeModTitleOwner.value = "none"
+    }
+    return
+  }
+
+  const transition = documentWithTransition.startViewTransition(update)
+  if (resetAfter) {
+    transition.finished.finally(() => {
+      activeModTitleTransitionName.value = "none"
+      activeModTitleOwner.value = "none"
+    })
+  }
+}
+
+async function openModDetail(mod: ModInfo, index: number) {
+  activeModTitleTransitionName.value = getModTitleTransitionName(index)
+  activeModTitleOwner.value = "list"
+  await nextTick()
+
+  runViewTransition(async () => {
+    penddingFile.value = mod;
+    isModDetailDialogShow.value = true;
+    activeModTitleOwner.value = "dialog"
+    await nextTick()
+  })
+}
+
+function closeModDetail() {
+  activeModTitleOwner.value = "dialog"
+
+  runViewTransition(async () => {
+    isModDetailDialogShow.value = false
+    activeModTitleOwner.value = "list"
+    await nextTick()
+  }, true)
+}
+
+function handleModDetailOpenChange(open: boolean) {
+  if (open) {
+    isModDetailDialogShow.value = true
+  } else {
+    closeModDetail()
+  }
+}
+
+function getListTitleTransitionName(index: number) {
+  return activeModTitleOwner.value == "list" &&
+    activeModTitleTransitionName.value == getModTitleTransitionName(index)
+    ? activeModTitleTransitionName.value
+    : "none"
+}
+
+function getDialogTitleTransitionName() {
+  return activeModTitleOwner.value == "dialog"
+    ? activeModTitleTransitionName.value
+    : "none"
 }
 
 function openUrl(url: string) {
@@ -51,14 +119,17 @@ onMounted(() => {
 </script>
 <template>
   <div class="py-4">
-    <Dialog v-model:open="isModDetailDialogShow">
+    <Dialog :open="isModDetailDialogShow" @update:open="handleModDetailOpenChange">
       <DialogContent class="w-[calc(100%-2rem)] outline-0 border-0 max-w-150 sm:max-w-150 p-0 overflow-hidden"
         :show-close-button="false">
         <div>
           <div class="relative">
             <div
               class="w-full h-full absolute bg-linear-to-t from-black/60 to-transparent flex justify-end flex-col p-4">
-              <h2 class="text-white font-bold text-xl">{{ penddingFile.name }}</h2>
+              <h2 class="mod-title-transition text-white font-bold text-xl"
+                :style="{ viewTransitionName: getDialogTitleTransitionName() }">
+                {{ penddingFile.name }}
+              </h2>
               <div class="flex gap-1 mt-1">
                 <span v-for="(tag, index) in penddingFile.tags" :key="index"
                   class="inline-block text-white/90 text-xs rounded-full bg-gray-200/20 px-2 py-0.5">{{ tag
@@ -95,7 +166,7 @@ onMounted(() => {
               </div>
             </template>
             <div class="flex justify-end gap-2 mt-4">
-              <Button variant="outline" @click="isModDetailDialogShow = false">
+              <Button variant="outline" @click="closeModDetail">
                 <X /> 关闭
               </Button>
               <Button @click="openUrl(penddingFile.link)">
@@ -140,14 +211,17 @@ onMounted(() => {
       </div>
     </div>
     <div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
-      <div @click="openModDetail(item)"
+      <div
         class="border rounded-2xl shadow-xs duration-150 transition-all h-125 overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
         v-for="(item, index) in shownList" :key="index">
         <img class="w-full h-50 object-cover shrink-0" v-if="item.images" :src="item.images[0]" />
         <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
         <div class="p-4 flex flex-col flex-1 min-h-0">
           <div class="flex-1 min-h-0">
-            <h2 class="font-bold text-[18px]">{{ item.name }}</h2>
+            <h2 class="mod-title-transition font-bold text-[18px]"
+              :style="{ viewTransitionName: getListTitleTransitionName(index) }">
+              {{ item.name }}
+            </h2>
             <div class="text-xs text-gray-600 mt-2 flex items-center gap-2">
               <span class="flex items-center justify-center gap-1">
                 <UserRound :size="12" /><span>{{ item.author }}</span>
@@ -174,7 +248,7 @@ onMounted(() => {
               </div>
             </div>
             <div class="flex w-full justify-end mt-4 gap-2">
-              <Button variant="outline">
+              <Button variant="outline" @click="openModDetail(item, index)">
                 <Info />
                 详情
               </Button>
