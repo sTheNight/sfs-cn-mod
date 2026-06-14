@@ -7,14 +7,17 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
+        name: 'mod',
         component: () => import("@/views/ModView.vue")
       },
       {
         path: 'info',
+        name: 'info',
         component: () => import("@/views/InfoView.vue")
       },
       {
         path: 'tutor',
+        name: 'tutor',
         component: () => import("@/views/TutorView.vue")
       }
     ]

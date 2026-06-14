@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { CircleDollarSign, LogIn } from '@lucide/vue';
+import { CircleDollarSign, CircleQuestionMark, Info, LogIn, Package } from '@lucide/vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute()
@@ -9,6 +9,10 @@ const router = useRouter()
 
 const isSponseDialogShow = ref(false)
 const isWarningDialogShow = ref(true)
+
+function isActiveRoute(name: string) {
+  return route.name == name
+}
 
 function exitTheSite() {
   window.close()
@@ -61,14 +65,27 @@ function exitTheSite() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-    <div class="w-full max-w-6xl min-h-screen ml-auto mr-auto pl-2 pr-2">
+    <div class="w-full max-w-6xl min-h-screen ml-auto mr-auto px-2">
       <header class="w-full py-12 box-border flex items-center justify-center flex-col">
         <h2 class="animated-title text-3xl font-bold">汉化模组下载中心</h2>
       </header>
-      <div class="flex gap-1 items-center justify-center">
-        <Button id="mod" variant="ghost" @click="router.push('/')">模组</Button>
-        <Button id="tutor" variant="ghost" @click="router.push('/tutor')">教程</Button>
-        <Button id="home" variant="ghost" @click="router.push('/info')">关于</Button>
+      <div class="flex gap-1 items-center justify-center mb-8">
+        <!-- TODO: 优化选中样式的写法 -->
+        <Button id="mod" variant="ghost" :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('mod') }"
+          @click="router.push('/')">
+          <Package :size="16" />
+          模组
+        </Button>
+        <Button id="tutor" variant="ghost" :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('tutor') }"
+          @click="router.push('/tutor')">
+          <CircleQuestionMark :size="16" />
+          教程
+        </Button>
+        <Button id="info" variant="ghost" :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('info') }"
+          @click="router.push('/info')">
+          <Info :size="16" />
+          关于
+        </Button>
       </div>
       <RouterView v-slot="{ Component }">
         <Transition name="mainlayout-page-fade" mode="out-in">
@@ -103,18 +120,16 @@ function exitTheSite() {
 
 .mainlayout-page-fade-enter-active,
 .mainlayout-page-fade-leave-active {
-  transition: all .2s;
+  transition: all .15s;
 }
 
-.mainlayout-page-fade-enter-from,
+.mainlayout-page-fade-enter-from {
+  opacity: 0;
+  transform: translateX(5px);
+}
+
 .mainlayout-page-fade-leave-to {
   opacity: 0;
-  filter: blur(4px);
-}
-
-.mainlayout-page-fade-enter-to,
-.mainlayout-page-fade-leave-from {
-  opacity: 1;
-  filter: blur(0);
+  transform: translateX(-5px);
 }
 </style>
