@@ -218,7 +218,7 @@ onMounted(() => {
         <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
         <div class="p-4 flex flex-col flex-1 min-h-0">
           <div class="flex-1 min-h-0">
-            <h2 class="mod-title-transition font-bold text-[18px]"
+            <h2 class="mod-title-transition font-bold text-[18px] text-nowrap text-ellipsis overflow-hidden"
               :style="{ viewTransitionName: getListTitleTransitionName(index) }">
               {{ item.name }}
             </h2>
