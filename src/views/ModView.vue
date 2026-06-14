@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
 import { files, type ModInfo } from '@/data/modInfo';
-import { Calendar, Download, FileText, Filter, Folder, History, Image, Info, Save, UserRound, X } from '@lucide/vue';
+import { Calendar, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X } from '@lucide/vue';
 import { onMounted, ref, watchEffect } from 'vue';
 
 const shownList = ref<ModInfo[]>([] as ModInfo[])
 const penddingFile = ref<ModInfo>({} as ModInfo)
 const isModDetailDialogShow = ref(false)
 const categoryFilter = ref("none")
+const searchText = ref("")
 
 const categoryRecord: Record<string, string> = {
   "none": "未选择",
@@ -26,6 +28,13 @@ function openModDetail(mod: ModInfo) {
 
 function openUrl(url: string) {
   window.open(url, "_blank")
+}
+
+function search() {
+  shownList.value = files.filter((value) =>
+    value.name.includes(searchText.value) ||
+    value.author.includes(searchText.value)
+  )
 }
 
 watchEffect(() => {
@@ -97,28 +106,36 @@ onMounted(() => {
         </div>
       </DialogContent>
     </Dialog>
-    <div class="flex items-center text-sm gap-2">
-      <div
-        class="border-input flex h-9 w-fit items-center gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs">
-        <Folder :size="16" />
-        共 {{ shownList.length }} 个文件
+    <div class="flex items-center justify-between text-sm">
+      <div class="flex items-center gap-2">
+        <div
+          class="border-input flex h-9 w-fit items-center gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs">
+          <Folder :size="16" />
+          共 {{ shownList.length }} 个文件
+        </div>
+        <Select v-model:model-value="categoryFilter">
+          <SelectTrigger>
+            <div class="flex items-center gap-2">
+              <Filter :size="16" />
+              {{ categoryRecord[categoryFilter] }}
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>分类</SelectLabel>
+              <SelectItem v-for="(value, key) in categoryRecord" :key="key" :value="key">
+                {{ value }}
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
-      <Select v-model:model-value="categoryFilter">
-        <SelectTrigger>
-          <div class="flex items-center gap-2">
-            <Filter :size="16" />
-            {{ categoryRecord[categoryFilter] }}
-          </div>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>分类</SelectLabel>
-            <SelectItem v-for="(value, key) in categoryRecord" :key="key" :value="key">
-              {{ value }}
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <div class="flex gap-2">
+        <Input v-model="searchText" placeholder="请输入关键字" />
+        <Button @click="search">
+          <Search />
+        </Button>
+      </div>
     </div>
     <div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
       <div @click="openModDetail(item)"
