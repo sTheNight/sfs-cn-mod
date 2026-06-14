@@ -15,19 +15,20 @@ function exitTheSite() {
 }
 </script>
 <template>
-  <div class="w-full h-full">
-    <div class="fixed bottom-10 right-10 bg-blue-600 rounded-full p-4 z-10 cursor-pointer"
+  <div class="w-full min-h-screen">
+    <div
+      class="fixed bottom-10 right-10 bg-blue-600 rounded-full p-4 z-10 cursor-pointer shadow-[0_12px_32px_rgba(37,99,235,0.35)] transition-all duration-150 hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)] hover:-translate-y-0.5 active:scale-95"
       @click="isSponseDialogShow = !isSponseDialogShow">
       <CircleDollarSign color="#fff" />
     </div>
     <Dialog v-model:open="isSponseDialogShow">
       <DialogContent>
         <div class="w-full h-full">
-          <h2 class="text-5xl text-center">❤️</h2>
+          <h2 class="text-5xl text-center py-4">❤️</h2>
           <h2 class="text-xl mt-2 font-bold text-center">赞助支持</h2>
           <p class="text-center text-sm m-2 text-gray-600">感谢你的支持，我们会继续更新优质汉化模组！</p>
           <div class="flex justify-center mt-2">
-            <div class="border rounded-2xl p-4">
+            <div class="border rounded-2xl p-4 shadow-md">
               <img src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/5.png" width="250">
             </div>
           </div>
@@ -39,7 +40,7 @@ function exitTheSite() {
         <DialogHeader>
           <h2 class="text-xl font-bold">欢迎访问 SFS 汉化模组站</h2>
         </DialogHeader>
-        <p>
+        <p class="text-gray-600 text-sm">
           本站所有模组均为汉化版本，仅供学习交流使用。<br />
           请于下载后24小时内删除，禁止用于商业用途。<br />
           下载前请确认您已了解模组安装方法。<br />
@@ -56,7 +57,7 @@ function exitTheSite() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-    <div class="w-full max-w-6xl h-full ml-auto mr-auto pl-2 pr-2">
+    <div class="w-full max-w-6xl min-h-screen ml-auto mr-auto pl-2 pr-2">
       <header class="w-full py-12 box-border flex items-center justify-center flex-col">
         <h2 class="animated-title text-3xl font-bold">汉化模组下载中心</h2>
       </header>
@@ -70,6 +71,7 @@ function exitTheSite() {
           <component :is="Component" :key="route.fullPath" />
         </Transition>
       </RouterView>
+      <div class="h-28" aria-hidden="true"></div>
     </div>
   </div>
 </template>
