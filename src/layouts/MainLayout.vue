@@ -57,8 +57,8 @@ function exitTheSite() {
       </DialogContent>
     </Dialog>
     <div class="w-full max-w-6xl h-full ml-auto mr-auto pl-2 pr-2">
-      <header class="w-full py-8 box-border flex items-center justify-center flex-col">
-        <h2 class=" text-3xl font-bold">汉化模组下载中心</h2>
+      <header class="w-full py-12 box-border flex items-center justify-center flex-col">
+        <h2 class="animated-title text-3xl font-bold">汉化模组下载中心</h2>
       </header>
       <div class="flex gap-1 items-center justify-center">
         <Button id="home" variant="ghost" @click="router.push('/')">首页</Button>
@@ -74,6 +74,27 @@ function exitTheSite() {
   </div>
 </template>
 <style scoped>
+.animated-title {
+  background: linear-gradient(90deg, #2563eb, #06b6d4, #8b5cf6, #2563eb);
+  background-size: 300% 100%;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: title-gradient 4s ease-in-out infinite;
+}
+
+@keyframes title-gradient {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 .mainlayout-page-fade-enter-active,
 .mainlayout-page-fade-leave-active {
   transition: all .2s;
