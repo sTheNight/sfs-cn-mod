@@ -11,7 +11,7 @@ const isSponseDialogShow = ref(false)
 </script>
 <template>
   <div class="w-full h-full">
-    <div class="fixed bottom-10 right-10 bg-blue-600 rounded-full p-4 z-100 cursor-pointer"
+    <div class="fixed bottom-10 right-10 bg-blue-600 rounded-full p-4 z-10 cursor-pointer"
       @click="isSponseDialogShow = !isSponseDialogShow">
       <CircleDollarSign color="#fff" />
     </div>
