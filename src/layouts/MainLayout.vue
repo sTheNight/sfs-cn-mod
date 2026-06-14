@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { CircleDollarSign } from '@lucide/vue';
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
+import { CircleDollarSign, LogIn } from '@lucide/vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute()
 const router = useRouter()
 
 const isSponseDialogShow = ref(false)
+const isWarningDialogShow = ref(true)
+
+function exitTheSite() {
+  window.close()
+}
 </script>
 <template>
   <div class="w-full h-full">
@@ -27,6 +32,28 @@ const isSponseDialogShow = ref(false)
             </div>
           </div>
         </div>
+      </DialogContent>
+    </Dialog>
+    <Dialog v-model:open="isWarningDialogShow">
+      <DialogContent>
+        <DialogHeader>
+          <h2 class="text-xl font-bold">欢迎访问 SFS 汉化模组站</h2>
+        </DialogHeader>
+        <p>
+          本站所有模组均为汉化版本，仅供学习交流使用。<br />
+          请于下载后24小时内删除，禁止用于商业用途。<br />
+          下载前请确认您已了解模组安装方法。<br />
+          点击确认进入下载中心。<br />
+          upQQ交流反馈群923038827<br />
+        </p>
+        <DialogFooter>
+          <div class="flex items-center justify-end gap-2.5">
+            <Button @click="isWarningDialogShow = false">
+              <LogIn /> 进入
+            </Button>
+            <Button @click="exitTheSite" variant="outline">退出</Button>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
     <div class="w-full max-w-6xl h-full ml-auto mr-auto pl-2 pr-2">

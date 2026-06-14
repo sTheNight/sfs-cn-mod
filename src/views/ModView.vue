@@ -106,18 +106,20 @@ onMounted(() => {
         </div>
       </DialogContent>
     </Dialog>
-    <div class="flex items-center justify-between text-sm">
+    <div class="flex items-center justify-between text-sm flex-wrap gap-y-2">
       <div class="flex items-center gap-2">
         <div
           class="border-input flex h-9 w-fit items-center gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs">
           <Folder :size="16" />
-          共 {{ shownList.length }} 个文件
+          <Transition name="switch-fade" mode="out-in">
+            <span :key="shownList.length">共 {{ shownList.length }} 个文件</span>
+          </Transition>
         </div>
         <Select v-model:model-value="categoryFilter">
           <SelectTrigger>
             <div class="flex items-center gap-2">
               <Filter :size="16" />
-              {{ categoryRecord[categoryFilter] }}
+              <span>{{ categoryRecord[categoryFilter] }}</span>
             </div>
           </SelectTrigger>
           <SelectContent>
@@ -139,7 +141,7 @@ onMounted(() => {
     </div>
     <div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
       <div @click="openModDetail(item)"
-        class="border rounded-2xl shadow-xs duration-150 transition-all h-150 overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
+        class="border rounded-2xl shadow-xs duration-150 transition-all h-125 overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
         v-for="(item, index) in shownList" :key="index">
         <img class="w-full h-50 object-cover shrink-0" v-if="item.images" :src="item.images[0]" />
         <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
@@ -163,11 +165,13 @@ onMounted(() => {
             <p class="mt-4 text-gray-600 text-sm">{{ item.desc }}</p>
           </div>
           <div class="shrink-0">
-            <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100">
-              <Save :size="16" class="mr-1" />{{ item.size }}
-            </div>
-            <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 mt-2">
-              <Calendar :size="16" class="mr-1" />{{ item.date }}
+            <div class="flex justify-evenly gap-2">
+              <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 flex-1">
+                <Save :size="16" class="mr-1" />{{ item.size }}
+              </div>
+              <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 flex-1">
+                <Calendar :size="16" class="mr-1" />{{ item.date }}
+              </div>
             </div>
             <div class="flex w-full justify-end mt-4 gap-2">
               <Button variant="outline">
@@ -185,4 +189,19 @@ onMounted(() => {
     </div>
   </div>
 </template>
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+.switch-fade-enter-active,
+.switch-fade-leave-active {
+  transition: all .2s;
+}
+
+.switch-fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.switch-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>
