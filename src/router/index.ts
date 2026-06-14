@@ -7,11 +7,11 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import("@/views/HomeView.vue")
+        component: () => import("@/views/ModView.vue")
       },
       {
-        path: 'mods',
-        component: () => import("@/views/ModView.vue")
+        path: 'info',
+        component: () => import("@/views/InfoView.vue")
       },
       {
         path: 'tutor',

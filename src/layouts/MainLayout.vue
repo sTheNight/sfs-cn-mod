@@ -45,7 +45,11 @@ function exitTheSite() {
           请于下载后24小时内删除，禁止用于商业用途。<br />
           下载前请确认您已了解模组安装方法。<br />
           点击确认进入下载中心。<br />
-          upQQ交流反馈群923038827<br />
+          QQ 交流反馈群923038827<br />
+        </p>
+        <p class="text-sm text-gray-600">
+          额外说明：本站为重写版并非原站点，部分功能特性可能未同步，如有需要请访问<a class="px-2 outline-0 underline text-blue-500"
+            href="https://sfszhmod.pages.dev/">原站点</a>
         </p>
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
@@ -62,9 +66,9 @@ function exitTheSite() {
         <h2 class="animated-title text-3xl font-bold">汉化模组下载中心</h2>
       </header>
       <div class="flex gap-1 items-center justify-center">
-        <Button id="home" variant="ghost" @click="router.push('/')">首页</Button>
-        <Button id="mod" variant="ghost" @click="router.push('/mods')">模组</Button>
+        <Button id="mod" variant="ghost" @click="router.push('/')">模组</Button>
         <Button id="tutor" variant="ghost" @click="router.push('/tutor')">教程</Button>
+        <Button id="home" variant="ghost" @click="router.push('/info')">关于</Button>
       </div>
       <RouterView v-slot="{ Component }">
         <Transition name="mainlayout-page-fade" mode="out-in">
