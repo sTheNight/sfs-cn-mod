@@ -4,26 +4,31 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
 import { files, type ModInfo } from '@/data/modInfo';
+import { categoryRecord, type ModCategory } from '@/models/Category';
 import { Calendar, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X } from '@lucide/vue';
 import { nextTick, onMounted, ref, watchEffect } from 'vue';
 
 const shownList = ref<ModInfo[]>([] as ModInfo[])
 const penddingFile = ref<ModInfo>({} as ModInfo)
 const isModDetailDialogShow = ref(false)
-const activeModTitleTransitionName = ref("none")
-const activeModTitleOwner = ref<"none" | "list" | "dialog">("none")
-const categoryFilter = ref("all")
+const categoryFilter = ref<ModCategory>("all")
 const searchText = ref("")
 
-const categoryRecord: Record<string, string> = {
-  "all": "全部",
-  "engine": "发动机",
-  "function": "功能性部件",
-  "entertain": "娱乐性部件",
-  "skin": "涂装包",
+function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
+  return source.filter((mod) => mod.category == category)
+}
+
+function getModListByKeyword(keyword: string, source: ModInfo[] = files): ModInfo[] {
+  return source.filter((mod) =>
+    mod.author.includes(keyword) ||
+    mod.name.includes(keyword)
+  )
 }
 
 // 模组名元素共享动画
+const activeModTitleTransitionName = ref("none")
+const activeModTitleOwner = ref<"none" | "list" | "dialog">("none")
+
 function getModTitleTransitionName(index: number) {
   return `mod-title-${index}`
 }
@@ -102,17 +107,18 @@ function openUrl(url: string) {
 }
 
 function search() {
-  shownList.value = files.filter((value) =>
-    value.name.includes(searchText.value) ||
-    value.author.includes(searchText.value)
-  )
+  shownList.value = getModListByKeyword(searchText.value, getModListByCategory(categoryFilter.value))
+}
+
+function handleKeywordFilterKeyDown(e: KeyboardEvent) {
+  if (e.code == "Enter") search()
 }
 
 watchEffect(() => {
   if (categoryFilter.value == "all") {
     shownList.value = files
   } else {
-    shownList.value = files.filter((value) => value.category == categoryFilter.value)
+    shownList.value = getModListByCategory(categoryFilter.value)
   }
 })
 
@@ -210,7 +216,7 @@ onMounted(() => {
         </Select>
       </div>
       <div class="flex gap-2">
-        <Input v-model="searchText" placeholder="请输入关键字" />
+        <Input v-model="searchText" placeholder="请输入关键字" @keydown="handleKeywordFilterKeyDown" />
         <Button @click="search">
           <Search />
         </Button>
