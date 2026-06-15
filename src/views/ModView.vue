@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { files, type ModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
 import { Calendar, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X } from '@lucide/vue';
-import { nextTick, onMounted, ref, watchEffect } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 
 const shownList = ref<ModInfo[]>([] as ModInfo[])
 const penddingFile = ref<ModInfo>({} as ModInfo)
@@ -15,13 +15,18 @@ const categoryFilter = ref<ModCategory>("all")
 const searchText = ref("")
 
 function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
+  if (category == "all") return source
   return source.filter((mod) => mod.category == category)
 }
 
 function getModListByKeyword(keyword: string, source: ModInfo[] = files): ModInfo[] {
+  keyword = keyword.trim()
+  if (keyword === "") return source
   return source.filter((mod) =>
     mod.author.includes(keyword) ||
-    mod.name.includes(keyword)
+    mod.name.includes(keyword) ||
+    mod.desc.includes(keyword) ||
+    mod.tags.some((tag) => tag.includes(keyword))
   )
 }
 
@@ -78,7 +83,6 @@ function getDialogTitleTransitionName() {
 }
 
 // 常规事件
-
 async function openModDetail(mod: ModInfo, index: number) {
   activeModTitleTransitionName.value = getModTitleTransitionName(index)
   activeModTitleOwner.value = "list"
@@ -106,24 +110,18 @@ function openUrl(url: string) {
   window.open(url, "_blank")
 }
 
-function search() {
+function applyFilter() {
   shownList.value = getModListByKeyword(searchText.value, getModListByCategory(categoryFilter.value))
 }
 
 function handleKeywordFilterKeyDown(e: KeyboardEvent) {
-  if (e.code == "Enter") search()
+  if (e.code == "Enter") applyFilter()
 }
 
-watchEffect(() => {
-  if (categoryFilter.value == "all") {
-    shownList.value = files
-  } else {
-    shownList.value = getModListByCategory(categoryFilter.value)
-  }
-})
+watch(categoryFilter, applyFilter)
 
 onMounted(() => {
-  shownList.value = files
+  applyFilter()
 })
 </script>
 <template>
@@ -217,7 +215,7 @@ onMounted(() => {
       </div>
       <div class="flex gap-2">
         <Input v-model="searchText" placeholder="请输入关键字" @keydown="handleKeywordFilterKeyDown" />
-        <Button @click="search">
+        <Button @click="applyFilter">
           <Search />
         </Button>
       </div>

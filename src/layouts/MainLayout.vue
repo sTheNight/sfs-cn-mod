@@ -65,7 +65,7 @@ function exitTheSite() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-    <div class="w-full max-w-6xl min-h-screen ml-auto mr-auto px-2">
+    <div class="w-full max-w-6xl min-h-screen ml-auto mr-auto px-4">
       <header class="w-full py-12 box-border flex items-center justify-center flex-col">
         <h2 class="animated-title text-3xl font-bold">汉化模组下载中心</h2>
       </header>
