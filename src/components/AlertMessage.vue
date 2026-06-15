@@ -50,7 +50,7 @@ const currentStyle = computed(() => alertStyleMap[props.type])
       :class="currentStyle.iconClass">
       <component :is="currentStyle.icon" :size="18" />
     </div>
-    <div class="min-w-0 flex items-center text-sm leading-6">
+    <div class="min-w-0 flex flex-wrap items-center text-sm leading-6">
       <slot />
     </div>
   </div>
