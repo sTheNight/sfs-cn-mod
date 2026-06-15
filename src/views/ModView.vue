@@ -187,8 +187,8 @@ onMounted(() => {
       </DialogContent>
     </Dialog>
     <!-- 检索栏 -->
-    <div class="flex items-center justify-between text-sm flex-wrap gap-y-2">
-      <div class="flex items-center gap-2">
+    <div class="grid gap-2 text-sm sm:flex sm:items-center sm:justify-between">
+      <div class="flex items-center flex-wrap justify-between gap-2 sm:justify-start">
         <div
           class="border-input flex h-9 w-fit items-center gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs">
           <Folder :size="16" />
@@ -213,9 +213,10 @@ onMounted(() => {
           </SelectContent>
         </Select>
       </div>
-      <div class="flex gap-2">
-        <Input v-model="searchText" placeholder="请输入关键字" @keydown="handleKeywordFilterKeyDown" />
-        <Button @click="applyFilter">
+      <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+        <Input v-model="searchText" class="min-w-0 text-sm" placeholder="请输入关键字"
+          @keydown="handleKeywordFilterKeyDown" />
+        <Button class="px-3" @click="applyFilter">
           <Search />
         </Button>
       </div>
