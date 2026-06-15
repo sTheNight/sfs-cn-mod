@@ -12,17 +12,18 @@ const penddingFile = ref<ModInfo>({} as ModInfo)
 const isModDetailDialogShow = ref(false)
 const activeModTitleTransitionName = ref("none")
 const activeModTitleOwner = ref<"none" | "list" | "dialog">("none")
-const categoryFilter = ref("none")
+const categoryFilter = ref("all")
 const searchText = ref("")
 
 const categoryRecord: Record<string, string> = {
-  "none": "未选择",
+  "all": "全部",
   "engine": "发动机",
   "function": "功能性部件",
   "entertain": "娱乐性部件",
   "skin": "涂装包",
 }
 
+// 模组名元素共享动画
 function getModTitleTransitionName(index: number) {
   return `mod-title-${index}`
 }
@@ -50,6 +51,29 @@ function runViewTransition(update: () => void | Promise<void>, resetAfter = fals
   }
 }
 
+function handleModDetailOpenChange(open: boolean) {
+  if (open) {
+    isModDetailDialogShow.value = true
+  } else {
+    closeModDetail()
+  }
+}
+
+function getListTitleTransitionName(index: number) {
+  return activeModTitleOwner.value == "list" &&
+    activeModTitleTransitionName.value == getModTitleTransitionName(index)
+    ? activeModTitleTransitionName.value
+    : "none"
+}
+
+function getDialogTitleTransitionName() {
+  return activeModTitleOwner.value == "dialog"
+    ? activeModTitleTransitionName.value
+    : "none"
+}
+
+// 常规事件
+
 async function openModDetail(mod: ModInfo, index: number) {
   activeModTitleTransitionName.value = getModTitleTransitionName(index)
   activeModTitleOwner.value = "list"
@@ -73,27 +97,6 @@ function closeModDetail() {
   }, true)
 }
 
-function handleModDetailOpenChange(open: boolean) {
-  if (open) {
-    isModDetailDialogShow.value = true
-  } else {
-    closeModDetail()
-  }
-}
-
-function getListTitleTransitionName(index: number) {
-  return activeModTitleOwner.value == "list" &&
-    activeModTitleTransitionName.value == getModTitleTransitionName(index)
-    ? activeModTitleTransitionName.value
-    : "none"
-}
-
-function getDialogTitleTransitionName() {
-  return activeModTitleOwner.value == "dialog"
-    ? activeModTitleTransitionName.value
-    : "none"
-}
-
 function openUrl(url: string) {
   window.open(url, "_blank")
 }
@@ -106,7 +109,7 @@ function search() {
 }
 
 watchEffect(() => {
-  if (categoryFilter.value == "none") {
+  if (categoryFilter.value == "all") {
     shownList.value = files
   } else {
     shownList.value = files.filter((value) => value.category == categoryFilter.value)
@@ -119,6 +122,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="py-4">
+    <!-- 模组详情对话框 -->
     <Dialog :open="isModDetailDialogShow" @update:open="handleModDetailOpenChange">
       <DialogContent class="w-[calc(100%-2rem)] outline-0 border-0 max-w-150 sm:max-w-150 p-0 overflow-hidden"
         :show-close-button="false">
@@ -132,7 +136,8 @@ onMounted(() => {
               </h2>
               <div class="flex gap-1 mt-1">
                 <span v-for="(tag, index) in penddingFile.tags" :key="index"
-                  class="inline-block text-white/90 text-xs rounded-full bg-gray-200/20 px-2 py-0.5">{{ tag
+                  class="inline-block text-white/90 text-xs rounded-full bg-gray-200/20 px-2 py-0.5">{{
+                    tag
                   }}</span>
               </div>
             </div>
@@ -177,6 +182,7 @@ onMounted(() => {
         </div>
       </DialogContent>
     </Dialog>
+    <!-- 检索栏 -->
     <div class="flex items-center justify-between text-sm flex-wrap gap-y-2">
       <div class="flex items-center gap-2">
         <div
@@ -211,14 +217,15 @@ onMounted(() => {
       </div>
     </div>
     <div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
+      <!-- 模组信息卡片 -->
       <div
-        class="border rounded-2xl shadow-xs duration-150 transition-all h-125 overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
+        class="border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
         v-for="(item, index) in shownList" :key="index">
         <img class="w-full h-50 object-cover shrink-0" v-if="item.images" :src="item.images[0]" />
-        <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
+        <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
         <div class="p-4 flex flex-col flex-1 min-h-0">
           <div class="flex-1 min-h-0">
-            <h2 class="mod-title-transition font-bold text-[18px] text-nowrap text-ellipsis overflow-hidden"
+            <h2 class="mod-title-transition font-bold text-xl text-nowrap text-ellipsis overflow-hidden"
               :style="{ viewTransitionName: getListTitleTransitionName(index) }">
               {{ item.name }}
             </h2>
@@ -236,7 +243,7 @@ onMounted(() => {
                 {{ tag }}
               </div>
             </div>
-            <p class="mt-4 text-gray-600 text-sm">{{ item.desc }}</p>
+            <p class="my-4 text-gray-600 text-sm">{{ item.desc }}</p>
           </div>
           <div class="shrink-0">
             <div class="flex justify-evenly gap-2">
