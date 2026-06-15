@@ -76,8 +76,8 @@ function exitTheSite() {
           <Package :size="16" />
           模组
         </Button>
-        <Button id="tutor" variant="ghost" :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('tutor') }"
-          @click="router.push('/tutor')">
+        <Button id="tutorial" variant="ghost"
+          :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('tutorial') }" @click="router.push('/tutorial')">
           <CircleQuestionMark :size="16" />
           教程
         </Button>
