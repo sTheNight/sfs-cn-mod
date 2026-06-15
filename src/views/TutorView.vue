@@ -30,9 +30,9 @@ function isActiveTutorSection(tutor: TutorType): boolean {
 
 <template>
   <div class="w-full max-w-2xl ml-auto mr-auto relative">
-    <ButtonGroup class="ml-auto mr-auto sticky top-4 z-5">
-      <Button class="bg-white/80 backdrop-blur-lg backdrop-saturate-200" v-for="tab in tutorTabs" :key="tab.type"
-        variant="outline" @click="currentTutor = tab.type"
+    <ButtonGroup class="ml-auto mr-auto sticky top-4 z-5 bg-white/80 backdrop-blur-lg rounded-[8px]">
+      <Button class="bg-transparent" v-for="tab in tutorTabs" :key="tab.type" variant="outline"
+        @click="currentTutor = tab.type"
         :class="{ 'text-blue-600 hover:text-blue-600': isActiveTutorSection(tab.type) }">
         <component :is="tab.icon" :size="14" />
         {{ tab.label }}
