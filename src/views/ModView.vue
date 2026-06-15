@@ -127,7 +127,7 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="py-4">
+  <div>
     <!-- 模组详情对话框 -->
     <Dialog :open="isModDetailDialogShow" @update:open="handleModDetailOpenChange">
       <DialogContent class="w-[calc(100%-2rem)] outline-0 border-0 max-w-150 sm:max-w-150 p-0 overflow-hidden"

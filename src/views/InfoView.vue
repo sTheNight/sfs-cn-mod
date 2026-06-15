@@ -5,7 +5,7 @@ import { AlertTriangle, Download, MessageCircle } from '@lucide/vue';
 const cardIcons = [Download, AlertTriangle, MessageCircle]
 </script>
 <template>
-  <div class="py-4">
+  <div>
     <section class="mt-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))]">
       <div class="border rounded-2xl p-4 shadow-xs transition-all duration-150 hover:shadow-xl hover:-translate-y-1"
         v-for="(item, index) in homeCardInfo" :key="index">
