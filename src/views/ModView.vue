@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
 import { files, type ModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
-import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X, ZoomIn, ZoomInIcon } from '@lucide/vue';
+import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
 import { computed, onMounted, ref, watch } from 'vue';
 
 const shownList = ref<ModInfo[]>([] as ModInfo[])
