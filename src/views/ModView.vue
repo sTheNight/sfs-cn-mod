@@ -85,10 +85,10 @@ onMounted(() => {
       <DialogContent
         class="w-[calc(100%-2rem)] max-h-[calc(100vh-2rem)] outline-0 border-0 max-w-150 sm:max-w-150 p-0 overflow-hidden"
         :show-close-button="false">
-        <div class="scrollbar-hidden max-h-[calc(100vh-2rem)] overflow-y-auto">
+        <div class="scrollbar-hidden flex-1 overflow-y-auto max-h-[calc(100vh-2rem)] relative">
           <div class="relative">
             <div
-              class="w-full h-full absolute bg-linear-to-t from-black/60 to-transparent flex justify-end flex-col p-4">
+              class="w-full z-2 h-full absolute bg-linear-to-t from-black/60 to-transparent flex justify-end flex-col p-4 backdrop-blur-xs">
               <h2 class="mod-title-transition text-white font-bold text-xl">
                 {{ penddingFile.name }}
               </h2>
@@ -128,14 +128,18 @@ onMounted(() => {
                 </div>
               </div>
             </template>
-            <div class="flex justify-end gap-2 mt-4">
-              <Button variant="outline" @click="closeModDetail">
-                <X /> 关闭
-              </Button>
-              <Button @click="openUrl(penddingFile.link)">
-                <Download />下载
-              </Button>
-            </div>
+          </div>
+          <div class="opacity-0 p-4">
+            <Button></Button>
+          </div>
+          <div
+            class="flex w-full justify-end gap-2 p-4 fixed bottom-0 bg-linear-to-t from-white via-white/90 via-20% to-transparent">
+            <Button variant="outline" @click="closeModDetail">
+              <X /> 关闭
+            </Button>
+            <Button @click="openUrl(penddingFile.link)">
+              <Download />下载
+            </Button>
           </div>
         </div>
       </DialogContent>
