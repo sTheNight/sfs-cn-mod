@@ -129,11 +129,8 @@ onMounted(() => {
               </div>
             </template>
           </div>
-          <div class="opacity-0 p-4">
-            <Button></Button>
-          </div>
           <div
-            class="flex w-full justify-end gap-2 p-4 fixed bottom-0 bg-linear-to-t from-white via-white/90 via-20% to-transparent">
+            class="flex w-full justify-end gap-2 p-4 sticky bottom-0 bg-linear-to-t from-white via-white/90 via-20% to-transparent">
             <Button variant="outline" @click="closeModDetail">
               <X /> 关闭
             </Button>
