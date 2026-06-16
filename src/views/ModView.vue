@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
 import { files, type ModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
-import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X } from '@lucide/vue';
+import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X, ZoomIn, ZoomInIcon } from '@lucide/vue';
 import { computed, onMounted, ref, watch } from 'vue';
 
 const shownList = ref<ModInfo[]>([] as ModInfo[])
@@ -122,9 +122,14 @@ onMounted(() => {
                 <Image :size="16" />截图
               </h2>
               <div class="flex flex-wrap gap-1 mt-2">
-                <div class="box-border rounded-2xl overflow-hidden" v-for="(img, index) in penddingFile.images"
-                  :key="index">
-                  <img @click="openImagePreview(index)" class="w-48 h-24 object-cover shrink-0" :src="img">
+                <div class="group box-border rounded-2xl relative overflow-hidden" @click="openImagePreview(index)"
+                  v-for="(img, index) in penddingFile.images" :key="index">
+                  <div
+                    class="absolute transition-all rounded-2xl duration-200 z-1 opacity-0 group-hover:opacity-100 w-full h-full bg-black/30 flex justify-center items-center">
+                    <ZoomInIcon :size="16" color="white" />
+                  </div>
+                  <img class="w-48 h-24 object-cover transition-all duration-200 shrink-0 group-hover:scale-105"
+                    :src="img">
                 </div>
               </div>
             </template>
