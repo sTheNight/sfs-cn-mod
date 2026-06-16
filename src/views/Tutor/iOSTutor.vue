@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import './tutorCommon.css'
-import TutorSetup from '../../components/TutorSetup.vue';
+import TutorSetup from '@/components/TutorSetup.vue';
+import MyCode from '@/components/MyCode.vue';
 </script>
 <template>
   <div>
@@ -9,7 +9,7 @@ import TutorSetup from '../../components/TutorSetup.vue';
     </TutorSetup>
     <TutorSetup tag="②" title="定位游戏目录" class="mt-2">
       <p>iOS游戏数据路径为：</p>
-      <code>我的设备\Spaceflight Simulator</code>
+      <MyCode>我的设备\Spaceflight Simulator</MyCode>
     </TutorSetup>
     <TutorSetup tag="③" title="放置模组文件" class="mt-2">
       <p>将解压后的模组移动到游戏目录的Parts或Textures Packs文件夹中，操作方式与Android类似。</p>
