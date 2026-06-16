@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { files, type ModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
 import { Calendar, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X } from '@lucide/vue';
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 const shownList = ref<ModInfo[]>([] as ModInfo[])
 const penddingFile = ref<ModInfo>({} as ModInfo)
@@ -30,80 +30,14 @@ function getModListByKeyword(keyword: string, source: ModInfo[] = files): ModInf
   )
 }
 
-// 模组名元素共享动画
-const activeModTitleTransitionName = ref("none")
-const activeModTitleOwner = ref<"none" | "list" | "dialog">("none")
-
-function getModTitleTransitionName(index: number) {
-  return `mod-title-${index}`
-}
-
-function runViewTransition(update: () => void | Promise<void>, resetAfter = false) {
-  const documentWithTransition = document as Document & {
-    startViewTransition?: (updateCallback: () => void | Promise<void>) => { finished: Promise<void> }
-  }
-
-  if (!documentWithTransition.startViewTransition) {
-    void update()
-    if (resetAfter) {
-      activeModTitleTransitionName.value = "none"
-      activeModTitleOwner.value = "none"
-    }
-    return
-  }
-
-  const transition = documentWithTransition.startViewTransition(update)
-  if (resetAfter) {
-    transition.finished.finally(() => {
-      activeModTitleTransitionName.value = "none"
-      activeModTitleOwner.value = "none"
-    })
-  }
-}
-
-function handleModDetailOpenChange(open: boolean) {
-  if (open) {
-    isModDetailDialogShow.value = true
-  } else {
-    closeModDetail()
-  }
-}
-
-function getListTitleTransitionName(index: number) {
-  return activeModTitleOwner.value == "list" &&
-    activeModTitleTransitionName.value == getModTitleTransitionName(index)
-    ? activeModTitleTransitionName.value
-    : "none"
-}
-
-function getDialogTitleTransitionName() {
-  return activeModTitleOwner.value == "dialog"
-    ? activeModTitleTransitionName.value
-    : "none"
-}
-
 // 常规事件
-async function openModDetail(mod: ModInfo, index: number) {
-  activeModTitleTransitionName.value = getModTitleTransitionName(index)
-  activeModTitleOwner.value = "list"
-  await nextTick()
-
-  runViewTransition(async () => {
-    penddingFile.value = mod;
-    isModDetailDialogShow.value = true;
-    activeModTitleOwner.value = "dialog"
-    await nextTick()
-  })
+async function openModDetail(mod: ModInfo) {
+  penddingFile.value = mod;
+  isModDetailDialogShow.value = true;
 }
 
 function closeModDetail() {
-  activeModTitleOwner.value = "dialog"
-
-  runViewTransition(async () => {
-    isModDetailDialogShow.value = false
-    activeModTitleOwner.value = "list"
-    await nextTick()
-  }, true)
+  isModDetailDialogShow.value = false
 }
 
 function openUrl(url: string) {
@@ -127,15 +61,14 @@ onMounted(() => {
 <template>
   <div>
     <!-- 模组详情对话框 -->
-    <Dialog :open="isModDetailDialogShow" @update:open="handleModDetailOpenChange">
+    <Dialog :open="isModDetailDialogShow">
       <DialogContent class="w-[calc(100%-2rem)] outline-0 border-0 max-w-150 sm:max-w-150 p-0 overflow-hidden"
         :show-close-button="false">
         <div>
           <div class="relative">
             <div
               class="w-full h-full absolute bg-linear-to-t from-black/60 to-transparent flex justify-end flex-col p-4">
-              <h2 class="mod-title-transition text-white font-bold text-xl"
-                :style="{ viewTransitionName: getDialogTitleTransitionName() }">
+              <h2 class="mod-title-transition text-white font-bold text-xl">
                 {{ penddingFile.name }}
               </h2>
               <div class="flex gap-1 mt-1">
@@ -230,8 +163,7 @@ onMounted(() => {
         <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
         <div class="p-4 flex flex-col flex-1 min-h-0">
           <div class="flex-1 min-h-0">
-            <h2 class="mod-title-transition font-bold text-xl text-nowrap text-ellipsis overflow-hidden"
-              :style="{ viewTransitionName: getListTitleTransitionName(index) }">
+            <h2 class="mod-title-transition font-bold text-xl text-nowrap text-ellipsis overflow-hidden">
               {{ item.name }}
             </h2>
             <div class="text-xs text-gray-600 mt-2 flex items-center gap-2">
@@ -260,7 +192,7 @@ onMounted(() => {
               </div>
             </div>
             <div class="flex w-full justify-end mt-4 gap-2">
-              <Button variant="outline" @click="openModDetail(item, index)">
+              <Button variant="outline" @click="openModDetail(item)">
                 <Info />
                 详情
               </Button>
