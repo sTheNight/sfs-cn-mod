@@ -5,14 +5,19 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
 import { files, type ModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
-import { Calendar, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X } from '@lucide/vue';
-import { onMounted, ref, watch } from 'vue';
+import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X } from '@lucide/vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 const shownList = ref<ModInfo[]>([] as ModInfo[])
 const penddingFile = ref<ModInfo>({} as ModInfo)
 const isModDetailDialogShow = ref(false)
+const isImagePreviewShow = ref(false)
+const previewImageIndex = ref(0)
 const categoryFilter = ref<ModCategory>("all")
 const searchText = ref("")
+
+const currentPreviewImage = computed(() => penddingFile.value.images?.[previewImageIndex.value])
+const hasMultiplePreviewImages = computed(() => (penddingFile.value.images?.length ?? 0) > 1)
 
 function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
   if (category == "all") return source
@@ -38,6 +43,21 @@ async function openModDetail(mod: ModInfo) {
 
 function closeModDetail() {
   isModDetailDialogShow.value = false
+  isImagePreviewShow.value = false
+}
+
+function openImagePreview(index: number) {
+  if (!penddingFile.value.images?.length) return
+
+  previewImageIndex.value = index
+  isImagePreviewShow.value = true
+}
+
+function switchPreviewImage(offset: number) {
+  const images = penddingFile.value.images
+  if (!images?.length) return
+
+  previewImageIndex.value = (previewImageIndex.value + offset + images.length) % images.length
 }
 
 function openUrl(url: string) {
@@ -61,10 +81,11 @@ onMounted(() => {
 <template>
   <div>
     <!-- 模组详情对话框 -->
-    <Dialog :open="isModDetailDialogShow">
-      <DialogContent class="w-[calc(100%-2rem)] outline-0 border-0 max-w-150 sm:max-w-150 p-0 overflow-hidden"
+    <Dialog v-model:open="isModDetailDialogShow">
+      <DialogContent
+        class="w-[calc(100%-2rem)] max-h-[calc(100vh-2rem)] outline-0 border-0 max-w-150 sm:max-w-150 p-0 overflow-hidden"
         :show-close-button="false">
-        <div>
+        <div class="scrollbar-hidden max-h-[calc(100vh-2rem)] overflow-y-auto">
           <div class="relative">
             <div
               class="w-full h-full absolute bg-linear-to-t from-black/60 to-transparent flex justify-end flex-col p-4">
@@ -100,10 +121,10 @@ onMounted(() => {
               <h2 class="flex items-center mt-4 gap-1 font-bold mb-1">
                 <Image :size="16" />截图
               </h2>
-              <div class="flex gap-1 mt-2">
+              <div class="flex flex-wrap gap-1 mt-2">
                 <div class="box-border rounded-2xl overflow-hidden" v-for="(img, index) in penddingFile.images"
                   :key="index">
-                  <img class="w-48 h-24 object-cover shrink-0" :src="img">
+                  <img @click="openImagePreview(index)" class="w-48 h-24 object-cover shrink-0" :src="img">
                 </div>
               </div>
             </template>
@@ -115,6 +136,37 @@ onMounted(() => {
                 <Download />下载
               </Button>
             </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+    <!-- 截图预览器 -->
+    <Dialog :open="isImagePreviewShow" @update:open="isImagePreviewShow = $event">
+      <DialogContent class="w-[calc(100%-2rem)] max-w-5xl border-0 bg-transparent p-0 shadow-none sm:max-w-5xl"
+        :show-close-button="false">
+        <div class="relative grid max-h-[calc(100vh-2rem)] overflow-hidden rounded-lg bg-black">
+          <img v-if="currentPreviewImage" class="max-h-[calc(100vh-6rem)] w-full object-contain"
+            :src="currentPreviewImage" :alt="`${penddingFile.name}截图 ${previewImageIndex + 1}`">
+          <Button variant="ghost" size="icon"
+            class="absolute right-2 top-2 text-white hover:bg-white/15 hover:text-white" aria-label="关闭预览"
+            @click="isImagePreviewShow = false">
+            <X />
+          </Button>
+          <template v-if="hasMultiplePreviewImages">
+            <Button variant="ghost" size="icon"
+              class="absolute left-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/15 hover:text-white"
+              aria-label="上一张截图" @click="switchPreviewImage(-1)">
+              <ChevronLeft />
+            </Button>
+            <Button variant="ghost" size="icon"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/15 hover:text-white"
+              aria-label="下一张截图" @click="switchPreviewImage(1)">
+              <ChevronRight />
+            </Button>
+          </template>
+          <div v-if="penddingFile.images?.length"
+            class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
+            {{ previewImageIndex + 1 }} / {{ penddingFile.images.length }}
           </div>
         </div>
       </DialogContent>
@@ -159,8 +211,10 @@ onMounted(() => {
       <div
         class="border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
         v-for="(item, index) in shownList" :key="index">
-        <img class="w-full h-50 object-cover shrink-0" v-if="item.images" :src="item.images[0]" />
-        <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
+        <img @click="openModDetail(item)" class="w-full h-50 object-cover shrink-0" v-if="item.images"
+          :src="item.images[0]" />
+        <div @click="openModDetail(item)" v-else
+          class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
         <div class="p-4 flex flex-col flex-1 min-h-0">
           <div class="flex-1 min-h-0">
             <h2 class="mod-title-transition font-bold text-xl text-nowrap text-ellipsis overflow-hidden">
@@ -221,5 +275,13 @@ onMounted(() => {
 .switch-fade-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+.scrollbar-hidden {
+  scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
 }
 </style>
