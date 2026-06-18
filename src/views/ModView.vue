@@ -1,17 +1,21 @@
 <script setup lang="ts">
+import AlertMessage from '@/components/AlertMessage.vue';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
-import { files, type ModInfo } from '@/data/modInfo';
+import { files, getModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
-import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, Save, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
+import type { ModInfo } from '@/models/ModInfo';
+import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, LoaderCircle, RefreshCcw, RefreshCw, Save, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
 import { computed, onMounted, ref, watch } from 'vue';
 
-const shownList = ref<ModInfo[]>([] as ModInfo[])
+const shownList = ref<ModInfo[]>([])
 const penddingFile = ref<ModInfo>({} as ModInfo)
 const isModDetailDialogShow = ref(false)
 const isImagePreviewShow = ref(false)
+const isLoading = ref(true)
+const loadError = ref("")
 const previewImageIndex = ref(0)
 const categoryFilter = ref<ModCategory>("all")
 const searchText = ref("")
@@ -72,10 +76,25 @@ function handleKeywordFilterKeyDown(e: KeyboardEvent) {
   if (e.code == "Enter") applyFilter()
 }
 
+async function loadModInfo(forceRefresh = false) {
+  isLoading.value = true
+  loadError.value = ""
+
+  try {
+    await getModInfo(forceRefresh)
+    applyFilter()
+  } catch (error) {
+    shownList.value = []
+    loadError.value = error instanceof Error ? error.message : "加载失败"
+  } finally {
+    isLoading.value = false
+  }
+}
+
 watch(categoryFilter, applyFilter)
 
 onMounted(() => {
-  applyFilter()
+  void loadModInfo()
 })
 </script>
 <template>
@@ -99,7 +118,8 @@ onMounted(() => {
                   }}</span>
               </div>
             </div>
-            <img class="w-full h-50 object-cover shrink-0" v-if="penddingFile.images" :src="penddingFile.images[0]" />
+            <img class="w-full h-50 object-cover shrink-0" v-if="penddingFile.images?.length"
+              :src="penddingFile.images[0]" />
             <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
           </div>
           <div class="p-6">
@@ -117,7 +137,7 @@ onMounted(() => {
               大小：{{ penddingFile.size }} |
               更新日期：{{ penddingFile.date }}
             </p>
-            <template v-if="penddingFile.images">
+            <template v-if="penddingFile.images?.length">
               <h2 class="flex items-center mt-4 gap-1 font-bold mb-1">
                 <Image :size="16" />截图
               </h2>
@@ -212,12 +232,30 @@ onMounted(() => {
         </Button>
       </div>
     </div>
-    <div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
+    <div v-if="isLoading || loadError || shownList.length === 0"
+      class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-gray-600 select-none">
+      <div v-if="isLoading">
+        加载中...
+      </div>
+      <div v-else-if="loadError" class="text-red-600 flex flex-col justify-center items-center gap-2">
+        <div>加载失败：{{ loadError }}</div>
+        <div>
+          <Button size="sm" @click="loadModInfo(true)">
+            <RefreshCcw />
+            重试
+          </Button>
+        </div>
+      </div>
+      <div v-else-if="shownList.length === 0">
+        未找到符合条件的模组
+      </div>
+    </div>
+    <div v-else class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
       <!-- 模组信息卡片 -->
       <div
         class="border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
         v-for="(item, index) in shownList" :key="index">
-        <img @click="openModDetail(item)" class="w-full h-50 object-cover shrink-0" v-if="item.images"
+        <img @click="openModDetail(item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
           :src="item.images[0]" />
         <div @click="openModDetail(item)" v-else
           class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
