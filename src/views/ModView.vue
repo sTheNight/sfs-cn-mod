@@ -213,7 +213,7 @@ onMounted(() => {
               <span>{{ categoryRecord[categoryFilter] }}</span>
             </div>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent class="bg-white/80 backdrop-blur-xs">
             <SelectGroup>
               <SelectLabel>分类</SelectLabel>
               <SelectItem v-for="(value, key) in categoryRecord" :key="key" :value="key">
