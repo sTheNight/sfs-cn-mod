@@ -148,7 +148,7 @@ onMounted(() => {
                     <ZoomInIcon :size="16" color="white" />
                   </div>
                   <img class="w-48 h-24 object-cover transition-all duration-200 shrink-0 group-hover:scale-105"
-                    :src="img">
+                    :src="img" :alt="`${penddingFile.name}截图 ${index + 1}`" loading="lazy" decoding="async">
                 </div>
               </div>
             </template>
@@ -255,7 +255,7 @@ onMounted(() => {
         class="border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
         v-for="(item, index) in shownList" :key="index">
         <img @click="openModDetail(item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
-          :src="item.images[0]" />
+          :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
         <div @click="openModDetail(item)" v-else
           class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
         <div class="p-4 flex flex-col flex-1 min-h-0">
