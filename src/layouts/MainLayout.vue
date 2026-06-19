@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 import { CircleDollarSign, CircleQuestionMark, Info, LogIn, Package } from '@lucide/vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
+const WARNING_DIALOG_STORAGE_KEY = 'hide-warning-dialog-v1'
+
 const route = useRoute()
 const router = useRouter()
 
 const isSponseDialogShow = ref(false)
-const isWarningDialogShow = ref(true)
+const isWarningDialogShow = ref(localStorage.getItem(WARNING_DIALOG_STORAGE_KEY) !== 'true')
+const isNeverShowDialog = ref(false)
 
 function isActiveRoute(name: string) {
   return route.name == name
@@ -16,6 +21,13 @@ function isActiveRoute(name: string) {
 
 function exitTheSite() {
   window.close()
+}
+
+function closeDialog() {
+  if (isNeverShowDialog.value) {
+    localStorage.setItem(WARNING_DIALOG_STORAGE_KEY, 'true')
+  }
+  isWarningDialogShow.value = false
 }
 </script>
 <template>
@@ -40,7 +52,7 @@ function exitTheSite() {
       </DialogContent>
     </Dialog>
     <Dialog v-model:open="isWarningDialogShow">
-      <DialogContent>
+      <DialogContent @interact-outside.prevent @escape-key-down.prevent>
         <DialogHeader>
           <h2 class="text-xl font-bold">欢迎访问 SFS 汉化模组站</h2>
         </DialogHeader>
@@ -55,9 +67,12 @@ function exitTheSite() {
           额外说明：本站为重写版并非原站点，部分功能特性可能未同步，如有需要请访问<a class="px-2 outline-0 underline text-blue-500"
             href="https://sfszhmod.pages.dev/">原站点</a>
         </p>
+        <p class="flex w-full justify-end items-center gap-2 text-sm">
+          <Checkbox v-model:model-value="isNeverShowDialog" /> 不再显示
+        </p>
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
-            <Button @click="isWarningDialogShow = false">
+            <Button @click="closeDialog">
               <LogIn /> 进入
             </Button>
             <Button @click="exitTheSite" variant="outline">退出</Button>
