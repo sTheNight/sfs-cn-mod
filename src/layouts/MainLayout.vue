@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { CircleDollarSign, CircleQuestionMark, Info, LogIn, Package } from '@lucide/vue';
+import { CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, type LucideIcon } from '@lucide/vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -14,6 +14,34 @@ const router = useRouter()
 const isSponseDialogShow = ref(false)
 const isWarningDialogShow = ref(localStorage.getItem(WARNING_DIALOG_STORAGE_KEY) !== 'true')
 const isNeverShowDialog = ref(false)
+
+interface RouteButton {
+  icon: LucideIcon,
+  title: string,
+  key: string,
+  route: string
+}
+
+const routeButtons: RouteButton[] = [
+  {
+    icon: PackageIcon,
+    title: "模组",
+    key: 'mod',
+    route: '/'
+  },
+  {
+    icon: CompassIcon,
+    title: '教程',
+    key: 'tutorial',
+    route: 'tutorial'
+  },
+  {
+    icon: InfoIcon,
+    title: '关于',
+    key: 'info',
+    route: 'info'
+  }
+]
 
 function isActiveRoute(name: string) {
   return route.name == name
@@ -88,22 +116,14 @@ function closeDialog() {
           汉化模组下载中心
         </h2>
       </header>
-      <div class="flex gap-1 items-center justify-center mb-4">
+      <div class="flex gap-2 items-center justify-center mb-4">
         <!-- TODO: 优化选中样式的写法 -->
-        <Button id="mod" variant="ghost" :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('mod') }"
-          @click="router.push('/')">
-          <Package :size="16" />
-          模组
-        </Button>
-        <Button id="tutorial" variant="ghost"
-          :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('tutorial') }" @click="router.push('/tutorial')">
-          <CircleQuestionMark :size="16" />
-          教程
-        </Button>
-        <Button id="info" variant="ghost" :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('info') }"
-          @click="router.push('/info')">
-          <Info :size="16" />
-          关于
+        <Button v-for="(item, index) in routeButtons" :key="index" class="rounded-full hover:scale-105 active:scale-95"
+          variant="ghost"
+          :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50': isActiveRoute(item.key) }"
+          @click="router.push(item.route)">
+          <component :is="item.icon" :size="14" />
+          {{ item.title }}
         </Button>
       </div>
       <RouterView v-slot="{ Component }">
