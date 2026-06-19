@@ -154,11 +154,11 @@ onMounted(() => {
             </template>
           </div>
           <div
-            class="flex w-full justify-end gap-2 p-4 sticky bottom-0 bg-linear-to-t from-white via-white/90 via-20% to-transparent">
-            <Button variant="outline" @click="closeModDetail">
+            class="pointer-events-none sticky bottom-0 z-10 flex w-full justify-end gap-2 bg-linear-to-t from-white via-white/90 via-20% to-transparent p-4">
+            <Button class="pointer-events-auto" variant="outline" @click.prevent="closeModDetail">
               <X /> 关闭
             </Button>
-            <Button @click="openUrl(penddingFile.link)">
+            <Button class="pointer-events-auto" @click.prevent="openUrl(penddingFile.link)">
               <Download />下载
             </Button>
           </div>
