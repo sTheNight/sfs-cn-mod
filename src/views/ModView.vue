@@ -6,10 +6,12 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { files, getModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
 import type { ModInfo } from '@/models/ModInfo';
-import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, HistoryIcon, Image, Info, InfoIcon, RefreshCcw, Save, SaveIcon, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
+import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, HistoryIcon, Image, InfoIcon, RefreshCcw, SaveIcon, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
 import { computed, onMounted, ref, watch } from 'vue';
-import InfoCard from './ModInfo/InfoCard.vue';
-import InfoTitle from './ModInfo/InfoTitle.vue';
+import InfoCard from '@/components/ModInfo/InfoCard.vue';
+import InfoTitle from '@/components/ModInfo/InfoTitle.vue';
+import ModCard from './Mod/ModCard.vue';
+import FadeInCardProvider from '@/components/FadeInCardProvider.vue';
 
 const shownList = ref<ModInfo[]>([])
 const penddingFile = ref<ModInfo>({} as ModInfo)
@@ -247,56 +249,9 @@ onMounted(() => {
     </div>
     <div v-else class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
       <!-- 模组信息卡片 -->
-      <div
-        class="border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
-        v-for="(item, index) in shownList" :key="index">
-        <img @click="openModDetail(item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
-          :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
-        <div @click="openModDetail(item)" v-else
-          class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
-        <div class="p-4 flex flex-col flex-1 min-h-0">
-          <div class="flex-1 min-h-0">
-            <h2 class="mod-title-transition font-bold text-xl text-nowrap text-ellipsis overflow-hidden">
-              {{ item.name }}
-            </h2>
-            <div class="text-xs text-gray-600 mt-2 flex items-center gap-2">
-              <span class="flex items-center justify-center gap-1">
-                <UserRound :size="12" /><span>{{ item.author }}</span>
-              </span>
-              <span class="flex items-center justify-center gap-1">
-                <History :size="12" /><span>{{ item.version }}</span>
-              </span>
-            </div>
-            <div class="flex gap-2 mt-2">
-              <div class="inline-block text-[12px] rounded-full bg-gray-200 text-gray-600 px-2 py-0.5"
-                v-for="(tag, index) in item.tags" :key="index">
-                {{ tag }}
-              </div>
-            </div>
-            <p class="my-4 text-gray-600 text-sm">{{ item.desc }}</p>
-          </div>
-          <div class="shrink-0">
-            <div class="flex justify-evenly gap-2">
-              <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 flex-1">
-                <Save :size="16" class="mr-1" />{{ item.size }}
-              </div>
-              <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 flex-1">
-                <Calendar :size="16" class="mr-1" />{{ item.date }}
-              </div>
-            </div>
-            <div class="flex w-full justify-end mt-4 gap-2">
-              <Button variant="outline" @click="openModDetail(item)">
-                <Info />
-                详情
-              </Button>
-              <Button @click="openUrl(item.link)">
-                <Download />
-                下载
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <FadeInCardProvider v-for="(item, index) in shownList" :key="index">
+        <ModCard :item="item" @open-detail="openModDetail" @on-download-button-clicked="openUrl" />
+      </FadeInCardProvider>
     </div>
   </div>
 </template>
@@ -322,5 +277,15 @@ onMounted(() => {
 
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
+}
+
+.card-fade-enter-active,
+.card-fade-leave-ective {
+  transition: all .3s;
+}
+
+.card-fade-enter-from {
+  transform: translateY(8px);
+  opacity: 0;
 }
 </style>
