@@ -127,7 +127,7 @@ onMounted(() => {
             <InfoTitle :icon="FileText" title="简介" />
             <p class="text-gray-600 text-sm mt-2">{{ penddingFile.desc }}</p>
             <InfoTitle class="mt-4" :icon="InfoIcon" title="信息" />
-            <div class="text-gray-600 text-sm mt-2 grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(150px,100%),1fr))]">
+            <div class="text-gray-600 text-sm mt-2 grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(120px,100%),1fr))]">
               <InfoCard title="作者" :icon="UserRound">{{ penddingFile.author }}</InfoCard>
               <InfoCard title="版本" :icon="HistoryIcon">{{ penddingFile.version }}</InfoCard>
               <InfoCard title="兼容版本" :icon="HistoryIcon">{{ penddingFile.compat }}</InfoCard>
