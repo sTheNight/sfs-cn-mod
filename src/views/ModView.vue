@@ -6,8 +6,10 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { files, getModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
 import type { ModInfo } from '@/models/ModInfo';
-import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, RefreshCcw, Save, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
+import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, HistoryIcon, Image, Info, InfoIcon, RefreshCcw, Save, SaveIcon, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
 import { computed, onMounted, ref, watch } from 'vue';
+import InfoCard from './ModInfo/InfoCard.vue';
+import InfoTitle from './ModInfo/InfoTitle.vue';
 
 const shownList = ref<ModInfo[]>([])
 const penddingFile = ref<ModInfo>({} as ModInfo)
@@ -122,24 +124,18 @@ onMounted(() => {
             <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
           </div>
           <div class="p-6">
-            <h2 class="flex items-center gap-1 font-bold mb-1">
-              <FileText :size="16" />简介
-            </h2>
+            <InfoTitle :icon="FileText" title="简介" />
             <p class="text-gray-600 text-sm mt-2">{{ penddingFile.desc }}</p>
-            <h2 class="flex items-center mt-4 gap-1 font-bold mb-1">
-              <Info :size="16" />信息
-            </h2>
-            <p class="text-gray-600 text-sm mt-2">
-              版本：{{ penddingFile.version }} |
-              作者：{{ penddingFile.author }} |
-              兼容版本：{{ penddingFile.compat }} |
-              大小：{{ penddingFile.size }} |
-              更新日期：{{ penddingFile.date }}
-            </p>
+            <InfoTitle class="mt-4" :icon="InfoIcon" title="信息" />
+            <div class="text-gray-600 text-sm mt-2 grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(150px,100%),1fr))]">
+              <InfoCard title="作者" :icon="UserRound">{{ penddingFile.author }}</InfoCard>
+              <InfoCard title="版本" :icon="HistoryIcon">{{ penddingFile.version }}</InfoCard>
+              <InfoCard title="兼容版本" :icon="HistoryIcon">{{ penddingFile.compat }}</InfoCard>
+              <InfoCard title="更新日期" :icon="Calendar">{{ penddingFile.date }}</InfoCard>
+              <InfoCard title="大小" :icon="SaveIcon">{{ penddingFile.size }}</InfoCard>
+            </div>
             <template v-if="penddingFile.images?.length">
-              <h2 class="flex items-center mt-4 gap-1 font-bold mb-1">
-                <Image :size="16" />截图
-              </h2>
+              <InfoTitle class="mt-4" :icon="Image" title="截图" />
               <div class="flex flex-wrap gap-1 mt-2">
                 <div class="group box-border rounded-2xl relative overflow-hidden" @click="openImagePreview(index)"
                   v-for="(img, index) in penddingFile.images" :key="index">

@@ -9,10 +9,10 @@ import {
   MessageCircleQuestionIcon,
 } from '@lucide/vue';
 import { ref, type Component, type Ref } from 'vue';
-import AnrdoidTutor from './Tutor/AnrdoidTutor.vue';
-import IOSTutor from './Tutor/iOSTutor.vue';
-import PCTutor from './Tutor/PCTutor.vue';
-import QA from './Tutor/QA.vue';
+import AnrdoidTutor from './Tutorial/AnrdoidTutor.vue';
+import IOSTutor from './Tutorial/iOSTutor.vue';
+import PCTutor from './Tutorial/PCTutor.vue';
+import QA from './Tutorial/QA.vue';
 
 const currentTutor: Ref<TutorType> = ref("android")
 

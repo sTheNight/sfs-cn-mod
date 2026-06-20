@@ -117,8 +117,8 @@ function closeDialog() {
         </h2>
       </header>
       <div class="flex gap-2 items-center justify-center mb-4">
-        <Button v-for="(item, index) in routeButtons" :key="index" class="rounded-full hover:scale-105 active:scale-95"
-          variant="ghost"
+        <Button v-for="(item, index) in routeButtons" :key="index"
+          class="rounded-full select-none hover:scale-105 active:scale-95" variant="ghost"
           :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50': isActiveRoute(item.key) }"
           @click="router.push(item.route)">
           <component :is="item.icon" :size="14" />
