@@ -61,7 +61,7 @@ function closeDialog() {
 <template>
   <div class="w-full min-h-screen">
     <div
-      class="fixed bottom-10 right-10 bg-blue-600 rounded-full p-4 z-10 cursor-pointer shadow-[0_12px_32px_rgba(37,99,235,0.35)] transition-all duration-150 hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)] hover:-translate-y-0.5 active:scale-95"
+      class="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 bg-blue-600 rounded-full scale-90 sm:scale-100 p-4 z-10 cursor-pointer shadow-[0_12px_32px_rgba(37,99,235,0.35)] transition-all duration-150 hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)] hover:-translate-y-0.5 active:scale-95"
       @click="isSponseDialogShow = !isSponseDialogShow">
       <CircleDollarSign color="#fff" />
     </div>
@@ -117,7 +117,6 @@ function closeDialog() {
         </h2>
       </header>
       <div class="flex gap-2 items-center justify-center mb-4">
-        <!-- TODO: 优化选中样式的写法 -->
         <Button v-for="(item, index) in routeButtons" :key="index" class="rounded-full hover:scale-105 active:scale-95"
           variant="ghost"
           :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50': isActiveRoute(item.key) }"
