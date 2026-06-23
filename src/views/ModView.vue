@@ -10,7 +10,7 @@ import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder
 import { computed, onMounted, ref, watch } from 'vue';
 import InfoCard from '@/components/ModInfo/InfoCard.vue';
 import InfoTitle from '@/components/ModInfo/InfoTitle.vue';
-import ModCard from './Mod/ModCard.vue';
+import ModCard from '@/components/ModInfo/ModCard.vue';
 import FadeInCardProvider from '@/components/FadeInCardProvider.vue';
 
 const shownList = ref<ModInfo[]>([])
