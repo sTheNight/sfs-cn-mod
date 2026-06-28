@@ -9,10 +9,10 @@ import {
   MessageCircleQuestionIcon,
 } from '@lucide/vue';
 import { ref, type Component, type Ref } from 'vue';
-import AnrdoidTutor from './Tutor/AnrdoidTutor.vue';
-import IOSTutor from './Tutor/iOSTutor.vue';
-import PCTutor from './Tutor/PCTutor.vue';
-import QA from './Tutor/QA.vue';
+import AnrdoidTutor from './Tutorial/AnrdoidTutor.vue';
+import IOSTutor from './Tutorial/iOSTutor.vue';
+import PCTutor from './Tutorial/PCTutor.vue';
+import QA from './Tutorial/QA.vue';
 
 const currentTutor: Ref<TutorType> = ref("android")
 
@@ -33,7 +33,7 @@ function isActiveTutorSection(tutor: TutorType): boolean {
     <ButtonGroup class="ml-auto mr-auto sticky top-4 z-5">
       <Button class="bg-white/80 backdrop-blur-xs backdrop-saturate-200" v-for="tab in tutorTabs" :key="tab.type"
         variant="outline" @click="currentTutor = tab.type"
-        :class="{ 'text-blue-600 hover:text-blue-600': isActiveTutorSection(tab.type) }">
+        :class="{ 'text-blue-600 hover:text-blue-600 bg-blue-50/80 hover:bg-blue-50/80': isActiveTutorSection(tab.type) }">
         <component :is="tab.icon" :size="14" />
         {{ tab.label }}
       </Button>

@@ -1,14 +1,47 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { CircleDollarSign, CircleQuestionMark, Info, LogIn, Package } from '@lucide/vue';
+import { CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, type LucideIcon } from '@lucide/vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
+const WARNING_DIALOG_STORAGE_KEY = 'hide-warning-dialog-v1'
+
 const route = useRoute()
 const router = useRouter()
 
 const isSponseDialogShow = ref(false)
-const isWarningDialogShow = ref(true)
+const isWarningDialogShow = ref(localStorage.getItem(WARNING_DIALOG_STORAGE_KEY) !== 'true')
+const isNeverShowDialog = ref(false)
+
+interface RouteButton {
+  icon: LucideIcon,
+  title: string,
+  key: string,
+  route: string
+}
+
+const routeButtons: RouteButton[] = [
+  {
+    icon: PackageIcon,
+    title: "模组",
+    key: 'mod',
+    route: '/'
+  },
+  {
+    icon: CompassIcon,
+    title: '教程',
+    key: 'tutorial',
+    route: 'tutorial'
+  },
+  {
+    icon: InfoIcon,
+    title: '关于',
+    key: 'info',
+    route: 'info'
+  }
+]
 
 function isActiveRoute(name: string) {
   return route.name == name
@@ -17,11 +50,18 @@ function isActiveRoute(name: string) {
 function exitTheSite() {
   window.close()
 }
+
+function closeDialog() {
+  if (isNeverShowDialog.value) {
+    localStorage.setItem(WARNING_DIALOG_STORAGE_KEY, 'true')
+  }
+  isWarningDialogShow.value = false
+}
 </script>
 <template>
   <div class="w-full min-h-screen">
     <div
-      class="fixed bottom-10 right-10 bg-blue-600 rounded-full p-4 z-10 cursor-pointer shadow-[0_12px_32px_rgba(37,99,235,0.35)] transition-all duration-150 hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)] hover:-translate-y-0.5 active:scale-95"
+      class="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 bg-blue-600 rounded-full scale-90 sm:scale-100 p-4 z-10 cursor-pointer shadow-[0_12px_32px_rgba(37,99,235,0.35)] transition-all duration-150 hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)] hover:-translate-y-0.5 active:scale-95"
       @click="isSponseDialogShow = !isSponseDialogShow">
       <CircleDollarSign color="#fff" />
     </div>
@@ -40,7 +80,7 @@ function exitTheSite() {
       </DialogContent>
     </Dialog>
     <Dialog v-model:open="isWarningDialogShow">
-      <DialogContent>
+      <DialogContent @interact-outside.prevent @escape-key-down.prevent>
         <DialogHeader>
           <h2 class="text-xl font-bold">欢迎访问 SFS 汉化模组站</h2>
         </DialogHeader>
@@ -55,9 +95,12 @@ function exitTheSite() {
           额外说明：本站为重写版并非原站点，部分功能特性可能未同步，如有需要请访问<a class="px-2 outline-0 underline text-blue-500"
             href="https://sfszhmod.pages.dev/">原站点</a>
         </p>
+        <p class="flex w-full justify-end items-center gap-2 text-sm">
+          <Checkbox v-model:model-value="isNeverShowDialog" /> 不再显示
+        </p>
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
-            <Button @click="isWarningDialogShow = false">
+            <Button @click="closeDialog">
               <LogIn /> 进入
             </Button>
             <Button @click="exitTheSite" variant="outline">退出</Button>
@@ -73,22 +116,13 @@ function exitTheSite() {
           汉化模组下载中心
         </h2>
       </header>
-      <div class="flex gap-1 items-center justify-center mb-4">
-        <!-- TODO: 优化选中样式的写法 -->
-        <Button id="mod" variant="ghost" :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('mod') }"
-          @click="router.push('/')">
-          <Package :size="16" />
-          模组
-        </Button>
-        <Button id="tutorial" variant="ghost"
-          :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('tutorial') }" @click="router.push('/tutorial')">
-          <CircleQuestionMark :size="16" />
-          教程
-        </Button>
-        <Button id="info" variant="ghost" :class="{ 'text-blue-600 hover:text-blue-600': isActiveRoute('info') }"
-          @click="router.push('/info')">
-          <Info :size="16" />
-          关于
+      <div class="flex gap-2 items-center justify-center mb-4">
+        <Button v-for="(item, index) in routeButtons" :key="index"
+          class="rounded-full select-none hover:scale-105 active:scale-95" variant="ghost"
+          :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50': isActiveRoute(item.key) }"
+          @click="router.push(item.route)">
+          <component :is="item.icon" :size="14" />
+          {{ item.title }}
         </Button>
       </div>
       <RouterView v-slot="{ Component }">

@@ -6,8 +6,12 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { files, getModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
 import type { ModInfo } from '@/models/ModInfo';
-import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, History, Image, Info, RefreshCcw, Save, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
+import { Calendar, ChevronLeft, ChevronRight, Download, FileText, Filter, Folder, HistoryIcon, Image, InfoIcon, RefreshCcw, SaveIcon, Search, UserRound, X, ZoomInIcon } from '@lucide/vue';
 import { computed, onMounted, ref, watch } from 'vue';
+import InfoCard from '@/components/ModInfo/InfoCard.vue';
+import InfoTitle from '@/components/ModInfo/InfoTitle.vue';
+import ModCard from '@/components/ModInfo/ModCard.vue';
+import FadeInCardProvider from '@/components/FadeInCardProvider.vue';
 
 const shownList = ref<ModInfo[]>([])
 const penddingFile = ref<ModInfo>({} as ModInfo)
@@ -122,24 +126,18 @@ onMounted(() => {
             <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
           </div>
           <div class="p-6">
-            <h2 class="flex items-center gap-1 font-bold mb-1">
-              <FileText :size="16" />简介
-            </h2>
+            <InfoTitle :icon="FileText" title="简介" />
             <p class="text-gray-600 text-sm mt-2">{{ penddingFile.desc }}</p>
-            <h2 class="flex items-center mt-4 gap-1 font-bold mb-1">
-              <Info :size="16" />信息
-            </h2>
-            <p class="text-gray-600 text-sm mt-2">
-              版本：{{ penddingFile.version }} |
-              作者：{{ penddingFile.author }} |
-              兼容版本：{{ penddingFile.compat }} |
-              大小：{{ penddingFile.size }} |
-              更新日期：{{ penddingFile.date }}
-            </p>
+            <InfoTitle class="mt-4" :icon="InfoIcon" title="信息" />
+            <div class="text-gray-600 text-sm mt-2 grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
+              <InfoCard title="作者" :icon="UserRound">{{ penddingFile.author }}</InfoCard>
+              <InfoCard title="版本" :icon="HistoryIcon">{{ penddingFile.version }}</InfoCard>
+              <InfoCard title="兼容版本" :icon="HistoryIcon">{{ penddingFile.compat }}</InfoCard>
+              <InfoCard title="更新日期" :icon="Calendar">{{ penddingFile.date }}</InfoCard>
+              <InfoCard title="大小" :icon="SaveIcon">{{ penddingFile.size }}</InfoCard>
+            </div>
             <template v-if="penddingFile.images?.length">
-              <h2 class="flex items-center mt-4 gap-1 font-bold mb-1">
-                <Image :size="16" />截图
-              </h2>
+              <InfoTitle class="mt-4" :icon="Image" title="截图" />
               <div class="flex flex-wrap gap-1 mt-2">
                 <div class="group box-border rounded-2xl relative overflow-hidden" @click="openImagePreview(index)"
                   v-for="(img, index) in penddingFile.images" :key="index">
@@ -148,17 +146,17 @@ onMounted(() => {
                     <ZoomInIcon :size="16" color="white" />
                   </div>
                   <img class="w-48 h-24 object-cover transition-all duration-200 shrink-0 group-hover:scale-105"
-                    :src="img">
+                    :src="img" :alt="`${penddingFile.name}截图 ${index + 1}`" loading="lazy" decoding="async">
                 </div>
               </div>
             </template>
           </div>
           <div
-            class="flex w-full justify-end gap-2 p-4 sticky bottom-0 bg-linear-to-t from-white via-white/90 via-20% to-transparent">
-            <Button variant="outline" @click="closeModDetail">
+            class="pointer-events-none sticky bottom-0 z-10 flex w-full justify-end gap-2 bg-linear-to-t from-white via-white/90 via-20% to-transparent p-4">
+            <Button class="pointer-events-auto" variant="outline" @click.prevent="closeModDetail">
               <X /> 关闭
             </Button>
-            <Button @click="openUrl(penddingFile.link)">
+            <Button class="pointer-events-auto" @click.prevent="openUrl(penddingFile.link)">
               <Download />下载
             </Button>
           </div>
@@ -213,7 +211,7 @@ onMounted(() => {
               <span>{{ categoryRecord[categoryFilter] }}</span>
             </div>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent class="bg-white/80 backdrop-blur-xs">
             <SelectGroup>
               <SelectLabel>分类</SelectLabel>
               <SelectItem v-for="(value, key) in categoryRecord" :key="key" :value="key">
@@ -251,56 +249,9 @@ onMounted(() => {
     </div>
     <div v-else class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
       <!-- 模组信息卡片 -->
-      <div
-        class="border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
-        v-for="(item, index) in shownList" :key="index">
-        <img @click="openModDetail(item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
-          :src="item.images[0]" />
-        <div @click="openModDetail(item)" v-else
-          class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
-        <div class="p-4 flex flex-col flex-1 min-h-0">
-          <div class="flex-1 min-h-0">
-            <h2 class="mod-title-transition font-bold text-xl text-nowrap text-ellipsis overflow-hidden">
-              {{ item.name }}
-            </h2>
-            <div class="text-xs text-gray-600 mt-2 flex items-center gap-2">
-              <span class="flex items-center justify-center gap-1">
-                <UserRound :size="12" /><span>{{ item.author }}</span>
-              </span>
-              <span class="flex items-center justify-center gap-1">
-                <History :size="12" /><span>{{ item.version }}</span>
-              </span>
-            </div>
-            <div class="flex gap-2 mt-2">
-              <div class="inline-block text-[12px] rounded-full bg-gray-200 text-gray-600 px-2 py-0.5"
-                v-for="(tag, index) in item.tags" :key="index">
-                {{ tag }}
-              </div>
-            </div>
-            <p class="my-4 text-gray-600 text-sm">{{ item.desc }}</p>
-          </div>
-          <div class="shrink-0">
-            <div class="flex justify-evenly gap-2">
-              <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 flex-1">
-                <Save :size="16" class="mr-1" />{{ item.size }}
-              </div>
-              <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 flex-1">
-                <Calendar :size="16" class="mr-1" />{{ item.date }}
-              </div>
-            </div>
-            <div class="flex w-full justify-end mt-4 gap-2">
-              <Button variant="outline" @click="openModDetail(item)">
-                <Info />
-                详情
-              </Button>
-              <Button @click="openUrl(item.link)">
-                <Download />
-                下载
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <FadeInCardProvider v-for="(item, index) in shownList" :key="index">
+        <ModCard :item="item" @open-detail="openModDetail" @on-download-button-clicked="openUrl" />
+      </FadeInCardProvider>
     </div>
   </div>
 </template>
@@ -326,5 +277,15 @@ onMounted(() => {
 
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
+}
+
+.card-fade-enter-active,
+.card-fade-leave-ective {
+  transition: all .3s;
+}
+
+.card-fade-enter-from {
+  transform: translateY(8px);
+  opacity: 0;
 }
 </style>
