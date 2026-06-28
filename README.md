@@ -2,10 +2,7 @@
 
 [Chinese-localization-download-site](https://github.com/aaaa111ssf/Chinese-localization-download-site) 的 Vue3 重写版
 
-对比原站缺失如下功能：
-
-1. 图片预览器
-2. 教程板块
+图标由 Seedream + Image 2 生成，如有侵权请联系删除
 
 ## Recommended IDE Setup
 
