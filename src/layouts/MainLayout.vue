@@ -72,11 +72,11 @@ function closeDialog() {
 </script>
 <template>
   <div class="w-full min-h-screen">
-    <div class="fixed bottom-0 right-0 p-8 z-10 flex gap-5 flex-col justify-center items-center">
-      <Transition name="float-button-fade">
+    <div class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
+      <Transition name="float-button-fade" mode="out-in">
         <FloatButton @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
+        <FloatButton v-else :icon="CircleDollarSign" @on-button-click="isSponseDialogShow = !isSponseDialogShow" />
       </Transition>
-      <FloatButton :icon="CircleDollarSign" @on-button-click="isSponseDialogShow = !isSponseDialogShow" />
     </div>
     <Dialog v-model:open="isSponseDialogShow">
       <DialogContent>
@@ -143,7 +143,7 @@ function closeDialog() {
           <component :is="Component" :key="route.fullPath" />
         </Transition>
       </RouterView>
-      <div class="h-28" aria-hidden="true"></div>
+      <div class=" h-28" aria-hidden="true"></div>
     </div>
   </div>
 </template>
@@ -171,7 +171,9 @@ function closeDialog() {
 
 .mainlayout-page-fade-enter-active,
 .mainlayout-page-fade-leave-active {
-  transition: all .15s;
+  transition:
+    opacity .15s,
+    transform .15s;
 }
 
 .mainlayout-page-fade-enter-from {
@@ -186,7 +188,9 @@ function closeDialog() {
 
 .float-button-fade-enter-active,
 .float-button-fade-leave-active {
-  transition: all .2s;
+  transition:
+    transform .15s,
+    opacity .15s;
 }
 
 .float-button-fade-enter-from,

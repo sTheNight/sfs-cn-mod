@@ -29,11 +29,13 @@ const { stop } = useIntersectionObserver(
   min-width: 0;
   opacity: 0;
   transform: translateY(8px);
+  filter: blur(8px);
   transition: all .3s;
 }
 
 .fade-in-card--visible {
   opacity: 1;
+  filter: blur(0);
   transform: translateY(0);
 }
 
