@@ -124,10 +124,11 @@ function closeDialog() {
     <div class="w-full max-w-6xl min-h-screen ml-auto mr-auto px-4">
       <header class="w-full box-border flex items-center justify-center flex-col relative">
         <h2 class="animated-title my-24 text-2xl sm:text-3xl font-bold">汉化模组下载中心</h2>
-        <h2
+        <!-- 兼容性问题暂时移除 -->
+        <!-- <h2
           class="animated-title absolute top-1/2 left-1/2 -translate-1/2 text-2xl sm:text-3xl font-bold select-none -z-1 blur-2xl">
           汉化模组下载中心
-        </h2>
+        </h2> -->
       </header>
       <div class="flex gap-2 items-center justify-center mb-4">
         <Button v-for="(item, index) in routeButtons" :key="index"
