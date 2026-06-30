@@ -1,15 +1,23 @@
 <script setup lang="ts">
+import FloatButton from '@/components/FloatButton.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, type LucideIcon } from '@lucide/vue';
-import { ref } from 'vue';
+import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, type LucideIcon } from '@lucide/vue';
+import { useWindowScroll } from '@vueuse/core';
+import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const WARNING_DIALOG_STORAGE_KEY = 'hide-warning-dialog-v1'
 
 const route = useRoute()
 const router = useRouter()
+
+const { y } = useWindowScroll({
+  behavior: "smooth"
+})
+
+const showBackTop = computed(() => y.value >= 400)
 
 const isSponseDialogShow = ref(false)
 const isWarningDialogShow = ref(localStorage.getItem(WARNING_DIALOG_STORAGE_KEY) !== 'true')
@@ -51,6 +59,10 @@ function exitTheSite() {
   window.close()
 }
 
+function backToTop() {
+  y.value = 0
+}
+
 function closeDialog() {
   if (isNeverShowDialog.value) {
     localStorage.setItem(WARNING_DIALOG_STORAGE_KEY, 'true')
@@ -60,10 +72,11 @@ function closeDialog() {
 </script>
 <template>
   <div class="w-full min-h-screen">
-    <div
-      class="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 bg-blue-600 rounded-full scale-90 sm:scale-100 p-4 z-10 cursor-pointer shadow-[0_12px_32px_rgba(37,99,235,0.35)] transition-all duration-150 hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)] hover:-translate-y-0.5 active:scale-95"
-      @click="isSponseDialogShow = !isSponseDialogShow">
-      <CircleDollarSign color="#fff" />
+    <div class="fixed bottom-0 right-0 p-8 z-10 flex gap-5 flex-col justify-center items-center">
+      <Transition name="float-button-fade">
+        <FloatButton @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
+      </Transition>
+      <FloatButton :icon="CircleDollarSign" @on-button-click="isSponseDialogShow = !isSponseDialogShow" />
     </div>
     <Dialog v-model:open="isSponseDialogShow">
       <DialogContent>
@@ -169,5 +182,16 @@ function closeDialog() {
 .mainlayout-page-fade-leave-to {
   opacity: 0;
   transform: translateX(-5px);
+}
+
+.float-button-fade-enter-active,
+.float-button-fade-leave-active {
+  transition: all .2s;
+}
+
+.float-button-fade-enter-from,
+.float-button-fade-leave-to {
+  transform: scale(0.2);
+  opacity: 0;
 }
 </style>
