@@ -11,7 +11,6 @@ import { computed, onMounted, ref, watch } from 'vue';
 import InfoCard from '@/components/ModInfo/InfoCard.vue';
 import InfoTitle from '@/components/ModInfo/InfoTitle.vue';
 import ModCard from '@/components/ModInfo/ModCard.vue';
-import FadeInCardProvider from '@/components/FadeInCardProvider.vue';
 
 const shownList = ref<ModInfo[]>([])
 const penddingFile = ref<ModInfo>({} as ModInfo)
@@ -249,9 +248,8 @@ onMounted(() => {
     </div>
     <div v-else class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
       <!-- 模组信息卡片 -->
-      <FadeInCardProvider v-for="(item, index) in shownList" :key="index">
-        <ModCard :item="item" @open-detail="openModDetail" @on-download-button-clicked="openUrl" />
-      </FadeInCardProvider>
+      <ModCard v-for="(item, index) in shownList" :key="index" :item="item" @open-detail="openModDetail"
+        @on-download-button-clicked="openUrl" />
     </div>
   </div>
 </template>

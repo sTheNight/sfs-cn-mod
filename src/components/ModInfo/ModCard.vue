@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import type { ModInfo } from '@/models/ModInfo';
 import { Calendar, Download, History, Info, Save, UserRound } from '@lucide/vue';
+import { ref, useTemplateRef } from 'vue'
 
 export interface ModCardProps {
   item: ModInfo
@@ -13,10 +14,24 @@ export interface ModCardEmits {
 }
 defineEmits<ModCardEmits>()
 defineProps<ModCardProps>()
+
+import { useIntersectionObserver } from '@vueuse/core'
+
+
+const cardRef = useTemplateRef<HTMLElement>('card')
+const hasEnteredViewport = ref(false)
+
+useIntersectionObserver(
+  cardRef,
+  ([entry]) => {
+    hasEnteredViewport.value = entry?.isIntersecting ?? false
+  }
+)
 </script>
 <template>
-  <div
-    class="border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col">
+  <div ref="card"
+    class="fade-in-card border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
+    :class="{ 'fade-in-card--visible': hasEnteredViewport }">
     <img @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
       :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
     <div @click="$emit('openDetail', item)" v-else
@@ -65,3 +80,25 @@ defineProps<ModCardProps>()
     </div>
   </div>
 </template>
+<style>
+.fade-in-card {
+  display: grid;
+  min-width: 0;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all .3s;
+}
+
+.fade-in-card--visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+</style>
