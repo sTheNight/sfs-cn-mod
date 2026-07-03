@@ -29,7 +29,7 @@ function isActiveTutorSection(tutor: TutorType): boolean {
 </script>
 
 <template>
-  <div class="w-full max-w-2xl ml-auto mr-auto relative">
+  <div class="w-full max-w-2xl mx-auto relative">
     <ButtonGroup class="ml-auto mr-auto sticky top-4 z-5">
       <Button class="bg-white/80 backdrop-blur-xs backdrop-saturate-200" v-for="tab in tutorTabs" :key="tab.type"
         variant="outline" @click="currentTutor = tab.type"

@@ -246,7 +246,7 @@ onMounted(() => {
         未找到符合条件的模组
       </div>
     </div>
-    <div v-else class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] mt-4">
+    <div v-else class="mt-4 grid w-full grid-cols-1 gap-4 mx-auto sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <!-- 模组信息卡片 -->
       <ModCard v-for="(item, index) in shownList" :key="index" :item="item" @open-detail="openModDetail"
         @on-download-button-clicked="openUrl" />

@@ -121,7 +121,7 @@ function closeDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-    <div class="w-full max-w-6xl min-h-screen ml-auto mr-auto px-4">
+    <div class="w-full max-w-7xl min-h-screen ml-auto mr-auto px-4">
       <header class="w-full box-border flex items-center justify-center flex-col relative">
         <h2 class="animated-title my-24 text-2xl sm:text-3xl font-bold">汉化模组下载中心</h2>
         <!-- 兼容性问题暂时移除 -->
