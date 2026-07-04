@@ -170,7 +170,7 @@ onMounted(() => {
           <img v-if="currentPreviewImage" class="max-h-[calc(100vh-6rem)] w-full object-contain"
             :src="currentPreviewImage" :alt="`${pendingFile.name}截图 ${previewImageIndex + 1}`">
           <MyCustomButton variant="ghost" size="icon"
-            class="absolute right-2 top-2 text-white hover:bg-white/15 hover:text-white backdrop-blur-xl bg-black/10 border"
+            class="absolute right-2 top-2 text-white hover:bg-white/15 hover:text-white backdrop-blur-xl bg-black/10"
             aria-label="关闭预览" @click="isImagePreviewShow = false">
             <X />
           </MyCustomButton>
