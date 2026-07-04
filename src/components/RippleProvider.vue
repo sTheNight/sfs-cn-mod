@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, useAttrs } from 'vue';
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 interface RippleProviderProps {
   tag?: keyof HTMLElementTagNameMap
@@ -8,7 +12,20 @@ interface RippleProviderProps {
 
 withDefaults(defineProps<RippleProviderProps>(), {
   tag: 'span',
-  isdarkripple: false,
+  isDarkRipple: false,
+})
+
+const attrs = useAttrs()
+const rootAttrs = computed(() => {
+  const { class: _class, ...rest } = attrs
+  return rest
+})
+const positionClasses = new Set(['static', 'fixed', 'absolute', 'relative', 'sticky'])
+const hasPositionClass = computed(() => {
+  return normalizeClass(attrs.class).some((className) => {
+    const utilityName = className.split(':').pop()?.replace(/^!/, '')
+    return utilityName ? positionClasses.has(utilityName) : false
+  })
 })
 
 interface Ripple {
@@ -24,6 +41,18 @@ const ripple = ref<Ripple>({
   y: 0,
   size: 0,
 })
+
+function normalizeClass(value: unknown): string[] {
+  if (!value) return []
+  if (typeof value === 'string') return value.split(/\s+/).filter(Boolean)
+  if (Array.isArray(value)) return value.flatMap(normalizeClass)
+  if (typeof value === 'object') {
+    return Object.entries(value)
+      .filter(([, enabled]) => enabled)
+      .map(([className]) => className)
+  }
+  return []
+}
 
 function onPointerDownHandle(e: PointerEvent) {
   const target = e.currentTarget as HTMLElement
@@ -45,8 +74,8 @@ function hideRipple() {
 </script>
 
 <template>
-  <component :is="tag" class="relative overflow-hidden" @pointerdown="onPointerDownHandle" @pointerup="hideRipple"
-    @pointercancel="hideRipple" @pointerout="hideRipple">
+  <component :is="tag" v-bind="rootAttrs" :class="[attrs.class, !hasPositionClass && 'relative', 'overflow-hidden']"
+    @pointerdown="onPointerDownHandle" @pointerup="hideRipple" @pointercancel="hideRipple" @pointerout="hideRipple">
     <Transition name="ripple-fade">
       <span v-if="isRippleShow" :key="rippleKey"
         :class="['absolute z-100 rounded-full pointer-events-none', isDarkRipple ? 'bg-black/20' : 'bg-white/30']"
