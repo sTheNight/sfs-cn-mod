@@ -57,9 +57,17 @@ function normalizeClass(value: unknown): string[] {
 function onPointerDownHandle(e: PointerEvent) {
   const target = e.currentTarget as HTMLElement
   const rect = target.getBoundingClientRect()
-  const size = Math.max(rect.width, rect.height) * 2
-  const x = e.clientX - rect.left - size / 2
-  const y = e.clientY - rect.top - size / 2
+  const pointerX = e.clientX - rect.left
+  const pointerY = e.clientY - rect.top
+  const maxDistance = Math.max(
+    Math.hypot(pointerX, pointerY),
+    Math.hypot(rect.width - pointerX, pointerY),
+    Math.hypot(pointerX, rect.height - pointerY),
+    Math.hypot(rect.width - pointerX, rect.height - pointerY),
+  )
+  const size = Math.ceil(maxDistance * 2) + 2
+  const x = pointerX - size / 2
+  const y = pointerY - size / 2
 
   ripple.value.x = x
   ripple.value.y = y
