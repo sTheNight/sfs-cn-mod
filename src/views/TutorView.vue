@@ -9,7 +9,7 @@ import {
   MessageCircleQuestionIcon,
 } from '@lucide/vue';
 import { ref, type Component, type Ref } from 'vue';
-import AnrdoidTutor from './Tutorial/AnrdoidTutor.vue';
+import AndroidTutor from './Tutorial/AndroidTutor.vue';
 import IOSTutor from './Tutorial/iOSTutor.vue';
 import PCTutor from './Tutorial/PCTutor.vue';
 import QA from './Tutorial/QA.vue';
@@ -40,7 +40,7 @@ function isActiveTutorSection(tutor: TutorType): boolean {
     </ButtonGroup>
     <div class="mt-4">
       <Transition mode="out-in" name="tutor-section-fade">
-        <AnrdoidTutor v-if="currentTutor == 'android'" />
+        <AndroidTutor v-if="currentTutor == 'android'" />
         <IOSTutor v-else-if="currentTutor == 'ios'" />
         <PCTutor v-else-if="currentTutor == 'pc'" />
         <QA v-else />

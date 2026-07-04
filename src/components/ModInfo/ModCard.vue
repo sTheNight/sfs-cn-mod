@@ -38,7 +38,7 @@ useIntersectionObserver(
       class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
     <div class="p-4 flex flex-col flex-1 min-h-0">
       <div class="flex-1 min-h-0">
-        <h2 class="mod-title-transition font-bold text-xl text-nowrap text-ellipsis overflow-hidden">
+        <h2 class="mod-title-transition min-w-0 truncate font-bold text-xl">
           {{ item.name }}
         </h2>
         <div class="text-xs text-gray-600 mt-2 flex items-center gap-2">
@@ -82,7 +82,6 @@ useIntersectionObserver(
 </template>
 <style>
 .fade-in-card {
-  display: grid;
   min-width: 0;
   opacity: 0;
   transform: scale(0.8);

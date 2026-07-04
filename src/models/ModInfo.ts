@@ -1,3 +1,5 @@
+import type { ModCategory } from "./Category";
+
 export interface ModInfo {
   name: string;
   type: string;
@@ -6,7 +8,7 @@ export interface ModInfo {
   desc: string;
   link: string;
   tags: string[];
-  category: string;
+  category: ModCategory;
   images?: string[];
   version: string;
   author: string;

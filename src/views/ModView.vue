@@ -13,7 +13,7 @@ import InfoTitle from '@/components/ModInfo/InfoTitle.vue';
 import ModCard from '@/components/ModInfo/ModCard.vue';
 
 const shownList = ref<ModInfo[]>([])
-const penddingFile = ref<ModInfo>({} as ModInfo)
+const pendingFile = ref<ModInfo>({} as ModInfo)
 const isModDetailDialogShow = ref(false)
 const isImagePreviewShow = ref(false)
 const isLoading = ref(true)
@@ -22,8 +22,8 @@ const previewImageIndex = ref(0)
 const categoryFilter = ref<ModCategory>("all")
 const searchText = ref("")
 
-const currentPreviewImage = computed(() => penddingFile.value.images?.[previewImageIndex.value])
-const hasMultiplePreviewImages = computed(() => (penddingFile.value.images?.length ?? 0) > 1)
+const currentPreviewImage = computed(() => pendingFile.value.images?.[previewImageIndex.value])
+const hasMultiplePreviewImages = computed(() => (pendingFile.value.images?.length ?? 0) > 1)
 
 function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
   if (category == "all") return source
@@ -43,7 +43,7 @@ function getModListByKeyword(keyword: string, source: ModInfo[] = files): ModInf
 
 // 常规事件
 async function openModDetail(mod: ModInfo) {
-  penddingFile.value = mod;
+  pendingFile.value = mod;
   isModDetailDialogShow.value = true;
 }
 
@@ -53,14 +53,14 @@ function closeModDetail() {
 }
 
 function openImagePreview(index: number) {
-  if (!penddingFile.value.images?.length) return
+  if (!pendingFile.value.images?.length) return
 
   previewImageIndex.value = index
   isImagePreviewShow.value = true
 }
 
 function switchPreviewImage(offset: number) {
-  const images = penddingFile.value.images
+  const images = pendingFile.value.images
   if (!images?.length) return
 
   previewImageIndex.value = (previewImageIndex.value + offset + images.length) % images.length
@@ -111,41 +111,41 @@ onMounted(() => {
             <div
               class="w-full z-2 h-full absolute bg-linear-to-t from-black/60 to-transparent flex justify-end flex-col p-4 backdrop-blur-xs">
               <h2 class="mod-title-transition text-white font-bold text-xl">
-                {{ penddingFile.name }}
+                {{ pendingFile.name }}
               </h2>
               <div class="flex gap-1 mt-1">
-                <span v-for="(tag, index) in penddingFile.tags" :key="index"
+                <span v-for="(tag, index) in pendingFile.tags" :key="index"
                   class="inline-block text-white/90 text-xs rounded-full bg-gray-200/20 px-2 py-0.5">{{
                     tag
                   }}</span>
               </div>
             </div>
-            <img class="w-full h-50 object-cover shrink-0" v-if="penddingFile.images?.length"
-              :src="penddingFile.images[0]" />
+            <img class="w-full h-50 object-cover shrink-0" v-if="pendingFile.images?.length"
+              :src="pendingFile.images[0]" />
             <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
           </div>
           <div class="p-6">
             <InfoTitle :icon="FileText" title="简介" />
-            <p class="text-gray-600 text-sm mt-2">{{ penddingFile.desc }}</p>
+            <p class="text-gray-600 text-sm mt-2">{{ pendingFile.desc }}</p>
             <InfoTitle class="mt-4" :icon="InfoIcon" title="信息" />
             <div class="text-gray-600 text-sm mt-2 grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
-              <InfoCard title="作者" :icon="UserRound">{{ penddingFile.author }}</InfoCard>
-              <InfoCard title="版本" :icon="HistoryIcon">{{ penddingFile.version }}</InfoCard>
-              <InfoCard title="兼容版本" :icon="HistoryIcon">{{ penddingFile.compat }}</InfoCard>
-              <InfoCard title="更新日期" :icon="Calendar">{{ penddingFile.date }}</InfoCard>
-              <InfoCard title="大小" :icon="SaveIcon">{{ penddingFile.size }}</InfoCard>
+              <InfoCard title="作者" :icon="UserRound">{{ pendingFile.author }}</InfoCard>
+              <InfoCard title="版本" :icon="HistoryIcon">{{ pendingFile.version }}</InfoCard>
+              <InfoCard title="兼容版本" :icon="HistoryIcon">{{ pendingFile.compat }}</InfoCard>
+              <InfoCard title="更新日期" :icon="Calendar">{{ pendingFile.date }}</InfoCard>
+              <InfoCard title="大小" :icon="SaveIcon">{{ pendingFile.size }}</InfoCard>
             </div>
-            <template v-if="penddingFile.images?.length">
+            <template v-if="pendingFile.images?.length">
               <InfoTitle class="mt-4" :icon="Image" title="截图" />
               <div class="flex flex-wrap gap-1 mt-2">
                 <div class="group box-border rounded-2xl relative overflow-hidden" @click="openImagePreview(index)"
-                  v-for="(img, index) in penddingFile.images" :key="index">
+                  v-for="(img, index) in pendingFile.images" :key="index">
                   <div
                     class="absolute transition-all rounded-2xl duration-200 z-1 opacity-0 group-hover:opacity-100 w-full h-full bg-black/30 flex justify-center items-center">
                     <ZoomInIcon :size="16" color="white" />
                   </div>
                   <img class="w-48 h-24 object-cover transition-all duration-200 shrink-0 group-hover:scale-105"
-                    :src="img" :alt="`${penddingFile.name}截图 ${index + 1}`" loading="lazy" decoding="async">
+                    :src="img" :alt="`${pendingFile.name}截图 ${index + 1}`" loading="lazy" decoding="async">
                 </div>
               </div>
             </template>
@@ -155,7 +155,7 @@ onMounted(() => {
             <Button class="pointer-events-auto" variant="outline" @click.prevent="closeModDetail">
               <X /> 关闭
             </Button>
-            <Button class="pointer-events-auto" @click.prevent="openUrl(penddingFile.link)">
+            <Button class="pointer-events-auto" @click.prevent="openUrl(pendingFile.link)">
               <Download />下载
             </Button>
           </div>
@@ -168,10 +168,10 @@ onMounted(() => {
         :show-close-button="false">
         <div class="relative grid max-h-[calc(100vh-2rem)] overflow-hidden rounded-lg bg-black">
           <img v-if="currentPreviewImage" class="max-h-[calc(100vh-6rem)] w-full object-contain"
-            :src="currentPreviewImage" :alt="`${penddingFile.name}截图 ${previewImageIndex + 1}`">
+            :src="currentPreviewImage" :alt="`${pendingFile.name}截图 ${previewImageIndex + 1}`">
           <Button variant="ghost" size="icon"
-            class="absolute right-2 top-2 text-white hover:bg-white/15 hover:text-white" aria-label="关闭预览"
-            @click="isImagePreviewShow = false">
+            class="absolute right-2 top-2 text-white hover:bg-white/15 hover:text-white backdrop-blur-xl bg-black/10 border"
+            aria-label="关闭预览" @click="isImagePreviewShow = false">
             <X />
           </Button>
           <template v-if="hasMultiplePreviewImages">
@@ -186,9 +186,9 @@ onMounted(() => {
               <ChevronRight />
             </Button>
           </template>
-          <div v-if="penddingFile.images?.length"
+          <div v-if="pendingFile.images?.length"
             class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
-            {{ previewImageIndex + 1 }} / {{ penddingFile.images.length }}
+            {{ previewImageIndex + 1 }} / {{ pendingFile.images.length }}
           </div>
         </div>
       </DialogContent>
@@ -247,7 +247,7 @@ onMounted(() => {
       </div>
     </div>
     <div v-else
-      class="mt-4 grid w-full grid-cols-1 gap-4 mx-auto tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
+      class="mt-4 grid w-full grid-cols-[minmax(0,1fr)] gap-4 mx-auto tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
       <!-- 模组信息卡片 -->
       <ModCard v-for="(item, index) in shownList" :key="index" :item="item" @open-detail="openModDetail"
         @on-download-button-clicked="openUrl" />

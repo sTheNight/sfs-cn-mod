@@ -19,7 +19,7 @@ const { y } = useWindowScroll({
 
 const showBackTop = computed(() => y.value >= 400)
 
-const isSponseDialogShow = ref(false)
+const isSponsorDialogShow = ref(false)
 const isWarningDialogShow = ref(localStorage.getItem(WARNING_DIALOG_STORAGE_KEY) !== 'true')
 const isNeverShowDialog = ref(false)
 
@@ -75,10 +75,10 @@ function closeDialog() {
     <div class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
       <Transition name="float-button-fade" mode="out-in">
         <FloatButton @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
-        <FloatButton v-else :icon="CircleDollarSign" @on-button-click="isSponseDialogShow = !isSponseDialogShow" />
+        <FloatButton v-else :icon="CircleDollarSign" @on-button-click="isSponsorDialogShow = !isSponsorDialogShow" />
       </Transition>
     </div>
-    <Dialog v-model:open="isSponseDialogShow">
+    <Dialog v-model:open="isSponsorDialogShow">
       <DialogContent>
         <div class="w-full h-full">
           <h2 class="text-5xl text-center py-4">❤️</h2>
@@ -132,7 +132,7 @@ function closeDialog() {
       </header>
       <div class="flex gap-2 items-center justify-center mb-4">
         <Button v-for="(item, index) in routeButtons" :key="index"
-          class="rounded-full select-none hover:scale-105 active:scale-95" variant="ghost"
+          class="rounded-full select-none hover:scale-105 active:scale-95 cursor-pointer" variant="ghost"
           :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50': isActiveRoute(item.key) }"
           @click="router.push(item.route)">
           <component :is="item.icon" :size="14" />
