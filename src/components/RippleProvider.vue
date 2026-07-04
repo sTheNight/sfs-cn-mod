@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 interface RippleProviderProps {
   tag?: keyof HTMLElementTagNameMap
-  isdarkripple?: boolean
+  isDarkRipple?: boolean
 }
 
 withDefaults(defineProps<RippleProviderProps>(), {
@@ -49,7 +49,7 @@ function hideRipple() {
     @pointercancel="hideRipple" @pointerout="hideRipple">
     <Transition name="ripple-fade">
       <span v-if="isRippleShow" :key="rippleKey"
-        :class="['absolute z-100 rounded-full pointer-events-none', isdarkripple ? 'bg-black/20' : 'bg-white/30']"
+        :class="['absolute z-100 rounded-full pointer-events-none', isDarkRipple ? 'bg-black/20' : 'bg-white/30']"
         :style="{
           left: `${ripple.x}px`,
           top: `${ripple.y}px`,

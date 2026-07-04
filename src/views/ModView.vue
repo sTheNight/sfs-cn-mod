@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
@@ -11,6 +10,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import InfoCard from '@/components/ModInfo/InfoCard.vue';
 import InfoTitle from '@/components/ModInfo/InfoTitle.vue';
 import ModCard from '@/components/ModInfo/ModCard.vue';
+import { MyCustomButton } from '@/components/MyCustomButton';
 
 const shownList = ref<ModInfo[]>([])
 const pendingFile = ref<ModInfo>({} as ModInfo)
@@ -152,12 +152,12 @@ onMounted(() => {
           </div>
           <div
             class="pointer-events-none sticky bottom-0 z-10 flex w-full justify-end gap-2 bg-linear-to-t from-white/90 via-white/80 via-20% to-transparent p-4">
-            <Button class="pointer-events-auto" variant="outline" @click.prevent="closeModDetail">
+            <MyCustomButton class="pointer-events-auto" variant="outline" @click.prevent="closeModDetail">
               <X /> 关闭
-            </Button>
-            <Button class="pointer-events-auto" @click.prevent="openUrl(pendingFile.link)">
+            </MyCustomButton>
+            <MyCustomButton class="pointer-events-auto" @click.prevent="openUrl(pendingFile.link)">
               <Download />下载
-            </Button>
+            </MyCustomButton>
           </div>
         </div>
       </DialogContent>
@@ -169,22 +169,22 @@ onMounted(() => {
         <div class="relative grid max-h-[calc(100vh-2rem)] overflow-hidden rounded-lg bg-black">
           <img v-if="currentPreviewImage" class="max-h-[calc(100vh-6rem)] w-full object-contain"
             :src="currentPreviewImage" :alt="`${pendingFile.name}截图 ${previewImageIndex + 1}`">
-          <Button variant="ghost" size="icon"
+          <MyCustomButton variant="ghost" size="icon"
             class="absolute right-2 top-2 text-white hover:bg-white/15 hover:text-white backdrop-blur-xl bg-black/10 border"
             aria-label="关闭预览" @click="isImagePreviewShow = false">
             <X />
-          </Button>
+          </MyCustomButton>
           <template v-if="hasMultiplePreviewImages">
-            <Button variant="ghost" size="icon"
+            <MyCustomButton variant="ghost" size="icon"
               class="absolute left-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/15 hover:text-white"
               aria-label="上一张截图" @click="switchPreviewImage(-1)">
               <ChevronLeft />
-            </Button>
-            <Button variant="ghost" size="icon"
+            </MyCustomButton>
+            <MyCustomButton variant="ghost" size="icon"
               class="absolute right-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/15 hover:text-white"
               aria-label="下一张截图" @click="switchPreviewImage(1)">
               <ChevronRight />
-            </Button>
+            </MyCustomButton>
           </template>
           <div v-if="pendingFile.images?.length"
             class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
@@ -223,9 +223,9 @@ onMounted(() => {
       <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
         <Input v-model="searchText" class="min-w-0 text-sm" placeholder="请输入关键字"
           @keydown="handleKeywordFilterKeyDown" />
-        <Button class="px-3" @click="applyFilter">
+        <MyCustomButton class="px-3" @click="applyFilter">
           <Search />
-        </Button>
+        </MyCustomButton>
       </div>
     </div>
     <div v-if="isLoading || loadError || shownList.length === 0"
@@ -236,10 +236,10 @@ onMounted(() => {
       <div v-else-if="loadError" class="text-red-600 flex flex-col justify-center items-center gap-2">
         <div>加载失败：{{ loadError }}</div>
         <div>
-          <Button size="sm" @click="loadModInfo(true)">
+          <MyCustomButton size="sm" @click="loadModInfo(true)">
             <RefreshCcw />
             重试
-          </Button>
+          </MyCustomButton>
         </div>
       </div>
       <div v-else-if="shownList.length === 0">

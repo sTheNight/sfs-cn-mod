@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FloatButton from '@/components/FloatButton.vue';
+import { MyCustomButton } from '@/components/MyCustomButton';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
@@ -131,13 +132,13 @@ function closeDialog() {
         </h2> -->
       </header>
       <div class="flex gap-2 items-center justify-center mb-4">
-        <Button v-for="(item, index) in routeButtons" :key="index"
+        <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
           class="rounded-full select-none hover:scale-105 active:scale-95 cursor-pointer" variant="ghost"
           :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50': isActiveRoute(item.key) }"
           @click="router.push(item.route)">
           <component :is="item.icon" :size="14" />
           {{ item.title }}
-        </Button>
+        </MyCustomButton>
       </div>
       <RouterView v-slot="{ Component }">
         <Transition name="mainlayout-page-fade" mode="out-in">

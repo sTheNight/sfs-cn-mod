@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
 import type { ModInfo } from '@/models/ModInfo';
 import { Calendar, Download, History, Info, Save, UserRound } from '@lucide/vue';
 import { ref, useTemplateRef } from 'vue'
@@ -16,6 +15,7 @@ defineEmits<ModCardEmits>()
 defineProps<ModCardProps>()
 
 import { useIntersectionObserver } from '@vueuse/core'
+import { MyCustomButton } from '../MyCustomButton';
 
 
 const cardRef = useTemplateRef<HTMLElement>('card')
@@ -67,14 +67,14 @@ useIntersectionObserver(
           </div>
         </div>
         <div class="flex w-full justify-end mt-4 gap-2">
-          <Button variant="outline" @click="$emit('openDetail', item)">
+          <MyCustomButton variant="outline" @click="$emit('openDetail', item)">
             <Info />
             详情
-          </Button>
-          <Button @click="$emit('onDownloadButtonClicked', item.link)">
+          </MyCustomButton>
+          <MyCustomButton @click="$emit('onDownloadButtonClicked', item.link)">
             <Download />
             下载
-          </Button>
+          </MyCustomButton>
         </div>
       </div>
     </div>
