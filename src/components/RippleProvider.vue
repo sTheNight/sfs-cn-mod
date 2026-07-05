@@ -20,6 +20,7 @@ const rootAttrs = computed(() => {
   const { class: _class, ...rest } = attrs
   return rest
 })
+// 判断是否存在 position
 const positionClasses = new Set(['static', 'fixed', 'absolute', 'relative', 'sticky'])
 const hasPositionClass = computed(() => {
   return normalizeClass(attrs.class).some((className) => {
@@ -27,6 +28,18 @@ const hasPositionClass = computed(() => {
     return utilityName ? positionClasses.has(utilityName) : false
   })
 })
+// 由于 vue 可以将 class 以对象的形式传递，因此需要将组件 class 统一转成字符串数组便于后续处理
+function normalizeClass(value: unknown): string[] {
+  if (!value) return []
+  if (typeof value === 'string') return value.split(/\s+/).filter(Boolean)
+  if (Array.isArray(value)) return value.flatMap(normalizeClass)
+  if (typeof value === 'object') {
+    return Object.entries(value)
+      .filter(([, enabled]) => enabled)
+      .map(([className]) => className)
+  }
+  return []
+}
 
 interface Ripple {
   x: number
@@ -42,20 +55,19 @@ const ripple = ref<Ripple>({
   size: 0,
 })
 
-function normalizeClass(value: unknown): string[] {
-  if (!value) return []
-  if (typeof value === 'string') return value.split(/\s+/).filter(Boolean)
-  if (Array.isArray(value)) return value.flatMap(normalizeClass)
-  if (typeof value === 'object') {
-    return Object.entries(value)
-      .filter(([, enabled]) => enabled)
-      .map(([className]) => className)
-  }
-  return []
-}
-
 function onPointerDownHandle(e: PointerEvent) {
+  // 获取最先触发事件的对象
   const target = e.currentTarget as HTMLElement
+  // 获取当前正在触发事件的对象
+  const eventTarget = e.target
+  // 获取离 eventTarget 最近的 ripple-provider
+  const nearestRippleProvider = eventTarget instanceof Element
+    ? eventTarget.closest('[data-ripple-provider]')
+    : null
+  // 判断最近的 ripple-provider 是否是最先触发事件的对象
+  // 防止 ripper 多重触发
+  if (nearestRippleProvider && nearestRippleProvider !== target) return
+
   const rect = target.getBoundingClientRect()
   const pointerX = e.clientX - rect.left
   const pointerY = e.clientY - rect.top
@@ -83,7 +95,8 @@ function hideRipple() {
 
 <template>
   <component :is="tag" v-bind="rootAttrs" :class="[attrs.class, !hasPositionClass && 'relative', 'overflow-hidden']"
-    @pointerdown="onPointerDownHandle" @pointerup="hideRipple" @pointercancel="hideRipple" @pointerout="hideRipple">
+    data-ripple-provider @pointerdown="onPointerDownHandle" @pointerup="hideRipple" @pointercancel="hideRipple"
+    @pointerout="hideRipple">
     <Transition name="ripple-fade">
       <span v-if="isRippleShow" :key="rippleKey"
         :class="['absolute z-100 rounded-full pointer-events-none', isDarkRipple ? 'bg-black/20' : 'bg-white/30']"
@@ -100,7 +113,7 @@ function hideRipple() {
 
 <style lang="css" scoped>
 .ripple-fade-enter-active {
-  transition: transform .5s;
+  transition: transform .3s;
 }
 
 .ripple-fade-enter-from {
@@ -112,7 +125,7 @@ function hideRipple() {
 }
 
 .ripple-fade-leave-active {
-  transition: opacity .5s, transform .5s;
+  transition: opacity .3s, transform .3s;
 }
 
 .ripple-fade-leave-from {

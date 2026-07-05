@@ -16,6 +16,7 @@ defineProps<ModCardProps>()
 
 import { useIntersectionObserver } from '@vueuse/core'
 import { MyCustomButton } from '../MyCustomButton';
+import RippleProvider from '../RippleProvider.vue';
 
 
 const cardRef = useTemplateRef<HTMLElement>('card')
@@ -29,8 +30,8 @@ useIntersectionObserver(
 )
 </script>
 <template>
-  <div ref="card"
-    class="fade-in-card border rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
+  <RippleProvider :is-dark-ripple='true' tag="div" ref="card"
+    class="fade-in-card border select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
     :class="{ 'fade-in-card--visible': hasEnteredViewport }">
     <img @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
       :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
@@ -78,7 +79,7 @@ useIntersectionObserver(
         </div>
       </div>
     </div>
-  </div>
+  </RippleProvider>
 </template>
 <style>
 .fade-in-card {
