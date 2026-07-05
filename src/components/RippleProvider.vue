@@ -65,7 +65,7 @@ function onPointerDownHandle(e: PointerEvent) {
     ? eventTarget.closest('[data-ripple-provider]')
     : null
   // 判断最近的 ripple-provider 是否是最先触发事件的对象
-  // 防止 ripper 多重触发
+  // 防止 ripple 多重触发
   if (nearestRippleProvider && nearestRippleProvider !== target) return
 
   const rect = target.getBoundingClientRect()
@@ -89,6 +89,7 @@ function onPointerDownHandle(e: PointerEvent) {
 }
 
 function hideRipple() {
+  ripple.value.size = 0
   isRippleShow.value = false
 }
 </script>
