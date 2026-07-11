@@ -8,12 +8,12 @@ const props = defineProps<TutorSetupProps>()
 <template>
   <div class="border rounded-2xl p-4 shadow-xs w-full box-border">
     <div class="flex items-center gap-3 mb-4">
-      <div class="flex size-9 shrink-0 items-center justify-center rounded-lg border bg-gray-100">
+      <div class="flex size-9 shrink-0 items-center justify-center rounded-lg border bg-muted">
         {{ props.tag }}
       </div>
       <h2 class="font-bold">{{ props.title }}</h2>
     </div>
-    <div class="text-sm text-gray-600">
+    <div class="text-sm text-muted-foreground">
       <slot />
     </div>
   </div>

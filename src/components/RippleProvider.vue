@@ -100,7 +100,7 @@ function hideRipple() {
     @pointerout="hideRipple">
     <Transition name="ripple-fade">
       <span v-if="isRippleShow" :key="rippleKey"
-        :class="['absolute z-100 rounded-full pointer-events-none', isDarkRipple ? 'bg-black/20' : 'bg-white/30']"
+        :class="['absolute z-100 rounded-full pointer-events-none', isDarkRipple ? 'bg-black/20 dark:bg-white/30' : 'bg-white/30 dark:bg-black/20']"
         :style="{
           left: `${ripple.x}px`,
           top: `${ripple.y}px`,

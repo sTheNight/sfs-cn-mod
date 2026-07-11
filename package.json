@@ -20,6 +20,8 @@
     "axios": "^1.18.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "pinia": "^3.0.4",
+    "pinia-plugin-persistedstate": "^4.7.1",
     "reka-ui": "^2.9.10",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.1",

@@ -31,18 +31,18 @@ useIntersectionObserver(
 </script>
 <template>
   <RippleProvider :is-dark-ripple='true' tag="div" ref="card"
-    class="fade-in-card border select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
+    class="fade-in-card border bg-card text-card-foreground select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
     :class="{ 'fade-in-card--visible': hasEnteredViewport }">
     <img @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
       :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
     <div @click="$emit('openDetail', item)" v-else
-      class="h-50 flex bg-amber-100 justify-center items-center text-6xl select-none">📦</div>
+      class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl select-none">📦</div>
     <div class="p-4 flex flex-col flex-1 min-h-0">
       <div class="flex-1 min-h-0">
         <h2 class="mod-title-transition min-w-0 truncate font-bold text-xl">
           {{ item.name }}
         </h2>
-        <div class="text-xs text-gray-600 mt-2 flex items-center gap-2">
+        <div class="text-xs text-muted-foreground mt-2 flex items-center gap-2">
           <span class="flex items-center justify-center gap-1">
             <UserRound :size="12" /><span>{{ item.author }}</span>
           </span>
@@ -51,19 +51,19 @@ useIntersectionObserver(
           </span>
         </div>
         <div class="flex gap-2 mt-2">
-          <div class="inline-block text-[12px] rounded-full bg-gray-200 text-gray-600 px-2 py-0.5"
+          <div class="inline-block text-[12px] rounded-full bg-muted text-muted-foreground px-2 py-0.5"
             v-for="(tag, index) in item.tags" :key="index">
             {{ tag }}
           </div>
         </div>
-        <p class="my-4 text-gray-600 text-sm">{{ item.desc }}</p>
+        <p class="my-4 text-muted-foreground text-sm">{{ item.desc }}</p>
       </div>
       <div class="shrink-0">
         <div class="flex justify-evenly gap-2">
-          <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 flex-1">
+          <div class="text-xs flex items-center border rounded-lg p-2 bg-muted flex-1">
             <Save :size="16" class="mr-1" />{{ item.size }}
           </div>
-          <div class="text-xs flex items-center border rounded-lg p-2 bg-gray-100 flex-1">
+          <div class="text-xs flex items-center border rounded-lg p-2 bg-muted flex-1">
             <Calendar :size="16" class="mr-1" />{{ item.date }}
           </div>
         </div>
