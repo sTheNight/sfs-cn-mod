@@ -2,7 +2,6 @@
 import FloatButton from '@/components/FloatButton.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import SettingsDrawer from '@/components/SettingsDrawer.vue';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, Menu, PackageIcon, type LucideIcon } from '@lucide/vue';
@@ -118,10 +117,10 @@ function closeDialog() {
         </p>
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
-            <Button @click="closeDialog">
+            <MyCustomButton @click="closeDialog">
               <LogIn /> 进入
-            </Button>
-            <Button @click="exitTheSite" variant="outline">退出</Button>
+            </MyCustomButton>
+            <MyCustomButton @click="exitTheSite" variant="outline">退出</MyCustomButton>
           </div>
         </DialogFooter>
       </DialogContent>
