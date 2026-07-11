@@ -270,14 +270,6 @@ onMounted(() => {
   transform: translateY(-10px);
 }
 
-.scrollbar-hidden {
-  scrollbar-width: none;
-}
-
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
-}
-
 .card-fade-enter-active,
 .card-fade-leave-ective {
   transition: all .3s;

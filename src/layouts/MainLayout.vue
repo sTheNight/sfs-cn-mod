@@ -4,7 +4,8 @@ import { MyCustomButton } from '@/components/MyCustomButton';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, type LucideIcon } from '@lucide/vue';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
+import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, Menu, PackageIcon, X, type LucideIcon } from '@lucide/vue';
 import { useWindowScroll } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -23,6 +24,7 @@ const showBackTop = computed(() => y.value >= 400)
 const isSponsorDialogShow = ref(false)
 const isWarningDialogShow = ref(localStorage.getItem(WARNING_DIALOG_STORAGE_KEY) !== 'true')
 const isNeverShowDialog = ref(false)
+const isSettingDrawerShow = ref(false);
 
 interface RouteButton {
   icon: LucideIcon,
@@ -74,6 +76,7 @@ function closeDialog() {
 <template>
   <div class="w-full min-h-screen">
     <div class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
+      <FloatButton :icon="Menu" @on-button-click="isSettingDrawerShow = true"></FloatButton>
       <Transition name="float-button-fade" mode="out-in">
         <FloatButton @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
         <FloatButton v-else :icon="CircleDollarSign" @on-button-click="isSponsorDialogShow = !isSponsorDialogShow" />
@@ -93,6 +96,24 @@ function closeDialog() {
         </div>
       </DialogContent>
     </Dialog>
+    <Drawer direction="right" v-model:open="isSettingDrawerShow">
+      <DrawerContent>
+        <div class="scrollbar-hidden w-full box-border relative h-dvh overflow-y-scroll">
+          <div
+            class="w-full px-6 sticky top-0 left-0 box-border border-b h-16 flex items-center justify-between z-2 backdrop-blur-xs">
+            <div class="text-black text-xl font-bold">设置</div>
+            <div>
+              <MyCustomButton class="w-8 h-8" variant="outline" @click="isSettingDrawerShow = false">
+                <X />
+              </MyCustomButton>
+            </div>
+          </div>
+          <div class="p-4">
+            <div v-for="item in 100" :key="item">{{ item }}</div>
+          </div>
+        </div>
+      </DrawerContent>
+    </Drawer>
     <Dialog v-model:open="isWarningDialogShow">
       <DialogContent @interact-outside.prevent @escape-key-down.prevent>
         <DialogHeader>

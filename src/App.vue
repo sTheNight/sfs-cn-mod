@@ -2,4 +2,12 @@
 <template>
   <RouterView />
 </template>
-<style scoped></style>
+<style>
+.scrollbar-hidden {
+  scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+</style>
