@@ -1,6 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import RippleProvider from '../RippleProvider.vue';
+
+</script>
 <template>
-  <div class="border rounded-2xl box-border py-2 px-3">
+  <ripple-provider tag="div" :is-dark-ripple="true"
+    class="border rounded-2xl box-border py-3 px-4 transition-all duration-200 dark:hover:bg-input/50 hover:bg-accent text-sm">
     <slot></slot>
-  </div>
+  </ripple-provider>
 </template>

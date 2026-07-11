@@ -4,7 +4,7 @@ import { MyCustomButton } from '@/components/MyCustomButton';
 import SettingsDrawer from '@/components/SettingsDrawer.vue';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, Menu, PackageIcon, type LucideIcon } from '@lucide/vue';
+import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
 import { useWindowScroll } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -75,7 +75,7 @@ function closeDialog() {
 <template>
   <div class="w-full min-h-screen">
     <div class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
-      <FloatButton :icon="Menu" @on-button-click="isSettingDrawerShow = true"></FloatButton>
+      <FloatButton :icon="Settings" @on-button-click="isSettingDrawerShow = true"></FloatButton>
       <Transition name="float-button-fade" mode="out-in">
         <FloatButton @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
         <FloatButton v-else :icon="CircleDollarSign" @on-button-click="isSponsorDialogShow = !isSponsorDialogShow" />

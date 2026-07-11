@@ -1,23 +1,32 @@
 <script setup lang="ts">
 import { MyCustomButton } from '@/components/MyCustomButton'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
-import { useSettingsStore, type ThemePreference } from '@/stores/settings'
-import { Monitor, Moon, Sun, X, type LucideIcon } from '@lucide/vue'
-import BasicSettingCard from './setting/BasicSettingCard.vue'
-import SelectSettingCard from './setting/SelectSettingCard.vue'
+import { type ThemePreference, useSettingsStore } from '@/stores/settings'
+import { Monitor, Moon, Sun, X } from '@lucide/vue'
+import SelectSettingCard, { type SelectValue } from './setting/SelectSettingCard.vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
 
-const themeOptions: { value: ThemePreference, label: string, icon: LucideIcon }[] = [
-  { value: 'system', label: '跟随系统', icon: Monitor },
-  { value: 'light', label: '浅色模式', icon: Sun },
-  { value: 'dark', label: '深色模式', icon: Moon },
+const themeOptions: SelectValue[] = [
+  { key: 'system', label: '跟随系统', icon: Monitor },
+  { key: 'light', label: '浅色模式', icon: Sun },
+  { key: 'dark', label: '深色模式', icon: Moon },
 ]
+
+function isThemePreference(value: string): value is ThemePreference {
+  return value === 'system' || value === 'light' || value === 'dark'
+}
+
+function handleThemeSelect(key: string) {
+  if (isThemePreference(key)) {
+    settingsStore.setTheme(key)
+  }
+}
 </script>
 
 <template>
-  <Drawer v-model:open="open" direction="right">
+  <Drawer v-model:open="open" direction="right" :handle-only="true">
     <DrawerContent>
       <div class="scrollbar-hidden relative h-dvh w-full overflow-y-scroll box-border">
         <div
@@ -27,13 +36,10 @@ const themeOptions: { value: ThemePreference, label: string, icon: LucideIcon }[
             <X />
           </MyCustomButton>
         </div>
-        <div class="p-6">
-          <div class="mt-4 grid gap-2" role="radiogroup" aria-label="主题模式">
-            <BasicSettingCard>
-
-            </BasicSettingCard>
-            <SelectSettingCard></SelectSettingCard>
-          </div>
+        <div class="p-4">
+          <h3 class="text-muted-foreground text-xs pl-3 pb-2">外观</h3>
+          <SelectSettingCard description="修改主题模式" :value="settingsStore.theme" :select="themeOptions" title="主题"
+            @select="handleThemeSelect" />
         </div>
       </div>
     </DrawerContent>
