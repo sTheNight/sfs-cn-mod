@@ -13,7 +13,7 @@ const props = defineProps<BasicSettingCardProps>()
           {{ props.description }}
         </p>
       </div>
-      <div class="shrink-0">
+      <div class="shrink-0 flex items-center">
         <slot></slot>
       </div>
     </div>
