@@ -15,11 +15,20 @@ interface Props extends PrimitiveProps {
 const props = withDefaults(defineProps<Props>(), {
   as: "button",
 })
+const isDarkRipple = () => {
+  switch (props.variant) {
+    case "destructive":
+    case "ghost":
+    case "outline":
+      return true;
+    default:
+      return false;
+  }
+}
 </script>
 
 <template>
-  <RippleProvider :is-dark-ripple="variant == 'ghost' || variant == 'outline'"
-    :class="cn(buttonVariants({ variant, size }), props.class)">
+  <RippleProvider :is-dark-ripple="isDarkRipple()" :class="cn(buttonVariants({ variant, size }), props.class)">
     <slot />
   </RippleProvider>
 </template>

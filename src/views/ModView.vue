@@ -122,13 +122,13 @@ onMounted(() => {
             </div>
             <img class="w-full h-50 object-cover shrink-0" v-if="pendingFile.images?.length"
               :src="pendingFile.images[0]" />
-            <div v-else class="h-50 flex bg-amber-100 justify-center items-center text-6xl">📦</div>
+            <div v-else class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl">📦</div>
           </div>
           <div class="p-6">
             <InfoTitle :icon="FileText" title="简介" />
-            <p class="text-gray-600 text-sm mt-2">{{ pendingFile.desc }}</p>
+            <p class="text-muted-foreground text-sm mt-2">{{ pendingFile.desc }}</p>
             <InfoTitle class="mt-4" :icon="InfoIcon" title="信息" />
-            <div class="text-gray-600 text-sm mt-2 grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
+            <div class="text-muted-foreground text-sm mt-2 grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
               <InfoCard title="作者" :icon="UserRound">{{ pendingFile.author }}</InfoCard>
               <InfoCard title="版本" :icon="HistoryIcon">{{ pendingFile.version }}</InfoCard>
               <InfoCard title="兼容版本" :icon="HistoryIcon">{{ pendingFile.compat }}</InfoCard>
@@ -151,7 +151,7 @@ onMounted(() => {
             </template>
           </div>
           <div
-            class="pointer-events-none sticky bottom-0 z-10 flex w-full justify-end gap-2 bg-linear-to-t from-white/90 via-white/80 via-20% to-transparent p-4">
+            class="pointer-events-none sticky bottom-0 z-10 flex w-full justify-end gap-2 bg-linear-to-t from-background/90 via-background/80 via-20% to-transparent p-4">
             <MyCustomButton class="pointer-events-auto" variant="outline" @click.prevent="closeModDetail">
               <X /> 关闭
             </MyCustomButton>
@@ -210,7 +210,7 @@ onMounted(() => {
               <span>{{ categoryRecord[categoryFilter] }}</span>
             </div>
           </SelectTrigger>
-          <SelectContent class="bg-white/80 backdrop-blur-xs">
+          <SelectContent class="bg-popover/80 backdrop-blur-xs">
             <SelectGroup>
               <SelectLabel>分类</SelectLabel>
               <SelectItem v-for="(value, key) in categoryRecord" :key="key" :value="key">
@@ -229,11 +229,11 @@ onMounted(() => {
       </div>
     </div>
     <div v-if="isLoading || loadError || shownList.length === 0"
-      class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-gray-600 select-none">
+      class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-muted-foreground select-none">
       <div v-if="isLoading">
         加载中...
       </div>
-      <div v-else-if="loadError" class="text-red-600 flex flex-col justify-center items-center gap-2">
+      <div v-else-if="loadError" class="text-red-600 dark:text-red-400 flex flex-col justify-center items-center gap-2">
         <div>加载失败：{{ loadError }}</div>
         <div>
           <MyCustomButton size="sm" @click="loadModInfo(true)">

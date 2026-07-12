@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import FloatButton from '@/components/FloatButton.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
-import { Button } from '@/components/ui/button';
+import SettingsDrawer from '@/components/SettingsDrawer.vue';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { Drawer, DrawerContent } from '@/components/ui/drawer';
-import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, Menu, PackageIcon, X, type LucideIcon } from '@lucide/vue';
+import { useSettingsStore } from '@/stores/settings';
+import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
 import { useWindowScroll } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
-const WARNING_DIALOG_STORAGE_KEY = 'hide-warning-dialog-v1'
 
 const route = useRoute()
 const router = useRouter()
@@ -22,9 +20,21 @@ const { y } = useWindowScroll({
 const showBackTop = computed(() => y.value >= 400)
 
 const isSponsorDialogShow = ref(false)
-const isWarningDialogShow = ref(localStorage.getItem(WARNING_DIALOG_STORAGE_KEY) !== 'true')
-const isNeverShowDialog = ref(false)
+const isNeverShowDialogCheck = ref(false)
 const isSettingDrawerShow = ref(false);
+
+const { neverShowWarningDialog, setNeverShowWarningDialog } = useSettingsStore()
+const showWarningDialog = ref(true)
+
+const isShowWarningDialog = computed<boolean>({
+  get() {
+    if (!neverShowWarningDialog && showWarningDialog.value) return true
+    else return false
+  },
+  set(newValue) {
+    showWarningDialog.value = newValue
+  }
+})
 
 interface RouteButton {
   icon: LucideIcon,
@@ -66,17 +76,15 @@ function backToTop() {
   y.value = 0
 }
 
-function closeDialog() {
-  if (isNeverShowDialog.value) {
-    localStorage.setItem(WARNING_DIALOG_STORAGE_KEY, 'true')
-  }
-  isWarningDialogShow.value = false
+function closeWarningDialog() {
+  isShowWarningDialog.value = false
+  setNeverShowWarningDialog(isNeverShowDialogCheck.value)
 }
 </script>
 <template>
   <div class="w-full min-h-screen">
     <div class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
-      <FloatButton :icon="Menu" @on-button-click="isSettingDrawerShow = true"></FloatButton>
+      <FloatButton :icon="Settings" @on-button-click="isSettingDrawerShow = true"></FloatButton>
       <Transition name="float-button-fade" mode="out-in">
         <FloatButton @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
         <FloatButton v-else :icon="CircleDollarSign" @on-button-click="isSponsorDialogShow = !isSponsorDialogShow" />
@@ -87,7 +95,7 @@ function closeDialog() {
         <div class="w-full h-full">
           <h2 class="text-5xl text-center py-4">❤️</h2>
           <h2 class="text-xl mt-2 font-bold text-center">赞助支持</h2>
-          <p class="text-center text-sm m-2 text-gray-600">感谢你的支持，我们会继续更新优质汉化模组！</p>
+          <p class="text-center text-sm m-2 text-muted-foreground">感谢你的支持，我们会继续更新优质汉化模组！</p>
           <div class="flex justify-center mt-2">
             <div class="border rounded-2xl p-4 shadow-md">
               <img src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/5.png" width="250">
@@ -96,49 +104,32 @@ function closeDialog() {
         </div>
       </DialogContent>
     </Dialog>
-    <Drawer direction="right" v-model:open="isSettingDrawerShow">
-      <DrawerContent>
-        <div class="scrollbar-hidden w-full box-border relative h-dvh overflow-y-scroll">
-          <div
-            class="w-full px-6 sticky top-0 left-0 box-border border-b h-16 flex items-center justify-between z-2 backdrop-blur-xs">
-            <div class="text-black text-xl font-bold">设置</div>
-            <div>
-              <MyCustomButton class="w-8 h-8" variant="outline" @click="isSettingDrawerShow = false">
-                <X />
-              </MyCustomButton>
-            </div>
-          </div>
-          <div class="p-4">
-            <div v-for="item in 100" :key="item">{{ item }}</div>
-          </div>
-        </div>
-      </DrawerContent>
-    </Drawer>
-    <Dialog v-model:open="isWarningDialogShow">
+    <SettingsDrawer v-model:open="isSettingDrawerShow" />
+    <Dialog v-model:open="isShowWarningDialog">
       <DialogContent @interact-outside.prevent @escape-key-down.prevent>
         <DialogHeader>
           <h2 class="text-xl font-bold">欢迎访问 SFS 汉化模组站</h2>
         </DialogHeader>
-        <p class="text-gray-600 text-sm">
+        <p class="text-muted-foreground text-sm">
           本站所有模组均为汉化版本，仅供学习交流使用。<br />
           请于下载后24小时内删除，禁止用于商业用途。<br />
           下载前请确认您已了解模组安装方法。<br />
           点击确认进入下载中心。<br />
           QQ 交流反馈群923038827<br />
         </p>
-        <p class="text-sm text-gray-600">
+        <p class="text-sm text-muted-foreground">
           额外说明：本站为重写版并非原站点，部分功能特性可能未同步，如有需要请访问<a class="px-2 outline-0 underline text-blue-500"
             href="https://sfszhmod.pages.dev/">原站点</a>
         </p>
         <p class="flex w-full justify-end items-center gap-2 text-sm">
-          <Checkbox v-model:model-value="isNeverShowDialog" /> 不再显示
+          <Checkbox v-model:model-value="isNeverShowDialogCheck" /> 不再显示
         </p>
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
-            <Button @click="closeDialog">
+            <MyCustomButton @click="closeWarningDialog">
               <LogIn /> 进入
-            </Button>
-            <Button @click="exitTheSite" variant="outline">退出</Button>
+            </MyCustomButton>
+            <MyCustomButton @click="exitTheSite" variant="outline">退出</MyCustomButton>
           </div>
         </DialogFooter>
       </DialogContent>
@@ -155,7 +146,7 @@ function closeDialog() {
       <div class="flex gap-2 items-center justify-center mb-4">
         <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
           class="rounded-full select-none hover:scale-105 active:scale-95 cursor-pointer" variant="ghost"
-          :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50': isActiveRoute(item.key) }"
+          :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50 dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-blue-950/60 dark:bg-blue-950/60': isActiveRoute(item.key) }"
           @click="router.push(item.route)">
           <component :is="item.icon" :size="14" />
           {{ item.title }}
