@@ -4,6 +4,8 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer'
 import { type ThemePreference, useSettingsStore } from '@/stores/settings'
 import { Monitor, Moon, Sun, X } from '@lucide/vue'
 import SelectSettingCard, { type SelectValue } from './setting/SelectSettingCard.vue'
+import SettingSection from './setting/SettingSection.vue'
+import BasicSettingCard from './setting/BasicSettingCard.vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
@@ -23,11 +25,16 @@ function handleThemeSelect(key: string) {
     settingsStore.setTheme(key)
   }
 }
+
+function handleResetAllSetting() {
+  settingsStore.resetAllSetting()
+  location.reload()
+}
 </script>
 
 <template>
   <Drawer v-model:open="open" direction="right" :handle-only="true">
-    <DrawerContent>
+    <DrawerContent class="w-full!">
       <div class="scrollbar-hidden relative h-dvh w-full overflow-y-scroll box-border">
         <div
           class="sticky top-0 left-0 z-2 flex h-16 w-full items-center justify-between border-b bg-background/80 px-6 backdrop-blur-xs box-border">
@@ -36,10 +43,18 @@ function handleThemeSelect(key: string) {
             <X />
           </MyCustomButton>
         </div>
-        <div class="p-4">
-          <h3 class="text-muted-foreground text-xs pl-3 pb-2">外观</h3>
-          <SelectSettingCard description="修改主题模式" :value="settingsStore.theme" :select="themeOptions" title="主题"
-            @select="handleThemeSelect" />
+        <div class="w-full box-border">
+          <SettingSection name="外观">
+            <SelectSettingCard description="修改主题模式" :value="settingsStore.theme" :select="themeOptions" title="主题"
+              @select="handleThemeSelect" />
+          </SettingSection>
+          <SettingSection name="操作">
+            <BasicSettingCard title="重置设置" description="清除自定义设置选项">
+              <MyCustomButton @click="handleResetAllSetting" variant="destructive" size="sm">
+                清除
+              </MyCustomButton>
+            </BasicSettingCard>
+          </SettingSection>
         </div>
       </div>
     </DrawerContent>

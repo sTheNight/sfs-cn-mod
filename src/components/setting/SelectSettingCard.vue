@@ -35,27 +35,17 @@ function handleSelect(value: unknown) {
 }
 </script>
 <template>
-  <BasicSettingCard>
-    <div class="flex items-center justify-between gap-3">
-      <div class="min-w-0 flex-1">
-        <h2>{{ props.title }}</h2>
-        <p v-if="props.description" class="text-muted-foreground text-xs wrap-break-word">
-          {{ props.description }}
-        </p>
-      </div>
-      <div class="shrink-0">
-        <Select :model-value="props.value" @update:model-value="handleSelect">
-          <SelectTrigger>
-            <SelectValue class="text-xs" :placeholder="placeholder ?? undefined" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem class="text-xs" v-for="item in props.select" :key="item.key" :value="item.key">
-              <component :is="item.icon" />
-              {{ item.label }}
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
+  <BasicSettingCard :title="props.title" :description="props.description">
+    <Select :model-value="props.value" @update:model-value="handleSelect">
+      <SelectTrigger>
+        <SelectValue class="text-xs" :placeholder="placeholder ?? undefined" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem class="text-xs" v-for="item in props.select" :key="item.key" :value="item.key">
+          <component :is="item.icon" />
+          {{ item.label }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
   </BasicSettingCard>
 </template>

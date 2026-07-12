@@ -4,12 +4,11 @@ import { MyCustomButton } from '@/components/MyCustomButton';
 import SettingsDrawer from '@/components/SettingsDrawer.vue';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
+import { useSettingsStore } from '@/stores/settings';
 import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
 import { useWindowScroll } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
-const WARNING_DIALOG_STORAGE_KEY = 'hide-warning-dialog-v1'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,9 +20,21 @@ const { y } = useWindowScroll({
 const showBackTop = computed(() => y.value >= 400)
 
 const isSponsorDialogShow = ref(false)
-const isWarningDialogShow = ref(localStorage.getItem(WARNING_DIALOG_STORAGE_KEY) !== 'true')
-const isNeverShowDialog = ref(false)
+const isNeverShowDialogCheck = ref(false)
 const isSettingDrawerShow = ref(false);
+
+const { neverShowWarningDialog, setNeverShowWarningDialog } = useSettingsStore()
+const showWarningDialog = ref(true)
+
+const isShowWarningDialog = computed<boolean>({
+  get() {
+    if (!neverShowWarningDialog && showWarningDialog.value) return true
+    else return false
+  },
+  set(newValue) {
+    showWarningDialog.value = newValue
+  }
+})
 
 interface RouteButton {
   icon: LucideIcon,
@@ -65,11 +76,9 @@ function backToTop() {
   y.value = 0
 }
 
-function closeDialog() {
-  if (isNeverShowDialog.value) {
-    localStorage.setItem(WARNING_DIALOG_STORAGE_KEY, 'true')
-  }
-  isWarningDialogShow.value = false
+function closeWarningDialog() {
+  isShowWarningDialog.value = false
+  setNeverShowWarningDialog(isNeverShowDialogCheck.value)
 }
 </script>
 <template>
@@ -96,7 +105,7 @@ function closeDialog() {
       </DialogContent>
     </Dialog>
     <SettingsDrawer v-model:open="isSettingDrawerShow" />
-    <Dialog v-model:open="isWarningDialogShow">
+    <Dialog v-model:open="isShowWarningDialog">
       <DialogContent @interact-outside.prevent @escape-key-down.prevent>
         <DialogHeader>
           <h2 class="text-xl font-bold">欢迎访问 SFS 汉化模组站</h2>
@@ -113,11 +122,11 @@ function closeDialog() {
             href="https://sfszhmod.pages.dev/">原站点</a>
         </p>
         <p class="flex w-full justify-end items-center gap-2 text-sm">
-          <Checkbox v-model:model-value="isNeverShowDialog" /> 不再显示
+          <Checkbox v-model:model-value="isNeverShowDialogCheck" /> 不再显示
         </p>
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
-            <MyCustomButton @click="closeDialog">
+            <MyCustomButton @click="closeWarningDialog">
               <LogIn /> 进入
             </MyCustomButton>
             <MyCustomButton @click="exitTheSite" variant="outline">退出</MyCustomButton>

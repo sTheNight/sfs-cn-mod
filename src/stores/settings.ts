@@ -7,6 +7,7 @@ const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matc
 
 export const useSettingsStore = defineStore('settings', () => {
   const theme = ref<ThemePreference>('system')
+  const neverShowWarningDialog = ref<boolean>(false)
   const isDark = computed(() => theme.value === 'dark' || (theme.value === 'system' && prefersDark()))
 
   function applyTheme() {
@@ -20,6 +21,10 @@ export const useSettingsStore = defineStore('settings', () => {
     applyTheme()
   }
 
+  function setNeverShowWarningDialog(val: boolean) {
+    neverShowWarningDialog.value = val
+  }
+
   function initializeTheme() {
     applyTheme()
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
@@ -27,15 +32,22 @@ export const useSettingsStore = defineStore('settings', () => {
     })
   }
 
+  function resetAllSetting() {
+    theme.value = 'system';
+    neverShowWarningDialog.value = false
+  }
+
   return {
     theme,
-    isDark,
+    neverShowWarningDialog,
     setTheme,
     initializeTheme,
+    setNeverShowWarningDialog,
+    resetAllSetting
   }
 }, {
   persist: {
     key: 'sfs-settings',
-    pick: ['theme'],
+    pick: ['theme', 'neverShowWarningDialog'],
   },
 })
