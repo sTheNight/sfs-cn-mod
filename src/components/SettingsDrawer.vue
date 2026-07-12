@@ -45,13 +45,13 @@ function handleResetAllSetting() {
         </div>
         <div class="w-full box-border">
           <SettingSection name="外观">
-            <SelectSettingCard description="修改主题模式" :value="settingsStore.theme" :select="themeOptions" title="主题"
+            <SelectSettingCard description="选择主题模式" :value="settingsStore.theme" :select="themeOptions" title="主题"
               @select="handleThemeSelect" />
           </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">
-              <MyCustomButton @click="handleResetAllSetting" variant="destructive" size="sm">
-                清除
+              <MyCustomButton @click="handleResetAllSetting" variant="destructive" size="sm" class="text-xs">
+                重置
               </MyCustomButton>
             </BasicSettingCard>
           </SettingSection>
