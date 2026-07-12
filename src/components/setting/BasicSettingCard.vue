@@ -5,7 +5,7 @@ const props = defineProps<BasicSettingCardProps>()
 </script>
 <template>
   <ripple-provider tag="div" :is-dark-ripple="true"
-    class="border rounded-2xl box-border py-3 px-4 transition-all duration-200 dark:hover:bg-input/50 hover:bg-accent text-sm">
+    class="border rounded-xl box-border py-3 px-4 transition-all duration-200 dark:hover:bg-input/50 hover:bg-accent text-sm">
     <div class="flex items-center justify-between gap-3">
       <div class="min-w-0 flex-1">
         <h2>{{ props.title }}</h2>

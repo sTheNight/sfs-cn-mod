@@ -8,6 +8,7 @@ const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matc
 export const useSettingsStore = defineStore('settings', () => {
   const theme = ref<ThemePreference>('system')
   const neverShowWarningDialog = ref<boolean>(false)
+  const enableAnimations = ref<boolean>(true)
   const isDark = computed(() => theme.value === 'dark' || (theme.value === 'system' && prefersDark()))
 
   function applyTheme() {
@@ -25,6 +26,15 @@ export const useSettingsStore = defineStore('settings', () => {
     neverShowWarningDialog.value = val
   }
 
+  function applyMotionPreference() {
+    document.documentElement.dataset.reduceMotion = String(!enableAnimations.value)
+  }
+
+  function setEnableAnimations(value: boolean) {
+    enableAnimations.value = value
+    applyMotionPreference()
+  }
+
   function initializeTheme() {
     applyTheme()
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
@@ -32,22 +42,32 @@ export const useSettingsStore = defineStore('settings', () => {
     })
   }
 
+  function initializeMotionPreference() {
+    applyMotionPreference()
+  }
+
   function resetAllSetting() {
     theme.value = 'system';
     neverShowWarningDialog.value = false
+    enableAnimations.value = true
+    applyTheme()
+    applyMotionPreference()
   }
 
   return {
     theme,
     neverShowWarningDialog,
+    enableAnimations,
     setTheme,
     initializeTheme,
     setNeverShowWarningDialog,
+    setEnableAnimations,
+    initializeMotionPreference,
     resetAllSetting
   }
 }, {
   persist: {
     key: 'sfs-settings',
-    pick: ['theme', 'neverShowWarningDialog'],
+    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations'],
   },
 })

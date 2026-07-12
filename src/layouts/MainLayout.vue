@@ -84,11 +84,11 @@ function closeWarningDialog() {
 <template>
   <div class="w-full min-h-screen">
     <div class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
-      <FloatButton :icon="Settings" @on-button-click="isSettingDrawerShow = true"></FloatButton>
       <Transition name="float-button-fade" mode="out-in">
         <FloatButton @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
         <FloatButton v-else :icon="CircleDollarSign" @on-button-click="isSponsorDialogShow = !isSponsorDialogShow" />
       </Transition>
+      <FloatButton :icon="Settings" @on-button-click="isSettingDrawerShow = true"></FloatButton>
     </div>
     <Dialog v-model:open="isSponsorDialogShow">
       <DialogContent>

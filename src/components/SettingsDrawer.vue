@@ -6,6 +6,7 @@ import { Monitor, Moon, Sun, X } from '@lucide/vue'
 import SelectSettingCard, { type SelectValue } from './setting/SelectSettingCard.vue'
 import SettingSection from './setting/SettingSection.vue'
 import BasicSettingCard from './setting/BasicSettingCard.vue'
+import SwitchSettingCard from './setting/SwitchSettingCard.vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
@@ -30,6 +31,10 @@ function handleResetAllSetting() {
   settingsStore.resetAllSetting()
   location.reload()
 }
+
+function handleSelect(val: boolean) {
+  settingsStore.setEnableAnimations(val)
+}
 </script>
 
 <template>
@@ -47,6 +52,8 @@ function handleResetAllSetting() {
           <SettingSection name="外观">
             <SelectSettingCard description="选择主题模式" :value="settingsStore.theme" :select="themeOptions" title="主题"
               @select="handleThemeSelect" />
+            <SwitchSettingCard :model-value="settingsStore.enableAnimations" @on-switch="handleSelect" title="动画效果"
+              description="关闭后将减少动画效果" />
           </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">

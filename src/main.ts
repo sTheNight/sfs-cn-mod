@@ -14,6 +14,8 @@ pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)
 
-useSettingsStore(pinia).initializeTheme()
+const settingsStore = useSettingsStore(pinia)
+settingsStore.initializeTheme()
+settingsStore.initializeMotionPreference()
 
 app.mount('#app')
