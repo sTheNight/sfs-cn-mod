@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BasicInfoCard from '@/components/Card/BasicInfoCard.vue';
 import { homeCardInfo } from '@/data/homeCardInfo';
 import { AlertTriangle, Download, MessageCircle } from '@lucide/vue';
 
@@ -7,16 +8,12 @@ const cardIcons = [Download, AlertTriangle, MessageCircle]
 <template>
   <div>
     <section class="mt-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))]">
-      <div class="border rounded-2xl p-4 shadow-xs transition-all duration-150 hover:shadow-xl hover:-translate-y-1"
-        v-for="(item, index) in homeCardInfo" :key="index">
-        <div class="flex items-center gap-3">
-          <div class="flex size-9 shrink-0 items-center justify-center rounded-lg border bg-muted">
-            <component :is="cardIcons[index]" :size="18" />
-          </div>
-          <h2 class="font-bold">{{ item.title }}</h2>
-        </div>
+      <basic-info-card v-for="(item, index) in homeCardInfo" :key="index" :title="item.title">
+        <template #tag>
+          <component :is="cardIcons[index]" :size="18" />
+        </template>
         <p class="mt-4 whitespace-pre-line text-sm leading-6 text-muted-foreground">{{ item.description }}</p>
-      </div>
+      </basic-info-card>
     </section>
   </div>
 </template>
