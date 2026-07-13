@@ -48,12 +48,12 @@ function handleSelect(val: boolean) {
             <X />
           </MyCustomButton>
         </div>
-        <div class="w-full box-border">
+        <div class="w-full box-border pb-2">
           <SettingSection name="外观">
             <SelectSettingCard description="选择主题模式" :value="settingsStore.theme" :select="themeOptions" title="主题"
               @select="handleThemeSelect" />
             <SwitchSettingCard :model-value="settingsStore.enableAnimations" @on-switch="handleSelect" title="动画效果"
-              description="关闭后将减少动画效果" />
+              description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" />
           </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">

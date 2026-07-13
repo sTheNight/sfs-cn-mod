@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useSettingsStore } from '@/stores/settings';
 import { computed, ref, useAttrs } from 'vue';
+
+const settingStore = useSettingsStore()
 
 defineOptions({
   inheritAttrs: false,
@@ -99,7 +102,7 @@ function hideRipple() {
     data-ripple-provider @pointerdown="onPointerDownHandle" @pointerup="hideRipple" @pointercancel="hideRipple"
     @pointerout="hideRipple">
     <Transition name="ripple-fade">
-      <span v-if="isRippleShow" :key="rippleKey"
+      <span v-if="isRippleShow && settingStore.enableAnimations" :key="rippleKey"
         :class="['absolute z-100 rounded-full pointer-events-none', isDarkRipple ? 'bg-black/20 dark:bg-white/30' : 'bg-white/30 dark:bg-black/20']"
         :style="{
           left: `${ripple.x}px`,

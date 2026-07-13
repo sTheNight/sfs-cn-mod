@@ -17,7 +17,7 @@ const hasTag = computed(() => Boolean(slots.tag))
       </div>
       <h2 class="font-bold">{{ title }}</h2>
     </div>
-    <div>
+    <div class="text-sm mt-4 text-muted-foreground">
       <slot></slot>
     </div>
   </div>
