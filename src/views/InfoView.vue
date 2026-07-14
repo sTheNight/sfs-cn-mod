@@ -10,7 +10,7 @@ function openUrl(link: string) {
   window.open(link)
 }
 const links: [string, string, LucideIcon][] = [
-  ["https://qm.qq.com/cgi-bin/qm/qr?k=Q3c7K7F7G9x5F5aB8bZ7hS9jK3nM2pL4&jump_from=webapi&authKey=xxx", "QQ群: 923038827", Users],
+  ["https://qm.qq.com/q/8kXMyVI00g", "QQ群: 923038827", Users],
   ['https://space.bilibili.com/3546673454254808', 'B站: A-Future-star', Tv],
   ['https://sfszhmod.pages.dev/', '原版站点', Globe]
 ]
