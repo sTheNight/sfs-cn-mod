@@ -11,6 +11,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/ModView.vue")
       },
       {
+        path: 'mods',
+        redirect: "/"
+      },
+      {
         path: 'info',
         name: 'info',
         component: () => import("@/views/InfoView.vue")
