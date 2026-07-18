@@ -25,8 +25,8 @@ const isNeverShowDialogCheck = ref(false)
 const isSettingDrawerShow = ref(false);
 
 const settingsStore = useSettingsStore()
-const { neverShowWarningDialog, transition } = storeToRefs(settingsStore)
-const { setNeverShowWarningDialog } = settingsStore
+const { transition } = storeToRefs(settingsStore)
+const { setNeverShowWarningDialog, neverShowWarningDialog } = settingsStore
 const showWarningDialog = ref(true)
 
 const isShowWarningDialog = computed<boolean>({
