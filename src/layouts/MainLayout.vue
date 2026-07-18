@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/
 import { useSettingsStore } from '@/stores/settings';
 import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
 import { useWindowScroll } from '@vueuse/core';
+import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -23,7 +24,9 @@ const isSponsorDialogShow = ref(false)
 const isNeverShowDialogCheck = ref(false)
 const isSettingDrawerShow = ref(false);
 
-const { neverShowWarningDialog, setNeverShowWarningDialog } = useSettingsStore()
+const settingsStore = useSettingsStore()
+const { neverShowWarningDialog, transition } = storeToRefs(settingsStore)
+const { setNeverShowWarningDialog } = settingsStore
 const showWarningDialog = ref(true)
 
 const isShowWarningDialog = computed<boolean>({
@@ -153,7 +156,7 @@ function closeWarningDialog() {
         </MyCustomButton>
       </div>
       <RouterView v-slot="{ Component }">
-        <Transition name="mainlayout-page-fade" mode="out-in">
+        <Transition :name="transition" mode="out-in">
           <component :is="Component" :key="route.fullPath" />
         </Transition>
       </RouterView>
@@ -183,23 +186,6 @@ function closeWarningDialog() {
   }
 }
 
-.mainlayout-page-fade-enter-active,
-.mainlayout-page-fade-leave-active {
-  transition:
-    opacity .15s,
-    transform .15s;
-}
-
-.mainlayout-page-fade-enter-from {
-  opacity: 0;
-  transform: translateX(5px);
-}
-
-.mainlayout-page-fade-leave-to {
-  opacity: 0;
-  transform: translateX(-5px);
-}
-
 .float-button-fade-enter-active,
 .float-button-fade-leave-active {
   transition:
@@ -210,6 +196,55 @@ function closeWarningDialog() {
 .float-button-fade-enter-from,
 .float-button-fade-leave-to {
   transform: scale(0.2);
+  opacity: 0;
+}
+</style>
+
+<style lang="css">
+/* X 轴切换过渡动画 */
+.x-fade-enter-active,
+.x-fade-leave-active {
+  transition:
+    opacity .15s,
+    transform .15s;
+}
+
+.x-fade-enter-from {
+  opacity: 0;
+  transform: translateX(5px);
+}
+
+.x-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-5px);
+}
+
+/* Y 轴切换过渡动画 */
+.y-fade-enter-active,
+.y-fade-leave-active {
+  transition:
+    opacity .15s,
+    transform .15s;
+}
+
+.y-fade-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.y-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+/* 淡入淡出 */
+.opacity-fade-enter-active,
+.opacity-fade-leave-active {
+  transition: opacity .15s;
+}
+
+.opacity-fade-enter-from,
+.opacity-fade-leave-to {
   opacity: 0;
 }
 </style>

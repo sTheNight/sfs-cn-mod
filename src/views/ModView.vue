@@ -234,7 +234,9 @@ onMounted(() => {
     </div>
     <AlertMessage class="mt-4 relative" type="warning" v-if="isWarningAlertShow">
       声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等bug
-      <MyCustomButton class="w-7 h-7 absolute top-2 right-2" variant="destructive" @click="isWarningAlertShow = false">
+      <!-- 这个按钮会遮挡文字 -->
+      <MyCustomButton class="w-7 h-7 absolute top-2 right-2 rounded-full text-accent-foreground" variant="outline"
+        @click="isWarningAlertShow = false">
         <X />
       </MyCustomButton>
     </AlertMessage>

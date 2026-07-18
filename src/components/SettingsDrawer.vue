@@ -1,30 +1,20 @@
 <script setup lang="ts">
 import { MyCustomButton } from '@/components/MyCustomButton'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
-import { type ThemePreference, useSettingsStore } from '@/stores/settings'
-import { Monitor, Moon, Sun, X } from '@lucide/vue'
-import SelectSettingCard, { type SelectValue } from './setting/SelectSettingCard.vue'
+import { type ThemePreference, type TransitionPreference, useSettingsStore } from '@/stores/settings'
+import { X } from '@lucide/vue'
+import SelectSettingCard from './setting/SelectSettingCard.vue'
 import SettingSection from './setting/SettingSection.vue'
 import BasicSettingCard from './setting/BasicSettingCard.vue'
 import SwitchSettingCard from './setting/SwitchSettingCard.vue'
+import { themeOptions } from '@/data/themeOptions.ts'
+import { transitionOptions } from '@/data/transitionOptions.ts'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
 
-const themeOptions: SelectValue[] = [
-  { key: 'system', label: '跟随系统', icon: Monitor },
-  { key: 'light', label: '浅色模式', icon: Sun },
-  { key: 'dark', label: '深色模式', icon: Moon },
-]
-
-function isThemePreference(value: string): value is ThemePreference {
-  return value === 'system' || value === 'light' || value === 'dark'
-}
-
-function handleThemeSelect(key: string) {
-  if (isThemePreference(key)) {
-    settingsStore.setTheme(key)
-  }
+function handleThemeSelect(key: ThemePreference) {
+  settingsStore.setTheme(key)
 }
 
 function handleResetAllSetting() {
@@ -34,6 +24,10 @@ function handleResetAllSetting() {
 
 function handleSelect(val: boolean) {
   settingsStore.setEnableAnimations(val)
+}
+
+function handleTransitionSelect(key: TransitionPreference) {
+  settingsStore.setTransition(key)
 }
 </script>
 
@@ -54,6 +48,10 @@ function handleSelect(val: boolean) {
               @select="handleThemeSelect" />
             <SwitchSettingCard :model-value="settingsStore.enableAnimations" @on-switch="handleSelect" title="动画效果"
               description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" />
+          </SettingSection>
+          <SettingSection name="界面">
+            <SelectSettingCard title="切换动画" description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions"
+              :value="settingsStore.transition" @select="handleTransitionSelect" />
           </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">

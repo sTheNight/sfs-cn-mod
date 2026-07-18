@@ -39,7 +39,7 @@ function isActiveTutorSection(tutor: TutorType): boolean {
       </Button>
     </ButtonGroup>
     <div class="mt-4">
-      <Transition mode="out-in" name="tutor-section-fade">
+      <Transition mode="out-in" name="y-fade">
         <AndroidTutor v-if="currentTutor == 'android'" />
         <IOSTutor v-else-if="currentTutor == 'ios'" />
         <PCTutor v-else-if="currentTutor == 'pc'" />
@@ -48,20 +48,3 @@ function isActiveTutorSection(tutor: TutorType): boolean {
     </div>
   </div>
 </template>
-
-<style lang="css" scoped>
-.tutor-section-fade-enter-active,
-.tutor-section-fade-leave-active {
-  transition: all .15s;
-}
-
-.tutor-section-fade-enter-from {
-  opacity: 0;
-  transform: translateY(6px);
-}
-
-.tutor-section-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-6px);
-}
-</style>

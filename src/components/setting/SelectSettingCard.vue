@@ -1,39 +1,41 @@
 <script lang="ts">
 import type { LucideIcon } from '@lucide/vue'
+import type { AcceptableValue } from 'reka-ui'
 
-export interface SelectValue {
+export interface SelectValue<T extends AcceptableValue = string> {
   label: string
-  key: string
-  icon: LucideIcon
+  key: T
+  icon?: LucideIcon
 }
 </script>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends AcceptableValue = string">
 import { ref } from 'vue'
 import { Select } from '../ui/select/index.ts'
 import SelectContent from '../ui/select/SelectContent.vue'
 import SelectItem from '../ui/select/SelectItem.vue'
 import SelectTrigger from '../ui/select/SelectTrigger.vue'
-import SelectValue from '../ui/select/SelectValue.vue'
+import SelectPrimitiveValue from '../ui/select/SelectValue.vue'
 import BasicSettingCard from './BasicSettingCard.vue'
 import type { BasicSettingCardProps } from './index.ts'
 
 interface SelectSettingCardProps {
-  select: SelectValue[]
-  value: string,
+  select: SelectValue<T>[]
+  value: T
   placeholder?: string
 }
 interface SelectSettingCardEmits {
-  (e: 'select', key: string): void
+  (e: 'select', key: T): void
 }
 
 const props = defineProps<BasicSettingCardProps & SelectSettingCardProps>()
 const emit = defineEmits<SelectSettingCardEmits>()
 const isOpen = ref(false)
 
-function handleSelect(value: unknown) {
-  if (typeof value === 'string') {
-    emit('select', value)
+function handleSelect(value: AcceptableValue) {
+  const selectedItem = props.select.find((item) => Object.is(item.key, value))
+  if (selectedItem) {
+    emit('select', selectedItem.key)
   }
 }
 
@@ -45,11 +47,11 @@ function openSelect() {
   <BasicSettingCard :title="props.title" :description="props.description" @click="openSelect">
     <Select v-model:open="isOpen" :model-value="props.value" @update:model-value="handleSelect">
       <SelectTrigger @click.stop>
-        <SelectValue class="text-xs" :placeholder="placeholder ?? undefined" />
+        <SelectPrimitiveValue class="text-xs" :placeholder="placeholder ?? undefined" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem class="text-xs" v-for="(item, index) in props.select" :key="index" :value="item.key">
-          <component :is="item.icon" />
+          <component v-if="item.icon" :is="item.icon" />
           {{ item.label }}
         </SelectItem>
       </SelectContent>
