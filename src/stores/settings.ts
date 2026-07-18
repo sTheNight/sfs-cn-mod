@@ -52,11 +52,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   function resetAllSetting() {
-    theme.value = 'system';
-    neverShowWarningDialog.value = false
-    enableAnimations.value = true
-    applyTheme()
-    applyMotionPreference()
+    localStorage.removeItem('sfs-settings')
   }
 
   return {
