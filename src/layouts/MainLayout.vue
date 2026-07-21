@@ -71,10 +71,6 @@ function isActiveRoute(name: string) {
   return route.name == name
 }
 
-function exitTheSite() {
-  window.close()
-}
-
 function backToTop() {
   y.value = 0
 }
@@ -129,7 +125,6 @@ function closeWarningDialog() {
             <MyCustomButton @click="closeWarningDialog">
               <LogIn /> 进入
             </MyCustomButton>
-            <MyCustomButton @click="exitTheSite" variant="outline">退出</MyCustomButton>
           </div>
         </DialogFooter>
       </DialogContent>
