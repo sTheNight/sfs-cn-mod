@@ -127,18 +127,17 @@ onMounted(() => {
             <div v-else class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl">📦
             </div>
           </div>
-          <div class="p-6">
-            <InfoTitle :icon="FileText" title="简介" />
-            <p class="text-muted-foreground text-sm mt-2">{{ pendingFile.desc }}</p>
-            <InfoTitle class="mt-4" :icon="InfoIcon" title="信息" />
+          <div class="px-6">
             <div
-              class="text-muted-foreground text-sm mt-2 grid gap-2 grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
+              class="text-muted-foreground text-sm grid py-4 gap-2 grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
               <InfoCard title="作者" :icon="UserRound">{{ pendingFile.author }}</InfoCard>
               <InfoCard title="版本" :icon="HistoryIcon">{{ pendingFile.version }}</InfoCard>
               <InfoCard title="兼容版本" :icon="HistoryIcon">{{ pendingFile.compat }}</InfoCard>
               <InfoCard title="更新日期" :icon="Calendar">{{ pendingFile.date }}</InfoCard>
               <InfoCard title="大小" :icon="SaveIcon">{{ pendingFile.size }}</InfoCard>
             </div>
+            <InfoTitle :icon="FileText" title="简介" />
+            <p class="text-muted-foreground text-sm mt-2">{{ pendingFile.desc }}</p>
             <template v-if="pendingFile.images?.length">
               <InfoTitle class="mt-4" :icon="Image" title="截图" />
               <div class="flex flex-wrap gap-1 mt-2">
@@ -232,14 +231,20 @@ onMounted(() => {
         </MyCustomButton>
       </div>
     </div>
-    <AlertMessage class="mt-4 relative" type="warning" v-if="isWarningAlertShow">
-      声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等bug
-      <!-- 这个按钮会遮挡文字 -->
-      <MyCustomButton class="w-7 h-7 absolute top-2 right-2 rounded-full text-accent-foreground" variant="outline"
-        @click="isWarningAlertShow = false">
-        <X />
-      </MyCustomButton>
-    </AlertMessage>
+    <Transition name="alert-collapse">
+      <div v-if="isWarningAlertShow" class="alert-collapse-grid">
+        <div class="min-h-0 overflow-hidden">
+          <AlertMessage class="mt-4 relative" type="warning">
+            声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等bug
+            <!-- 这个按钮会遮挡文字 -->
+            <MyCustomButton class="w-7 h-7 absolute top-2 right-2 rounded-full text-accent-foreground" variant="outline"
+              @click="isWarningAlertShow = false">
+              <X />
+            </MyCustomButton>
+          </AlertMessage>
+        </div>
+      </div>
+    </Transition>
     <div v-if="isLoading || loadError || shownList.length === 0"
       class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-muted-foreground select-none">
       <div v-if="isLoading">
@@ -290,5 +295,23 @@ onMounted(() => {
 .card-fade-enter-from {
   transform: translateY(8px);
   opacity: 0;
+}
+
+.alert-collapse-grid {
+  display: grid;
+  grid-template-rows: 1fr;
+  transform-origin: top;
+}
+
+.alert-collapse-enter-active,
+.alert-collapse-leave-active {
+  transition: all .3s;
+}
+
+.alert-collapse-enter-from,
+.alert-collapse-leave-to {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: scale(.9);
 }
 </style>

@@ -115,10 +115,7 @@ function closeWarningDialog() {
         </DialogHeader>
         <p class="text-muted-foreground text-sm">
           本站所有模组均为汉化版本，仅供学习交流使用。<br />
-          请于下载后24小时内删除，禁止用于商业用途。<br />
           下载前请确认您已了解模组安装方法。<br />
-          点击确认进入下载中心。<br />
-          QQ 交流反馈群923038827<br />
         </p>
         <p class="text-sm text-muted-foreground">
           额外说明：本站为重写版并非原站点，部分功能特性可能未同步，如有需要请访问<a class="px-2 outline-0 underline text-blue-500"
