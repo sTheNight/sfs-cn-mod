@@ -29,6 +29,10 @@ function handleSelect(val: boolean) {
 function handleTransitionSelect(key: TransitionPreference) {
   settingsStore.setTransition(key)
 }
+
+function handleEnableRippleEffectSelect(val: boolean) {
+  settingsStore.setEnableRippleEffect(val)
+}
 </script>
 
 <template>
@@ -48,6 +52,8 @@ function handleTransitionSelect(key: TransitionPreference) {
               @select="handleThemeSelect" />
             <SwitchSettingCard :model-value="settingsStore.enableAnimations" @on-switch="handleSelect" title="动画效果"
               description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" />
+            <SwitchSettingCard :model-value="settingsStore.enableRippleEffect"
+              @on-switch="handleEnableRippleEffectSelect" title="水波纹效果" description="按住按钮后的水波纹效果" />
           </SettingSection>
           <SettingSection name="界面">
             <SelectSettingCard title="切换动画" description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions"

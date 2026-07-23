@@ -11,6 +11,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const transition = ref<TransitionPreference>("x-fade")
   const neverShowWarningDialog = ref<boolean>(false)
   const enableAnimations = ref<boolean>(true)
+  const enableRippleEffect = ref<boolean>(true)
   const isDark = computed(() => theme.value === 'dark' || (theme.value === 'system' && prefersDark()))
 
   function applyTheme() {
@@ -39,6 +40,9 @@ export const useSettingsStore = defineStore('settings', () => {
     enableAnimations.value = value
     applyMotionPreference()
   }
+  function setEnableRippleEffect(value: boolean) {
+    enableRippleEffect.value = value
+  }
 
   function initializeTheme() {
     applyTheme()
@@ -59,8 +63,10 @@ export const useSettingsStore = defineStore('settings', () => {
     theme,
     neverShowWarningDialog,
     enableAnimations,
+    enableRippleEffect,
     setTheme,
     initializeTheme,
+    setEnableRippleEffect,
     setNeverShowWarningDialog,
     setEnableAnimations,
     initializeMotionPreference,
@@ -71,6 +77,6 @@ export const useSettingsStore = defineStore('settings', () => {
 }, {
   persist: {
     key: 'sfs-settings',
-    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition'],
+    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect'],
   },
 })

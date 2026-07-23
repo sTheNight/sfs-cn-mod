@@ -117,9 +117,11 @@ function closeWarningDialog() {
           额外说明：本站为重写版并非原站点，部分功能特性可能未同步，如有需要请访问<a class="px-2 outline-0 underline text-blue-500"
             href="https://sfszhmod.pages.dev/">原站点</a>
         </p>
-        <p class="flex w-full justify-end items-center gap-2 text-sm">
-          <Checkbox v-model:model-value="isNeverShowDialogCheck" /> 不再显示
-        </p>
+        <div class="flex w-full justify-end text-sm">
+          <div class="flex items-center gap-2 select-none" @click="isNeverShowDialogCheck = !isNeverShowDialogCheck">
+            <Checkbox @click.stop.prevent v-model:model-value="isNeverShowDialogCheck" /> 不再显示
+          </div>
+        </div>
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
             <MyCustomButton @click="closeWarningDialog">
