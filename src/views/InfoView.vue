@@ -15,9 +15,9 @@ const links: [string, string, LucideIcon][] = [
   ['https://sfszhmod.pages.dev/', '原版站点', Globe]
 ]
 
-const credits: [string, string, string?][] = [
-  ['重铬酸钠', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/%E9%87%8D%E9%93%AC%E9%85%B8%E9%92%A0.webp', "https://qm.qq.com/q/elEN4eyqaY"],
-  ['蓝鲸公益', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/%E8%93%9D%E9%B2%B8%E5%85%AC%E7%9B%8A.webp', "https://qm.qq.com/q/6J9eoSDyWk"],
+const credits: [string, string, number?, string?][] = [
+  ['重铬酸钠', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/%E9%87%8D%E9%93%AC%E9%85%B8%E9%92%A0.webp', 1078113418, "https://qm.qq.com/q/elEN4eyqaY"],
+  ['蓝鲸公益', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/%E8%93%9D%E9%B2%B8%E5%85%AC%E7%9B%8A.webp', 879487979, "https://qm.qq.com/q/6J9eoSDyWk"],
   ['PS201_', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/PS201_.webp'],
   ['555_55', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/555_5.webp'],
   ['10086', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/10086.webp']
@@ -53,8 +53,8 @@ const credits: [string, string, string?][] = [
             <span>{{ item[0] }}</span>
           </div>
           <div>
-            <my-custom-button class="w-full text-xs" size="sm" variant="outline" v-if="item[2]"
-              @click="openUrl(item[2])">
+            <my-custom-button class="w-full text-xs" size="sm" variant="outline" v-if="item[2] && item[3]"
+              @click="openUrl(item[3])">
               QQ群：{{ item[2] }}
             </my-custom-button>
           </div>
