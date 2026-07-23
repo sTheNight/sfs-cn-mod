@@ -55,6 +55,7 @@ const credits: [string, string, number?, string?][] = [
           <div>
             <my-custom-button class="w-full text-xs" size="sm" variant="outline" v-if="item[2] && item[3]"
               @click="openUrl(item[3])">
+              <users />
               QQ群：{{ item[2] }}
             </my-custom-button>
           </div>
