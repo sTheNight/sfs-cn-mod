@@ -13,7 +13,7 @@ defineEmits<FloatButtonEvents>()
 </script>
 <template>
   <RippleProvider
-    class="bg-blue-600 rounded-full p-3 cursor-pointer shadow-[0_12px_32px_rgba(37,99,235,0.35)] transition-all duration-150 hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)] hover:-translate-y-0.5"
+    class="bg-blue-600 rounded-4xl active:rounded-lg p-3 cursor-pointer shadow-[0_12px_32px_rgba(37,99,235,0.35)] transition-all duration-150 hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)]"
     @click="$emit('onButtonClick')">
     <component :is="icon" color="#fff" />
   </RippleProvider>

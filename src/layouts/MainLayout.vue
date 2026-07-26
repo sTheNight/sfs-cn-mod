@@ -142,7 +142,7 @@ function closeWarningDialog() {
       </header>
       <div class="flex gap-2 items-center justify-center mb-4">
         <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
-          class="rounded-full select-none hover:scale-105 active:scale-95 cursor-pointer" variant="ghost"
+          class="rounded-4xl active:rounded-lg select-none cursor-pointer" variant="ghost"
           :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50 dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-blue-950/60 dark:bg-blue-950/60': isActiveRoute(item.key) }"
           @click="router.push(item.route)">
           <component :is="item.icon" :size="14" />
