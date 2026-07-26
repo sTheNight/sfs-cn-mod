@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FloatButton from '@/components/FloatButton.vue';
+import MainBackground from '@/components/MainBackground.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import SettingsDrawer from '@/components/SettingsDrawer.vue';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,7 +9,7 @@ import { useSettingsStore } from '@/stores/settings';
 import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
 import { useWindowScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute()
@@ -28,6 +29,9 @@ const settingsStore = useSettingsStore()
 const { transition } = storeToRefs(settingsStore)
 const { setNeverShowWarningDialog, neverShowWarningDialog } = settingsStore
 const showWarningDialog = ref(true)
+
+const floatGroupRef = useTemplateRef("float-group")
+const safePadding = ref<number>(0)
 
 const isShowWarningDialog = computed<boolean>({
   get() {
@@ -79,10 +83,20 @@ function closeWarningDialog() {
   isShowWarningDialog.value = false
   setNeverShowWarningDialog(isNeverShowDialogCheck.value)
 }
+
+onMounted(() => {
+  if (floatGroupRef.value?.offsetHeight) {
+    safePadding.value = floatGroupRef.value.offsetHeight
+  }
+})
 </script>
 <template>
-  <div class="w-full min-h-screen">
-    <div class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
+  <div class="relative isolate w-full min-h-screen">
+    <template v-if="!(settingsStore.background == 'none')">
+      <MainBackground v-if="settingsStore.background == 'grid'" />
+    </template>
+    <div ref="float-group"
+      class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
       <Transition name="float-button-fade" mode="out-in">
         <FloatButton @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
         <FloatButton v-else :icon="CircleDollarSign" @on-button-click="isSponsorDialogShow = !isSponsorDialogShow" />
@@ -154,7 +168,7 @@ function closeWarningDialog() {
           <component :is="Component" :key="route.fullPath" />
         </Transition>
       </RouterView>
-      <div class=" h-28" aria-hidden="true"></div>
+      <div :style="{ height: `${safePadding}px` }" aria-hidden="true"></div>
     </div>
   </div>
 </template>

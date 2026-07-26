@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 
 export type ThemePreference = 'system' | 'light' | 'dark'
 export type TransitionPreference = 'x-fade' | 'y-fade' | 'opacity-fade'
+export type BackgroundPreference = 'none' | 'grid'
 
 const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches
 
@@ -13,6 +14,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const enableAnimations = ref<boolean>(true)
   const enableRippleEffect = ref<boolean>(true)
   const isDark = computed(() => theme.value === 'dark' || (theme.value === 'system' && prefersDark()))
+  const background = ref<BackgroundPreference>("grid")
 
   function applyTheme() {
     const dark = isDark.value
@@ -43,6 +45,9 @@ export const useSettingsStore = defineStore('settings', () => {
   function setEnableRippleEffect(value: boolean) {
     enableRippleEffect.value = value
   }
+  function setBackground(val: BackgroundPreference) {
+    background.value = val
+  }
 
   function initializeTheme() {
     applyTheme()
@@ -64,7 +69,9 @@ export const useSettingsStore = defineStore('settings', () => {
     neverShowWarningDialog,
     enableAnimations,
     enableRippleEffect,
+    background,
     setTheme,
+    setBackground,
     initializeTheme,
     setEnableRippleEffect,
     setNeverShowWarningDialog,

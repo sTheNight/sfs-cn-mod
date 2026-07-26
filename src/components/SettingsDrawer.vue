@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { MyCustomButton } from '@/components/MyCustomButton'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
-import { type ThemePreference, type TransitionPreference, useSettingsStore } from '@/stores/settings'
+import { type BackgroundPreference, type ThemePreference, type TransitionPreference, useSettingsStore } from '@/stores/settings'
 import { X } from '@lucide/vue'
 import SelectSettingCard from './setting/SelectSettingCard.vue'
 import SettingSection from './setting/SettingSection.vue'
@@ -9,6 +9,7 @@ import BasicSettingCard from './setting/BasicSettingCard.vue'
 import SwitchSettingCard from './setting/SwitchSettingCard.vue'
 import { themeOptions } from '@/data/themeOptions.ts'
 import { transitionOptions } from '@/data/transitionOptions.ts'
+import { backgroundOptions } from '@/data/backgroundOptions.ts'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
@@ -32,6 +33,10 @@ function handleTransitionSelect(key: TransitionPreference) {
 
 function handleEnableRippleEffectSelect(val: boolean) {
   settingsStore.setEnableRippleEffect(val)
+}
+
+function handleBackgroundSelect(key: BackgroundPreference) {
+  settingsStore.setBackground(key)
 }
 </script>
 
@@ -58,6 +63,9 @@ function handleEnableRippleEffectSelect(val: boolean) {
           <SettingSection name="界面">
             <SelectSettingCard title="切换动画" description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions"
               :value="settingsStore.transition" @select="handleTransitionSelect" />
+            <SelectSettingCard title="背景样式" description="选择主页背景样式" :select="backgroundOptions"
+              :value="settingsStore.background" @select="handleBackgroundSelect">
+            </SelectSettingCard>
           </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">
