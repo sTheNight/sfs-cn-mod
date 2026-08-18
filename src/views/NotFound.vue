@@ -9,7 +9,7 @@ const router = useRouter()
     <PackageX :size="36" class="text-muted-foreground" />
     <div>
       <h2 class="font-semibold">404 没有找到</h2>
-      <p class="mt-1 text-sm text-muted-foreground">这是一个比较绝望的错误</p>
+      <p class="mt-1 text-sm text-muted-foreground">人生无常，大肠包小肠</p>
     </div>
     <MyCustomButton variant="outline" @click="router.push('/')">
       <ArrowLeft />回到主页

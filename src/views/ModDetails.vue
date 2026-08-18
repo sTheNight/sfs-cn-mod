@@ -20,6 +20,7 @@ import {
   SaveIcon,
   SquarePen,
   Star,
+  TriangleAlert,
   UserRound,
   X,
   ZoomInIcon,
@@ -185,7 +186,7 @@ watch(
     </div>
 
     <template v-else>
-      <div class="flex items-center gap-3 sticky top-0 left-0 z-10 py-4">
+      <div class="flex items-center gap-3 py-4">
         <MyCustomButton class="backdrop-blur-lg" variant="outline" @click="goBack">
           <ArrowLeft />返回
         </MyCustomButton>
@@ -294,7 +295,13 @@ watch(
             <template #tag>
               <MessagesSquare :size="18" />
             </template>
-            <p class="text-default flex justify-center py-8">施工中...</p>
+            <div class="flex flex-col items-center justify-center gap-3 text-center text-accent-foreground py-6">
+              <TriangleAlert :size="36" class="text-muted-foreground" />
+              <div>
+                <h2 class="font-semibold">暂无支持计划</h2>
+                <p class="mt-1 text-sm text-muted-foreground">手写个 Waline 前端的难度有点高</p>
+              </div>
+            </div>
           </BasicInfoCard>
         </div>
       </div>
