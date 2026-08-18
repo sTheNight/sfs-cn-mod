@@ -11,11 +11,16 @@ const hasTag = computed(() => Boolean(slots.tag))
 </script>
 <template>
   <div class="border rounded-2xl p-4 shadow-xs transition-all duration-150 bg-background">
-    <div class="flex items-center gap-3">
-      <div v-if="hasTag" class="flex size-9 shrink-0 items-center justify-center rounded-lg border bg-muted">
-        <slot name="tag"></slot>
+    <div class="flex justify-between">
+      <div class="flex items-center gap-3">
+        <div v-if="hasTag" class="flex size-9 shrink-0 items-center justify-center rounded-lg border bg-muted">
+          <slot name="tag"></slot>
+        </div>
+        <h2 class="font-bold">{{ title }}</h2>
       </div>
-      <h2 class="font-bold">{{ title }}</h2>
+      <div class="flex items-center">
+        <slot name="prefix"></slot>
+      </div>
     </div>
     <div class="text-sm mt-4 text-muted-foreground">
       <slot></slot>

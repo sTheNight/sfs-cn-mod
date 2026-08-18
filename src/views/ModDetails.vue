@@ -18,6 +18,7 @@ import {
   MessagesSquare,
   PackageX,
   SaveIcon,
+  SquarePen,
   Star,
   UserRound,
   X,
@@ -28,8 +29,9 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 interface Rating {
-  count?: number
-  average?: number
+  count: number
+  average: number,
+  myScore: number
 }
 
 const route = useRoute()
@@ -52,6 +54,9 @@ const hasMultiplePreviewImages = computed(() => (mod.value?.images?.length ?? 0)
 const normalizedRating = computed(() => Math.min(5, Math.max(0, Number(rating.value?.average) || 0)))
 const formattedRating = computed(() => normalizedRating.value.toFixed(1))
 const hasRating = computed(() => (rating.value?.count ?? 0) > 0)
+
+const isRatingDialogShow = ref(false)
+const pendingRating = ref(0)
 
 function goBack() {
   if (window.history.length > 1) router.back()
@@ -81,6 +86,22 @@ function getStarFill(index: number) {
   return `${fill * 100}%`
 }
 
+async function submitScore(score: number) {
+  if (!mod.value) return;
+  try {
+    const response = await axios.post(
+      "https://sfszhmod.pages.dev/api/ratings",
+      {
+        mod: mod.value?.name,
+        score
+      }
+    )
+    rating.value = response.data
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 async function loadMod(name: string) {
   isLoading.value = true
   loadError.value = ''
@@ -106,7 +127,11 @@ async function fetchModRating(name: string) {
     const response = await axios.get<Rating>('https://sfszhmod.pages.dev/api/ratings', {
       params: { mod: name },
     })
-    if (requestId === ratingRequestId) rating.value = response.data
+    if (requestId === ratingRequestId) {
+      rating.value = response.data
+      if (rating.value.myScore > 0)
+        pendingRating.value = rating.value.myScore
+    }
   } catch (error) {
     if (requestId === ratingRequestId) ratingLoadFailed.value = true
     if (isAxiosError(error)) console.error(error)
@@ -158,16 +183,15 @@ watch(
     </div>
 
     <template v-else>
+      <div class="flex items-center gap-3 sticky top-0 left-0 z-10 py-4">
+        <MyCustomButton class="backdrop-blur-lg" variant="outline" @click="goBack">
+          <ArrowLeft />返回
+        </MyCustomButton>
+        <MyCustomButton @click="openUrl(mod.link)">
+          <Download />下载
+        </MyCustomButton>
+      </div>
       <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-3 justify-between">
-          <MyCustomButton variant="ghost" @click="goBack">
-            <ArrowLeft />返回
-          </MyCustomButton>
-          <MyCustomButton @click="openUrl(mod.link)">
-            <Download />下载
-          </MyCustomButton>
-        </div>
-
         <!-- 封面与基础信息 -->
         <section class="overflow-hidden rounded-2xl border bg-background shadow-xs">
           <div class="relative h-64 bg-amber-100 dark:bg-amber-950/60 sm:h-72">
@@ -198,45 +222,51 @@ watch(
         </div>
 
         <div class="grid gap-4">
-          <!-- 简介 -->
-          <BasicInfoCard title="模组简介">
-            <template #tag>
-              <FileText :size="18" />
-            </template>
-            <p class="whitespace-pre-line leading-6">{{ mod.desc }}</p>
-          </BasicInfoCard>
-
-          <!-- 评分 -->
-          <BasicInfoCard title="评分">
-            <template #tag>
-              <Star :size="18" />
-            </template>
-            <div class="flex min-h-7 items-center">
-              <template v-if="isRatingLoading">
-                <LoaderCircle :size="15" class="mr-2 animate-spin" />
-                正在加载评分...
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- 简介 -->
+            <BasicInfoCard title="模组简介">
+              <template #tag>
+                <FileText :size="18" />
               </template>
-              <span v-else-if="ratingLoadFailed">评分暂时无法加载</span>
-              <div v-else-if="hasRating" class="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <div class="flex items-baseline gap-1">
-                  <span class="text-xl font-semibold tabular-nums text-foreground">{{ formattedRating }}</span>
-                  <span class="text-xs">/ 5</span>
-                </div>
-                <div class="flex gap-0.5" :aria-label="`平均分数 ${formattedRating} 分`">
-                  <span v-for="index in 5" :key="index" class="relative block h-4 w-4">
-                    <Star :size="16" class="absolute inset-0 text-muted-foreground/25" />
-                    <span class="absolute inset-0 overflow-hidden text-amber-500"
-                      :style="{ width: getStarFill(index) }">
-                      <Star :size="16" class="fill-current" />
+              <p class="whitespace-pre-line leading-6">{{ mod.desc }}</p>
+            </BasicInfoCard>
+
+            <!-- 评分 -->
+            <BasicInfoCard title="评分">
+              <template #tag>
+                <Star :size="18" />
+              </template>
+              <template #prefix>
+                <MyCustomButton class="w-8 h-8 rounded-full" variant="ghost" size="sm"
+                  @click="isRatingDialogShow = !isRatingDialogShow">
+                  <SquarePen :size="16"></SquarePen>
+                </MyCustomButton>
+              </template>
+              <div class="flex min-h-7 items-center">
+                <template v-if="isRatingLoading">
+                  <LoaderCircle :size="15" class="mr-2 animate-spin" />
+                  正在加载评分...
+                </template>
+                <span v-else-if="ratingLoadFailed">评分暂时无法加载</span>
+                <div v-else-if="hasRating" class="flex flex-col gap-2">
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-xl font-semibold tabular-nums text-foreground">{{ formattedRating }}</span>
+                  </div>
+                  <div class="flex gap-0.5" :aria-label="`平均分数 ${formattedRating} 分`">
+                    <span v-for="index in 5" :key="index" class="relative block h-4 w-4">
+                      <Star :size="16" class="absolute inset-0 text-muted-foreground/25" />
+                      <span class="absolute inset-0 overflow-hidden text-amber-500"
+                        :style="{ width: getStarFill(index) }">
+                        <Star :size="16" class="fill-current" />
+                      </span>
                     </span>
-                  </span>
+                  </div>
+                  <span>{{ rating?.count }} 人评分</span>
                 </div>
-                <span class="h-3 w-px bg-border" aria-hidden="true"></span>
-                <span>{{ rating?.count }} 人评分</span>
+                <span v-else>暂无评分</span>
               </div>
-              <span v-else>暂无评分</span>
-            </div>
-          </BasicInfoCard>
+            </BasicInfoCard>
+          </div>
 
           <!-- 截图 -->
           <BasicInfoCard v-if="mod.images?.length" title="模组截图">
@@ -297,6 +327,29 @@ watch(
             {{ previewImageIndex + 1 }} / {{ mod.images.length }}
           </div>
         </div>
+      </DialogContent>
+    </Dialog>
+    <Dialog v-model:open="isRatingDialogShow">
+      <DialogContent class="w-[calc(100%-2rem)] max-w-sm rounded-2xl p-6 sm:max-w-sm" :show-close-button="false">
+        <div class="pr-8">
+          <h2 class="mt-4 text-lg font-bold">为模组评分</h2>
+          <p class="mt-1 truncate text-sm text-muted-foreground">{{ mod?.name }}</p>
+        </div>
+        <template v-if="rating">
+          <div class="py-5 text-center">
+            <div class="flex justify-center gap-2">
+              <Star v-for="index in 5" :key="index" :size="32" class="transition-transform duration-150 hover:scale-110"
+                @click="pendingRating = index"
+                :class="index <= pendingRating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'" />
+            </div>
+          </div>
+          <div class="flex justify-end gap-2">
+            <MyCustomButton variant="outline" @click="isRatingDialogShow = false">取消</MyCustomButton>
+            <MyCustomButton :disabled="pendingRating === 0" @click="submitScore(pendingRating)">
+              提交
+            </MyCustomButton>
+          </div>
+        </template>
       </DialogContent>
     </Dialog>
   </div>

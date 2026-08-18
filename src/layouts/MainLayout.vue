@@ -61,13 +61,13 @@ const routeButtons: RouteButton[] = [
     icon: CompassIcon,
     title: '教程',
     key: 'tutorial',
-    route: 'tutorial'
+    route: '/tutorial'
   },
   {
     icon: InfoIcon,
     title: '关于',
     key: 'info',
-    route: 'info'
+    route: '/info'
   }
 ]
 
