@@ -99,6 +99,8 @@ async function submitScore(score: number) {
     rating.value = response.data
   } catch (e) {
     console.log(e)
+  } finally {
+    isRatingDialogShow.value = false
   }
 }
 
