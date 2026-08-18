@@ -5,7 +5,6 @@ import { MyCustomButton } from '@/components/MyCustomButton';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { files, getModInfo } from '@/data/modInfo';
 import type { ModInfo } from '@/models/ModInfo';
-import { Waline } from '@waline/client/component';
 import {
   ArrowLeft,
   Calendar,
@@ -16,7 +15,6 @@ import {
   HistoryIcon,
   Image,
   LoaderCircle,
-  MessagesSquare,
   PackageX,
   SaveIcon,
   SquarePen,
@@ -28,7 +26,6 @@ import {
 import axios, { isAxiosError } from 'axios';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AlertMessage from '@/components/AlertMessage.vue';
 
 interface Rating {
   count: number
@@ -56,12 +53,6 @@ const hasMultiplePreviewImages = computed(() => (mod.value?.images?.length ?? 0)
 const normalizedRating = computed(() => Math.min(5, Math.max(0, Number(rating.value?.average) || 0)))
 const formattedRating = computed(() => normalizedRating.value.toFixed(1))
 const hasRating = computed(() => (rating.value?.count ?? 0) > 0)
-const walinePath = computed(() => {
-  if (!mod.value) return '/'
-
-  const slug = mod.value.name.trim().toLowerCase().replace(/\s+/g, '-')
-  return `/mod/${slug}`
-})
 
 const isRatingDialogShow = ref(false)
 const pendingRating = ref(0)
@@ -296,21 +287,6 @@ watch(
               </button>
             </div>
           </BasicInfoCard>
-
-          <!-- 评论 -->
-          <BasicInfoCard title="评论">
-            <template #tag>
-              <MessagesSquare :size="18" />
-            </template>
-            <div class="waline-comments">
-              <AlertMessage type="warning">
-                本站点可能不支持 OAuth 登录，有需求请访问
-                <a class="outline-0 underline text-blue-500" href="https://sfszhmod.pages.dev/">原站点</a>
-              </AlertMessage>
-              <Waline serverURL="https://sfszhmod.pages.dev/waline-proxy" :path="walinePath" lang="zh-CN"
-                dark="html.dark" />
-            </div>
-          </BasicInfoCard>
         </div>
       </div>
     </template>
@@ -371,21 +347,3 @@ watch(
     </Dialog>
   </div>
 </template>
-
-<style>
-@import '@waline/client/waline.css';
-</style>
-
-<style scoped>
-.waline-comments {
-  --waline-theme-color: #2563eb;
-  --waline-active-color: #1d4ed8;
-  --waline-color: var(--foreground);
-  --waline-bg-color: var(--color-background);
-  --waline-bg-color-light: var(--muted);
-  --waline-bg-color-hover: var(--accent);
-  --waline-border-color: var(--border);
-  --waline-info-bg-color: var(--muted);
-  --waline-info-color: var(--muted-foreground);
-}
-</style>
