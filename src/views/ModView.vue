@@ -9,16 +9,15 @@ import { onMounted, ref, watch } from 'vue';
 import ModCard from '@/components/ModInfo/ModCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import AlertMessage from '@/components/AlertMessage.vue';
-import ModInfoDialog from './ModInfoDialog.vue';
+import { useRouter } from 'vue-router';
 
 const shownList = ref<ModInfo[]>([])
-const pendingFile = ref<ModInfo>({} as ModInfo)
-const isModDetailDialogShow = ref(false)
 const isLoading = ref(true)
 const loadError = ref("")
 const categoryFilter = ref<ModCategory>("all")
 const searchText = ref("")
 const isWarningAlertShow = ref(true)
+const router = useRouter()
 
 function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
   if (category == "all") return source
@@ -37,9 +36,8 @@ function getModListByKeyword(keyword: string, source: ModInfo[] = files): ModInf
 }
 
 // 常规事件
-async function openModDetail(mod: ModInfo) {
-  pendingFile.value = mod;
-  isModDetailDialogShow.value = true;
+function openModDetail(mod: ModInfo) {
+  void router.push({ name: 'mod-details', params: { name: mod.name } })
 }
 
 function openUrl(url: string) {
@@ -77,7 +75,6 @@ onMounted(() => {
 </script>
 <template>
   <div>
-    <ModInfoDialog v-model:open="isModDetailDialogShow" :mod="pendingFile" @download="openUrl" />
     <!-- 检索栏 -->
     <div class="grid gap-2 text-sm sm:flex sm:items-center sm:justify-between">
       <div class="flex items-center flex-wrap justify-between gap-2 sm:justify-start">

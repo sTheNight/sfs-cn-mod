@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { House } from '@lucide/vue';
+import MyCustomButton from '@/components/MyCustomButton/MyCustomButton.vue';
+import { ArrowLeft, PackageX } from '@lucide/vue';
 import { useRouter } from 'vue-router';
 const router = useRouter()
 </script>
 <template>
-  <div class="flex w-full flex-col items-center justify-center px-4 py-20 text-center">
-    <div class=" select-none text-5xl font-semibold leading-none text-muted">404</div>
-    <p class="mt-4 text-sm text-muted-foreground">你好像来到了一个错误的地方</p>
-    <Button class="mt-6" size="sm" @click="router.push('/')">
-      <House :size="14" /> 回到正确的路上
-    </Button>
+  <div class="flex min-h-60 flex-col items-center justify-center gap-3 text-center">
+    <PackageX :size="36" class="text-muted-foreground" />
+    <div>
+      <h2 class="font-semibold">404 没有找到</h2>
+      <p class="mt-1 text-sm text-muted-foreground">这是一个比较绝望的错误</p>
+    </div>
+    <MyCustomButton variant="outline" @click="router.push('/')">
+      <ArrowLeft />回到主页
+    </MyCustomButton>
   </div>
 </template>

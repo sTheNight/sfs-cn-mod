@@ -72,6 +72,7 @@ const routeButtons: RouteButton[] = [
 ]
 
 function isActiveRoute(name: string) {
+  if (name === 'mod') return route.name === 'mod' || route.name === 'mod-details'
   return route.name == name
 }
 
@@ -165,7 +166,9 @@ onMounted(() => {
       </div>
       <RouterView v-slot="{ Component }">
         <Transition :name="transition" mode="out-in">
-          <component :is="Component" :key="route.fullPath" />
+          <KeepAlive include="ModView">
+            <component :is="Component" :key="route.fullPath" />
+          </KeepAlive>
         </Transition>
       </RouterView>
       <div :style="{ height: `${safePadding}px` }" aria-hidden="true"></div>
