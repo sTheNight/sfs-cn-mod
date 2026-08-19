@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { MyCustomButton } from '@/components/MyCustomButton'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
-import { type BackgroundPreference, type ThemePreference, type TransitionPreference, useSettingsStore } from '@/stores/settings'
+import { DEFAULT_SETTINGS, useSettingsStore } from '@/stores/settings'
 import { Trash2, X } from '@lucide/vue'
 import SelectSettingCard from './setting/SelectSettingCard.vue'
 import SettingSection from './setting/SettingSection.vue'
@@ -20,34 +20,10 @@ const backgroundInput = useTemplateRef<HTMLInputElement>('background-input')
 const backgroundError = ref('')
 const MAX_BACKGROUND_SIZE = 10 * 1024 * 1024
 
-function handleThemeSelect(key: ThemePreference) {
-  settingsStore.setTheme(key)
-}
-
 async function handleResetAllSetting() {
   await removeCustomBackground()
   settingsStore.resetAllSetting()
   location.reload()
-}
-
-function handleSelect(val: boolean) {
-  settingsStore.setEnableAnimations(val)
-}
-
-function handleTransitionSelect(key: TransitionPreference) {
-  settingsStore.setTransition(key)
-}
-
-function handleEnableRippleEffectSelect(val: boolean) {
-  settingsStore.setEnableRippleEffect(val)
-}
-
-function handleEnableTitleGlowSelect(val: boolean) {
-  settingsStore.setEnableTitleGlow(val)
-}
-
-function handleBackgroundSelect(key: BackgroundPreference) {
-  settingsStore.setBackground(key)
 }
 
 function selectBackgroundImage() {
@@ -113,22 +89,26 @@ async function clearBackgroundImage() {
         </div>
         <div class="w-full box-border pb-2">
           <SettingSection name="外观">
-            <SelectSettingCard description="选择主题模式" :value="settingsStore.theme" :select="themeOptions" title="主题"
-              @select="handleThemeSelect" />
-            <SwitchSettingCard :model-value="settingsStore.enableAnimations" @on-switch="handleSelect" title="动画效果"
-              description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" />
+            <SelectSettingCard description="选择主题模式" :model-value="settingsStore.theme"
+              :default-value="DEFAULT_SETTINGS.theme" :select="themeOptions" title="主题"
+              @update:model-value="settingsStore.setTheme" />
+            <SwitchSettingCard :model-value="settingsStore.enableAnimations"
+              title="动画效果" description="关闭后将减少动画效果，或许能提升一定的页面渲染性能"
+              @update:model-value="settingsStore.setEnableAnimations" />
             <SwitchSettingCard :disabled="!settingsStore.enableAnimations"
-              :model-value="settingsStore.enableRippleEffect" @on-switch="handleEnableRippleEffectSelect" title="水波纹效果"
-              description="按住按钮后的水波纹效果" />
+              :model-value="settingsStore.enableRippleEffect"
+              title="水波纹效果" description="按住按钮后的水波纹效果" @update:model-value="settingsStore.setEnableRippleEffect" />
             <SwitchSettingCard :disabled="!settingsStore.enableAnimations" :model-value="settingsStore.enableTitleGlow"
-              @on-switch="handleEnableTitleGlowSelect" title="标题发光" description="显示页面标题的背景发光效果" />
+              title="标题发光" description="显示页面标题的背景发光效果"
+              @update:model-value="settingsStore.setEnableTitleGlow" />
           </SettingSection>
           <SettingSection name="界面">
             <SelectSettingCard :disabled="!settingsStore.enableAnimations" title="切换动画"
-              description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions" :value="settingsStore.transition"
-              @select="handleTransitionSelect" />
+              description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions" :model-value="settingsStore.transition"
+              :default-value="DEFAULT_SETTINGS.transition" @update:model-value="settingsStore.setTransition" />
             <SelectSettingCard title="背景样式" description="选择主页背景样式" :select="backgroundOptions"
-              :value="settingsStore.background" @select="handleBackgroundSelect">
+              :model-value="settingsStore.background" :default-value="DEFAULT_SETTINGS.background"
+              @update:model-value="settingsStore.setBackground">
             </SelectSettingCard>
           </SettingSection>
           <SettingSection name="自定义背景" v-if="settingsStore.background === 'custom-image'">
@@ -147,11 +127,13 @@ async function clearBackgroundImage() {
               </div>
             </BasicSettingCard>
             <SliderSettingCard title="模糊强度" :description="`${settingsStore.backgroundOverlay.blur}px`"
-              :model-value="settingsStore.backgroundOverlay.blur" :min="0" :max="24" :step="1"
+              :model-value="settingsStore.backgroundOverlay.blur"
+              :default-value="DEFAULT_SETTINGS.backgroundOverlay.blur" :min="0" :max="24" :step="1"
               @update:model-value="settingsStore.setBackgroundBlur" />
             <SliderSettingCard title="透明度"
               :description="`${(settingsStore.backgroundOverlay.opacity * 100).toFixed(0)}%`"
-              :model-value="settingsStore.backgroundOverlay.opacity" :min="0" :max="1" :step="0.01"
+              :model-value="settingsStore.backgroundOverlay.opacity"
+              :default-value="DEFAULT_SETTINGS.backgroundOverlay.opacity" :min="0" :max="1" :step="0.01"
               @update:model-value="settingsStore.setBackgroundOpacity" />
           </SettingSection>
           <SettingSection name="操作">

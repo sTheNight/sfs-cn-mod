@@ -10,6 +10,7 @@ export interface SelectValue<T extends AcceptableValue = string> {
 </script>
 
 <script setup lang="ts" generic="T extends AcceptableValue = string">
+import { useResettableSetting } from '@/composables/useResettableSetting'
 import { ref } from 'vue'
 import { Select } from '../ui/select/index.ts'
 import SelectContent from '../ui/select/SelectContent.vue'
@@ -17,25 +18,36 @@ import SelectItem from '../ui/select/SelectItem.vue'
 import SelectTrigger from '../ui/select/SelectTrigger.vue'
 import SelectPrimitiveValue from '../ui/select/SelectValue.vue'
 import BasicSettingCard from './BasicSettingCard.vue'
-import type { BasicSettingCardProps } from './index.ts'
+import type { ResettableSettingCardProps } from './index.ts'
 
-interface SelectSettingCardProps {
+type SelectSettingCardProps = ResettableSettingCardProps<T> & {
   select: SelectValue<T>[]
-  value: T
+  modelValue: T
   placeholder?: string
 }
-interface SelectSettingCardEmits {
-  (e: 'select', key: T): void
+
+interface SelectSettingCardEmits<T> {
+  (event: 'update:modelValue', value: T): void
 }
 
-const props = defineProps<BasicSettingCardProps & SelectSettingCardProps>()
-const emit = defineEmits<SelectSettingCardEmits>()
+const props = defineProps<SelectSettingCardProps>()
+const emit = defineEmits<SelectSettingCardEmits<T>>()
 const isOpen = ref(false)
+
+function updateValue(value: T) {
+  if (!props.disabled) emit('update:modelValue', value)
+}
+
+const { canUndo, undo } = useResettableSetting(
+  () => props.modelValue,
+  () => props.defaultValue,
+  updateValue,
+)
 
 function handleSelect(value: AcceptableValue) {
   const selectedItem = props.select.find((item) => Object.is(item.key, value))
   if (selectedItem) {
-    emit('select', selectedItem.key)
+    updateValue(selectedItem.key)
   }
 }
 
@@ -45,12 +57,12 @@ function openSelect() {
 }
 </script>
 <template>
-  <BasicSettingCard :title="props.title" :description="props.description" :show-undo="props.showUndo"
-    :disabled="props.disabled" @click="openSelect">
-    <Select v-model:open="isOpen" :disabled="props.disabled" :model-value="props.value"
+  <BasicSettingCard :title="props.title" :description="props.description" :show-undo="canUndo"
+    :disabled="props.disabled" @click="openSelect" @undo="undo">
+    <Select v-model:open="isOpen" :disabled="props.disabled" :model-value="props.modelValue"
       @update:model-value="handleSelect">
       <SelectTrigger @click.stop>
-        <SelectPrimitiveValue class="text-xs" :placeholder="placeholder ?? undefined" />
+        <SelectPrimitiveValue class="text-xs" :placeholder="props.placeholder ?? undefined" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem class="text-xs" v-for="(item, index) in props.select" :key="index" :value="item.key">

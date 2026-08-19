@@ -21,22 +21,22 @@ const props = withDefaults(defineProps<AlertMessageProps>(), {
 const alertStyleMap: Record<AlertType, AlertStyle> = {
   info: {
     icon: Info,
-    wrapperClass: "border-blue-100 bg-blue-50/60 text-blue-700 dark:border-blue-900 dark:bg-blue-950/50 dark:text-blue-300",
+    wrapperClass: "border-blue-100 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-300",
     iconClass: "border-blue-100 bg-white text-blue-600 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-300",
   },
   warning: {
     icon: TriangleAlert,
-    wrapperClass: "border-amber-100 bg-amber-50/70 text-amber-700 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-300",
+    wrapperClass: "border-amber-100 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300",
     iconClass: "border-amber-100 bg-white text-amber-600 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300",
   },
   error: {
     icon: AlertCircle,
-    wrapperClass: "border-red-100 bg-red-50/70 text-red-700 dark:border-red-900 dark:bg-red-950/50 dark:text-red-300",
+    wrapperClass: "border-red-100 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300",
     iconClass: "border-red-100 bg-white text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-300",
   },
   success: {
     icon: CheckCircle2,
-    wrapperClass: "border-green-100 bg-green-50/70 text-green-700 dark:border-green-900 dark:bg-green-950/50 dark:text-green-300",
+    wrapperClass: "border-green-100 bg-green-50 text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-300",
     iconClass: "border-green-100 bg-white text-green-600 dark:border-green-900 dark:bg-green-950 dark:text-green-300",
   },
 }

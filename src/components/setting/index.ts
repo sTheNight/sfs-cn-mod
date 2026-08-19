@@ -4,3 +4,7 @@ export interface BasicSettingCardProps {
   showUndo?: boolean,
   disabled?: boolean
 }
+
+export type ResettableSettingCardProps<T> = Omit<BasicSettingCardProps, 'showUndo'> & {
+  defaultValue?: T
+}

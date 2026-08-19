@@ -10,10 +10,25 @@ interface BackgroundOverlay {
   opacity: number
 }
 
+export const DEFAULT_SETTINGS = {
+  theme: 'system' as ThemePreference,
+  neverShowWarningDialog: false,
+  enableAnimations: true,
+  enableRippleEffect: true,
+  enableTitleGlow: true,
+  transition: 'x-fade' as TransitionPreference,
+  background: 'grid' as BackgroundPreference,
+  customBackgroundName: '',
+  backgroundOverlay: {
+    blur: 12,
+    opacity: 0.75,
+  },
+} as const
+
 const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches
 
 export const useSettingsStore = defineStore('settings', () => {
-  const neverShowWarningDialog = ref<boolean>(false)
+  const neverShowWarningDialog = ref<boolean>(DEFAULT_SETTINGS.neverShowWarningDialog)
 
   function setNeverShowWarningDialog(val: boolean) {
     neverShowWarningDialog.value = val
@@ -22,10 +37,10 @@ export const useSettingsStore = defineStore('settings', () => {
     localStorage.removeItem('sfs-settings')
   }
   // 外观
-  const theme = ref<ThemePreference>('system')
-  const enableAnimations = ref<boolean>(true)
-  const enableRippleEffect = ref<boolean>(true)
-  const enableTitleGlow = ref<boolean>(true)
+  const theme = ref<ThemePreference>(DEFAULT_SETTINGS.theme)
+  const enableAnimations = ref<boolean>(DEFAULT_SETTINGS.enableAnimations)
+  const enableRippleEffect = ref<boolean>(DEFAULT_SETTINGS.enableRippleEffect)
+  const enableTitleGlow = ref<boolean>(DEFAULT_SETTINGS.enableTitleGlow)
   const isDark = computed(() => theme.value === 'dark' || (theme.value === 'system' && prefersDark()))
 
   function applyTheme() {
@@ -61,13 +76,12 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   // 界面 &  背景
-  const transition = ref<TransitionPreference>("x-fade")
-  const background = ref<BackgroundPreference>("grid")
-  const customBackgroundName = ref('')
+  const transition = ref<TransitionPreference>(DEFAULT_SETTINGS.transition)
+  const background = ref<BackgroundPreference>(DEFAULT_SETTINGS.background)
+  const customBackgroundName = ref<string>(DEFAULT_SETTINGS.customBackgroundName)
   const customBackgroundRevision = ref(0)
   const backgroundOverlay = ref<BackgroundOverlay>({
-    blur: 12,
-    opacity: 0.75
+    ...DEFAULT_SETTINGS.backgroundOverlay,
   })
 
   function applyMotionPreference() {

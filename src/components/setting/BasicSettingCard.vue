@@ -3,26 +3,37 @@ import { Undo2 } from '@lucide/vue';
 import RippleProvider from '../RippleProvider.vue';
 import type { BasicSettingCardProps } from './index.ts';
 
+interface BasicSettingCardEmits {
+  (event: 'undo'): void
+}
+
 defineOptions({ inheritAttrs: false })
 
-const { title, description, showUndo = false, disabled = false } = defineProps<BasicSettingCardProps>()
+const props = withDefaults(defineProps<BasicSettingCardProps>(), {
+  showUndo: false,
+  disabled: false
+})
+const emit = defineEmits<BasicSettingCardEmits>()
 </script>
 <template>
-  <div :class="disabled && 'cursor-not-allowed'">
-    <ripple-provider v-bind="$attrs" tag="div" :is-dark-ripple="true" :inert="disabled || undefined"
-      :aria-disabled="disabled || undefined"
-      :class="[
+  <div :class="props.disabled && 'cursor-not-allowed'">
+    <ripple-provider v-bind="$attrs" tag="div" :is-dark-ripple="true" :inert="props.disabled || undefined"
+      :aria-disabled="props.disabled || undefined" :class="[
         'border rounded-xl box-border py-3 px-4 transition-all duration-200 text-sm',
-        disabled ? 'pointer-events-none select-none opacity-50' : 'hover:bg-accent dark:hover:bg-input/50',
+        props.disabled ? 'pointer-events-none select-none opacity-50' : 'hover:bg-accent dark:hover:bg-input/50',
       ]">
       <div class="flex items-center justify-between gap-3">
         <div class="min-w-0 flex-1">
           <h3 class="flex items-center gap-1">
-            {{ title }}
-            <undo2 v-if="showUndo" class="cursor-pointer" :size="12" @click.prevent.stop />
+            {{ props.title }}
+            <button v-if="props.showUndo" type="button"
+              class="cursor-pointer rounded-sm text-muted-foreground hover:text-foreground" aria-label="恢复默认值"
+              title="恢复默认值" @click.prevent.stop="emit('undo')">
+              <undo2 :size="12" />
+            </button>
           </h3>
-          <p v-if="description" class="text-muted-foreground text-xs wrap-break-word">
-            {{ description }}
+          <p v-if="props.description" class="text-muted-foreground text-xs wrap-break-word">
+            {{ props.description }}
           </p>
         </div>
         <div class="shrink-0 flex items-center">
