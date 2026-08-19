@@ -112,7 +112,7 @@ onMounted(() => {
         </MyCustomButton>
       </div>
     </div>
-    <CollapseTransition :show="isWarningAlertShow" scale blur>
+    <CollapseTransition :show="isWarningAlertShow" scale>
       <AlertMessage class="mt-4 relative" type="warning">
         声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等bug
         <!-- 这个按钮会遮挡文字 -->

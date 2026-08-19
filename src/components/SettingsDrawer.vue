@@ -110,7 +110,7 @@ async function clearBackgroundImage() {
               @update:model-value="settingsStore.setBackground">
             </SelectSettingCard>
           </SettingSection>
-          <CollapseTransition :show="settingsStore.background === 'custom-image'" scale blur>
+          <CollapseTransition :show="settingsStore.background === 'custom-image'">
             <SettingSection name="自定义背景">
               <BasicSettingCard title="背景图片"
                 :description="backgroundError || settingsStore.customBackgroundName || '从本机选择一张图片，最大 10 MB'">
