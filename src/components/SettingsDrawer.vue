@@ -51,6 +51,10 @@ function handleEnableRippleEffectSelect(val: boolean) {
   settingsStore.setEnableRippleEffect(val)
 }
 
+function handleEnableTitleGlowSelect(val: boolean) {
+  settingsStore.setEnableTitleGlow(val)
+}
+
 function handleBackgroundSelect(key: BackgroundPreference) {
   settingsStore.setBackground(key)
 }
@@ -126,6 +130,8 @@ async function clearBackgroundImage() {
               description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" />
             <SwitchSettingCard :model-value="settingsStore.enableRippleEffect"
               @on-switch="handleEnableRippleEffectSelect" title="水波纹效果" description="按住按钮后的水波纹效果" />
+            <SwitchSettingCard :model-value="settingsStore.enableTitleGlow"
+              @on-switch="handleEnableTitleGlowSelect" title="标题发光" description="显示页面标题的背景发光效果" />
           </SettingSection>
           <SettingSection name="界面">
             <SelectSettingCard title="切换动画" description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions"

@@ -25,6 +25,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const theme = ref<ThemePreference>('system')
   const enableAnimations = ref<boolean>(true)
   const enableRippleEffect = ref<boolean>(true)
+  const enableTitleGlow = ref<boolean>(true)
   const isDark = computed(() => theme.value === 'dark' || (theme.value === 'system' && prefersDark()))
 
   function applyTheme() {
@@ -45,6 +46,9 @@ export const useSettingsStore = defineStore('settings', () => {
   }
   function setEnableRippleEffect(value: boolean) {
     enableRippleEffect.value = value
+  }
+  function setEnableTitleGlow(value: boolean) {
+    enableTitleGlow.value = value
   }
   function initializeTheme() {
     applyTheme()
@@ -87,6 +91,7 @@ export const useSettingsStore = defineStore('settings', () => {
     neverShowWarningDialog,
     enableAnimations,
     enableRippleEffect,
+    enableTitleGlow,
     background,
     customBackgroundName,
     customBackgroundRevision,
@@ -98,6 +103,7 @@ export const useSettingsStore = defineStore('settings', () => {
     setBackgroundBlur,
     initializeTheme,
     setEnableRippleEffect,
+    setEnableTitleGlow,
     setNeverShowWarningDialog,
     setEnableAnimations,
     initializeMotionPreference,
@@ -108,6 +114,6 @@ export const useSettingsStore = defineStore('settings', () => {
 }, {
   persist: {
     key: 'sfs-settings',
-    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'background', 'customBackgroundName', 'backgroundOverlay'],
+    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'enableTitleGlow', 'background', 'customBackgroundName', 'backgroundOverlay'],
   },
 })
