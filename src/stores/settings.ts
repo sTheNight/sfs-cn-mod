@@ -66,8 +66,8 @@ export const useSettingsStore = defineStore('settings', () => {
   const customBackgroundName = ref('')
   const customBackgroundRevision = ref(0)
   const backgroundOverlay = ref<BackgroundOverlay>({
-    blur: 8,
-    opacity: 0.3
+    blur: 12,
+    opacity: 0.75
   })
 
   function applyMotionPreference() {
