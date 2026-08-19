@@ -22,7 +22,21 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="fixed inset-0 -z-1 overflow-hidden pointer-events-none" aria-hidden="true">
-    <img v-if="imageUrl" :src="imageUrl" alt="" class="h-full w-full object-cover" />
-    <div v-if="imageUrl" class="absolute inset-0"></div>
+    <img v-if="imageUrl" :src="imageUrl" alt="" class="absolute inset-0 size-full object-cover" />
+    <div v-if="imageUrl" class="bg-img absolute inset-0" :style="{
+      '--ol-blur-radius': `${settingsStore.backgroundOverlay.blur}px`
+    }"></div>
+    <div v-if="imageUrl" class="background-overlay absolute inset-0 bg-background" :style="{
+      '--ol-opacity': settingsStore.backgroundOverlay.opacity,
+    }"></div>
   </div>
 </template>
+<style scoped>
+.background-overlay {
+  opacity: var(--ol-opacity);
+}
+
+.bg-img {
+  backdrop-filter: blur(var(--ol-blur-radius));
+}
+</style>

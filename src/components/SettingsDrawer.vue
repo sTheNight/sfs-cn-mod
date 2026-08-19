@@ -11,12 +11,21 @@ import { themeOptions } from '@/data/themeOptions.ts'
 import { transitionOptions } from '@/data/transitionOptions.ts'
 import { backgroundOptions } from '@/data/backgroundOptions.ts'
 import { removeCustomBackground, saveCustomBackground } from '@/utils/customBackgroundStorage'
-import { ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
+import Slider from './ui/slider/Slider.vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
 const backgroundInput = useTemplateRef<HTMLInputElement>('background-input')
 const backgroundError = ref('')
+const backgroundBlur = computed<number[]>({
+  get: () => [settingsStore.backgroundOverlay.blur],
+  set: ([value]) => settingsStore.setBackgroundBlur(value ?? 0),
+})
+const backgroundOpacity = computed<number[]>({
+  get: () => [settingsStore.backgroundOverlay.opacity],
+  set: ([value]) => settingsStore.setBackgroundOpacity(value ?? 0),
+})
 
 const MAX_BACKGROUND_SIZE = 10 * 1024 * 1024
 
@@ -124,7 +133,9 @@ async function clearBackgroundImage() {
             <SelectSettingCard title="背景样式" description="选择主页背景样式" :select="backgroundOptions"
               :value="settingsStore.background" @select="handleBackgroundSelect">
             </SelectSettingCard>
-            <BasicSettingCard title="背景图片" v-if="settingsStore.background === 'custom-image'"
+          </SettingSection>
+          <SettingSection name="自定义背景" v-if="settingsStore.background === 'custom-image'">
+            <BasicSettingCard title="背景图片"
               :description="backgroundError || settingsStore.customBackgroundName || '从本机选择一张图片，最大 10 MB'">
               <div class="flex gap-2">
                 <input ref="background-input" class="hidden" type="file" accept="image/*"
@@ -137,6 +148,13 @@ async function clearBackgroundImage() {
                   <Trash2 :size="14" />
                 </MyCustomButton>
               </div>
+            </BasicSettingCard>
+            <BasicSettingCard title="模糊强度" :description="`${settingsStore.backgroundOverlay.blur}px`">
+              <Slider v-model="backgroundBlur" :min="0" :max="24" :step="1" class="w-32 sm:w-40" />
+            </BasicSettingCard>
+            <BasicSettingCard title="透明度"
+              :description="`${(settingsStore.backgroundOverlay.opacity * 100).toFixed(0)}%`">
+              <Slider v-model="backgroundOpacity" :min="0" :max="1" :step="0.01" class="w-32 sm:w-40" />
             </BasicSettingCard>
           </SettingSection>
           <SettingSection name="操作">

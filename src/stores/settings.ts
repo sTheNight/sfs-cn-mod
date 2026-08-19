@@ -5,6 +5,11 @@ export type ThemePreference = 'system' | 'light' | 'dark'
 export type TransitionPreference = 'x-fade' | 'y-fade' | 'opacity-fade'
 export type BackgroundPreference = 'none' | 'grid' | 'custom-image'
 
+interface BackgroundOverlay {
+  blur: number,
+  opacity: number
+}
+
 const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches
 
 export const useSettingsStore = defineStore('settings', () => {
@@ -56,6 +61,10 @@ export const useSettingsStore = defineStore('settings', () => {
   const background = ref<BackgroundPreference>("grid")
   const customBackgroundName = ref('')
   const customBackgroundRevision = ref(0)
+  const backgroundOverlay = ref<BackgroundOverlay>({
+    blur: 8,
+    opacity: 0.3
+  })
 
   function applyMotionPreference() {
     document.documentElement.dataset.reduceMotion = String(!enableAnimations.value)
@@ -67,6 +76,12 @@ export const useSettingsStore = defineStore('settings', () => {
     customBackgroundName.value = value
     customBackgroundRevision.value += 1
   }
+  function setBackgroundBlur(value: number) {
+    backgroundOverlay.value.blur = value
+  }
+  function setBackgroundOpacity(value: number) {
+    backgroundOverlay.value.opacity = value
+  }
   return {
     theme,
     neverShowWarningDialog,
@@ -75,21 +90,24 @@ export const useSettingsStore = defineStore('settings', () => {
     background,
     customBackgroundName,
     customBackgroundRevision,
+    transition,
+    backgroundOverlay,
     setTheme,
     setBackground,
     setCustomBackgroundName,
+    setBackgroundBlur,
     initializeTheme,
     setEnableRippleEffect,
     setNeverShowWarningDialog,
     setEnableAnimations,
     initializeMotionPreference,
     resetAllSetting,
-    transition,
-    setTransition
+    setTransition,
+    setBackgroundOpacity
   }
 }, {
   persist: {
     key: 'sfs-settings',
-    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'background', 'customBackgroundName'],
+    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'background', 'customBackgroundName', 'backgroundOverlay'],
   },
 })
