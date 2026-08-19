@@ -2,7 +2,7 @@
 import { MyCustomButton } from '@/components/MyCustomButton'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
 import { type BackgroundPreference, type ThemePreference, type TransitionPreference, useSettingsStore } from '@/stores/settings'
-import { X } from '@lucide/vue'
+import { Trash2, X } from '@lucide/vue'
 import SelectSettingCard from './setting/SelectSettingCard.vue'
 import SettingSection from './setting/SettingSection.vue'
 import BasicSettingCard from './setting/BasicSettingCard.vue'
@@ -10,15 +10,22 @@ import SwitchSettingCard from './setting/SwitchSettingCard.vue'
 import { themeOptions } from '@/data/themeOptions.ts'
 import { transitionOptions } from '@/data/transitionOptions.ts'
 import { backgroundOptions } from '@/data/backgroundOptions.ts'
+import { removeCustomBackground, saveCustomBackground } from '@/utils/customBackgroundStorage'
+import { ref, useTemplateRef } from 'vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
+const backgroundInput = useTemplateRef<HTMLInputElement>('background-input')
+const backgroundError = ref('')
+
+const MAX_BACKGROUND_SIZE = 10 * 1024 * 1024
 
 function handleThemeSelect(key: ThemePreference) {
   settingsStore.setTheme(key)
 }
 
-function handleResetAllSetting() {
+async function handleResetAllSetting() {
+  await removeCustomBackground()
   settingsStore.resetAllSetting()
   location.reload()
 }
@@ -37,6 +44,38 @@ function handleEnableRippleEffectSelect(val: boolean) {
 
 function handleBackgroundSelect(key: BackgroundPreference) {
   settingsStore.setBackground(key)
+}
+
+function selectBackgroundImage() {
+  backgroundInput.value?.click()
+}
+
+async function handleBackgroundFile(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+
+  if (!file.type.startsWith('image/'))
+    return
+  if (file.size > MAX_BACKGROUND_SIZE)
+    return
+
+  try {
+    await saveCustomBackground(file)
+    settingsStore.setCustomBackgroundName(file.name)
+    settingsStore.setBackground('custom-image')
+    backgroundError.value = ''
+  } catch {
+    backgroundError.value = '图片保存失败，请检查浏览器存储权限'
+  }
+}
+
+async function clearBackgroundImage() {
+  await removeCustomBackground()
+  settingsStore.setCustomBackgroundName('')
+  settingsStore.setBackground('grid')
+  backgroundError.value = ''
 }
 </script>
 
@@ -85,6 +124,20 @@ function handleBackgroundSelect(key: BackgroundPreference) {
             <SelectSettingCard title="背景样式" description="选择主页背景样式" :select="backgroundOptions"
               :value="settingsStore.background" @select="handleBackgroundSelect">
             </SelectSettingCard>
+            <BasicSettingCard title="背景图片" v-if="settingsStore.background === 'custom-image'"
+              :description="backgroundError || settingsStore.customBackgroundName || '从本机选择一张图片，最大 10 MB'">
+              <div class="flex gap-2">
+                <input ref="background-input" class="hidden" type="file" accept="image/*"
+                  @change="handleBackgroundFile" />
+                <MyCustomButton variant="outline" size="sm" class="text-xs" @click="selectBackgroundImage">
+                  选择
+                </MyCustomButton>
+                <MyCustomButton v-if="settingsStore.customBackgroundName" variant="outline" size="sm" class="text-xs"
+                  aria-label="清除背景图片" @click="clearBackgroundImage">
+                  <Trash2 :size="14" />
+                </MyCustomButton>
+              </div>
+            </BasicSettingCard>
           </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">

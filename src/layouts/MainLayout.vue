@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import FloatButton from '@/components/FloatButton.vue';
-import MainBackground from '@/components/MainBackground.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import SettingsDrawer from '@/components/SettingsDrawer.vue';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -11,6 +10,8 @@ import { useWindowScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import GridBackground from '@/components/Background/GridBackground.vue';
+import ImageBackground from '@/components/Background/ImageBackground.vue';
 
 const route = useRoute()
 const router = useRouter()
@@ -94,7 +95,8 @@ onMounted(() => {
 <template>
   <div class="relative isolate w-full min-h-screen">
     <template v-if="!(settingsStore.background == 'none')">
-      <MainBackground v-if="settingsStore.background == 'grid'" />
+      <GridBackground v-if="settingsStore.background == 'grid'" />
+      <ImageBackground v-if="settingsStore.background == 'custom-image'" />
     </template>
     <div ref="float-group"
       class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">

@@ -79,14 +79,14 @@ onMounted(() => {
     <div class="grid gap-2 text-sm sm:flex sm:items-center sm:justify-between">
       <div class="flex items-center flex-wrap justify-between gap-2 sm:justify-start">
         <div
-          class="border-input flex h-9 w-fit items-center gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs">
+          class="border-input bg-background flex h-9 w-fit items-center gap-2 rounded-md border px-3 py-2 text-sm whitespace-nowrap shadow-xs">
           <Folder :size="16" />
           <Transition name="switch-fade" mode="out-in">
             <span :key="shownList.length">共 {{ shownList.length }} 个文件</span>
           </Transition>
         </div>
         <Select v-model:model-value="categoryFilter">
-          <SelectTrigger>
+          <SelectTrigger class="bg-background">
             <div class="flex items-center gap-2">
               <Filter :size="16" />
               <span>{{ categoryRecord[categoryFilter] }}</span>
@@ -103,7 +103,7 @@ onMounted(() => {
         </Select>
       </div>
       <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-        <Input v-model="searchText" class="min-w-0 text-sm" placeholder="请输入关键字"
+        <Input v-model="searchText" class="min-w-0 text-sm bg-background" placeholder="请输入关键字"
           @keydown="handleKeywordFilterKeyDown" />
         <MyCustomButton class="px-3 w-9 h-9" @click="applyFilter">
           <Search />
