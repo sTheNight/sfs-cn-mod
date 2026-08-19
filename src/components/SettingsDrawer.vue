@@ -13,6 +13,7 @@ import { transitionOptions } from '@/data/transitionOptions.ts'
 import { backgroundOptions } from '@/data/backgroundOptions.ts'
 import { removeCustomBackground, saveCustomBackground } from '@/utils/customBackgroundStorage'
 import { ref, useTemplateRef } from 'vue'
+import CollapseTransition from './CollapseTransition.vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
@@ -92,15 +93,13 @@ async function clearBackgroundImage() {
             <SelectSettingCard description="选择主题模式" :model-value="settingsStore.theme"
               :default-value="DEFAULT_SETTINGS.theme" :select="themeOptions" title="主题"
               @update:model-value="settingsStore.setTheme" />
-            <SwitchSettingCard :model-value="settingsStore.enableAnimations"
-              title="动画效果" description="关闭后将减少动画效果，或许能提升一定的页面渲染性能"
-              @update:model-value="settingsStore.setEnableAnimations" />
+            <SwitchSettingCard :model-value="settingsStore.enableAnimations" title="动画效果"
+              description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" @update:model-value="settingsStore.setEnableAnimations" />
             <SwitchSettingCard :disabled="!settingsStore.enableAnimations"
-              :model-value="settingsStore.enableRippleEffect"
-              title="水波纹效果" description="按住按钮后的水波纹效果" @update:model-value="settingsStore.setEnableRippleEffect" />
+              :model-value="settingsStore.enableRippleEffect" title="水波纹效果" description="按住按钮后的水波纹效果"
+              @update:model-value="settingsStore.setEnableRippleEffect" />
             <SwitchSettingCard :disabled="!settingsStore.enableAnimations" :model-value="settingsStore.enableTitleGlow"
-              title="标题发光" description="显示页面标题的背景发光效果"
-              @update:model-value="settingsStore.setEnableTitleGlow" />
+              title="标题发光" description="显示页面标题的背景发光效果" @update:model-value="settingsStore.setEnableTitleGlow" />
           </SettingSection>
           <SettingSection name="界面">
             <SelectSettingCard :disabled="!settingsStore.enableAnimations" title="切换动画"
@@ -111,31 +110,33 @@ async function clearBackgroundImage() {
               @update:model-value="settingsStore.setBackground">
             </SelectSettingCard>
           </SettingSection>
-          <SettingSection name="自定义背景" v-if="settingsStore.background === 'custom-image'">
-            <BasicSettingCard title="背景图片"
-              :description="backgroundError || settingsStore.customBackgroundName || '从本机选择一张图片，最大 10 MB'">
-              <div class="flex gap-2">
-                <input ref="background-input" class="hidden" type="file" accept="image/*"
-                  @change="handleBackgroundFile" />
-                <MyCustomButton variant="outline" size="sm" class="text-xs" @click="selectBackgroundImage">
-                  选择
-                </MyCustomButton>
-                <MyCustomButton v-if="settingsStore.customBackgroundName" variant="outline" size="sm" class="text-xs"
-                  aria-label="清除背景图片" @click="clearBackgroundImage">
-                  <Trash2 :size="14" />
-                </MyCustomButton>
-              </div>
-            </BasicSettingCard>
-            <SliderSettingCard title="模糊强度" :description="`${settingsStore.backgroundOverlay.blur}px`"
-              :model-value="settingsStore.backgroundOverlay.blur"
-              :default-value="DEFAULT_SETTINGS.backgroundOverlay.blur" :min="0" :max="24" :step="1"
-              @update:model-value="settingsStore.setBackgroundBlur" />
-            <SliderSettingCard title="透明度"
-              :description="`${(settingsStore.backgroundOverlay.opacity * 100).toFixed(0)}%`"
-              :model-value="settingsStore.backgroundOverlay.opacity"
-              :default-value="DEFAULT_SETTINGS.backgroundOverlay.opacity" :min="0" :max="1" :step="0.01"
-              @update:model-value="settingsStore.setBackgroundOpacity" />
-          </SettingSection>
+          <CollapseTransition :show="settingsStore.background === 'custom-image'" scale blur>
+            <SettingSection name="自定义背景">
+              <BasicSettingCard title="背景图片"
+                :description="backgroundError || settingsStore.customBackgroundName || '从本机选择一张图片，最大 10 MB'">
+                <div class="flex gap-2">
+                  <input ref="background-input" class="hidden" type="file" accept="image/*"
+                    @change="handleBackgroundFile" />
+                  <MyCustomButton variant="outline" size="sm" class="text-xs" @click="selectBackgroundImage">
+                    选择
+                  </MyCustomButton>
+                  <MyCustomButton v-if="settingsStore.customBackgroundName" variant="outline" size="sm" class="text-xs"
+                    aria-label="清除背景图片" @click="clearBackgroundImage">
+                    <Trash2 :size="14" />
+                  </MyCustomButton>
+                </div>
+              </BasicSettingCard>
+              <SliderSettingCard title="模糊强度" :description="`${settingsStore.backgroundOverlay.blur}px`"
+                :model-value="settingsStore.backgroundOverlay.blur"
+                :default-value="DEFAULT_SETTINGS.backgroundOverlay.blur" :min="0" :max="24" :step="1"
+                @update:model-value="settingsStore.setBackgroundBlur" />
+              <SliderSettingCard title="透明度"
+                :description="`${(settingsStore.backgroundOverlay.opacity * 100).toFixed(0)}%`"
+                :model-value="settingsStore.backgroundOverlay.opacity"
+                :default-value="DEFAULT_SETTINGS.backgroundOverlay.opacity" :min="0" :max="1" :step="0.01"
+                @update:model-value="settingsStore.setBackgroundOpacity" />
+            </SettingSection>
+          </CollapseTransition>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">
               <MyCustomButton @click="handleResetAllSetting" variant="destructive" size="sm" class="text-xs">

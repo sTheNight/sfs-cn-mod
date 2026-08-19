@@ -10,6 +10,7 @@ import ModCard from '@/components/ModInfo/ModCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import AlertMessage from '@/components/AlertMessage.vue';
 import { useRouter } from 'vue-router';
+import CollapseTransition from '@/components/CollapseTransition.vue';
 
 const shownList = ref<ModInfo[]>([])
 const isLoading = ref(true)
@@ -111,20 +112,16 @@ onMounted(() => {
         </MyCustomButton>
       </div>
     </div>
-    <Transition name="alert-collapse">
-      <div v-if="isWarningAlertShow" class="alert-collapse-grid">
-        <div class="min-h-0 overflow-hidden">
-          <AlertMessage class="mt-4 relative" type="warning">
-            声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等bug
-            <!-- 这个按钮会遮挡文字 -->
-            <MyCustomButton class="w-7 h-7 absolute top-2 right-2 rounded-full text-accent-foreground" variant="outline"
-              @click="isWarningAlertShow = false">
-              <X />
-            </MyCustomButton>
-          </AlertMessage>
-        </div>
-      </div>
-    </Transition>
+    <CollapseTransition :show="isWarningAlertShow" scale blur>
+      <AlertMessage class="mt-4 relative" type="warning">
+        声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等bug
+        <!-- 这个按钮会遮挡文字 -->
+        <MyCustomButton class="w-7 h-7 absolute top-2 right-2 rounded-full text-accent-foreground" variant="outline"
+          @click="isWarningAlertShow = false">
+          <X />
+        </MyCustomButton>
+      </AlertMessage>
+    </CollapseTransition>
     <div v-if="isLoading || loadError || shownList.length === 0"
       class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-muted-foreground select-none">
       <div v-if="isLoading">
@@ -175,23 +172,5 @@ onMounted(() => {
 .card-fade-enter-from {
   transform: translateY(8px);
   opacity: 0;
-}
-
-.alert-collapse-grid {
-  display: grid;
-  grid-template-rows: 1fr;
-  transform-origin: top;
-}
-
-.alert-collapse-enter-active,
-.alert-collapse-leave-active {
-  transition: all .3s;
-}
-
-.alert-collapse-enter-from,
-.alert-collapse-leave-to {
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transform: scale(.9);
 }
 </style>

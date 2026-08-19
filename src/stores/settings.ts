@@ -20,7 +20,7 @@ export const DEFAULT_SETTINGS = {
   background: 'grid' as BackgroundPreference,
   customBackgroundName: '',
   backgroundOverlay: {
-    blur: 12,
+    blur: 0,
     opacity: 0.75,
   },
 } as const
