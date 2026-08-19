@@ -1,5 +1,6 @@
 export interface BasicSettingCardProps {
   title: string,
   description?: string,
-  showUndo?: boolean
+  showUndo?: boolean,
+  disabled?: boolean
 }

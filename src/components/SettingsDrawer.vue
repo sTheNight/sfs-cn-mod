@@ -7,26 +7,17 @@ import SelectSettingCard from './setting/SelectSettingCard.vue'
 import SettingSection from './setting/SettingSection.vue'
 import BasicSettingCard from './setting/BasicSettingCard.vue'
 import SwitchSettingCard from './setting/SwitchSettingCard.vue'
+import SliderSettingCard from './setting/SliderSettingCard.vue'
 import { themeOptions } from '@/data/themeOptions.ts'
 import { transitionOptions } from '@/data/transitionOptions.ts'
 import { backgroundOptions } from '@/data/backgroundOptions.ts'
 import { removeCustomBackground, saveCustomBackground } from '@/utils/customBackgroundStorage'
-import { computed, ref, useTemplateRef } from 'vue'
-import Slider from './ui/slider/Slider.vue'
+import { ref, useTemplateRef } from 'vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
 const backgroundInput = useTemplateRef<HTMLInputElement>('background-input')
 const backgroundError = ref('')
-const backgroundBlur = computed<number[]>({
-  get: () => [settingsStore.backgroundOverlay.blur],
-  set: ([value]) => settingsStore.setBackgroundBlur(value ?? 0),
-})
-const backgroundOpacity = computed<number[]>({
-  get: () => [settingsStore.backgroundOverlay.opacity],
-  set: ([value]) => settingsStore.setBackgroundOpacity(value ?? 0),
-})
-
 const MAX_BACKGROUND_SIZE = 10 * 1024 * 1024
 
 function handleThemeSelect(key: ThemePreference) {
@@ -126,14 +117,16 @@ async function clearBackgroundImage() {
               @select="handleThemeSelect" />
             <SwitchSettingCard :model-value="settingsStore.enableAnimations" @on-switch="handleSelect" title="动画效果"
               description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" />
-            <SwitchSettingCard :model-value="settingsStore.enableRippleEffect"
-              @on-switch="handleEnableRippleEffectSelect" title="水波纹效果" description="按住按钮后的水波纹效果" />
-            <SwitchSettingCard :model-value="settingsStore.enableTitleGlow" @on-switch="handleEnableTitleGlowSelect"
-              title="标题发光" description="显示页面标题的背景发光效果" />
+            <SwitchSettingCard :disabled="!settingsStore.enableAnimations"
+              :model-value="settingsStore.enableRippleEffect" @on-switch="handleEnableRippleEffectSelect" title="水波纹效果"
+              description="按住按钮后的水波纹效果" />
+            <SwitchSettingCard :disabled="!settingsStore.enableAnimations" :model-value="settingsStore.enableTitleGlow"
+              @on-switch="handleEnableTitleGlowSelect" title="标题发光" description="显示页面标题的背景发光效果" />
           </SettingSection>
           <SettingSection name="界面">
-            <SelectSettingCard title="切换动画" description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions"
-              :value="settingsStore.transition" @select="handleTransitionSelect" />
+            <SelectSettingCard :disabled="!settingsStore.enableAnimations" title="切换动画"
+              description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions" :value="settingsStore.transition"
+              @select="handleTransitionSelect" />
             <SelectSettingCard title="背景样式" description="选择主页背景样式" :select="backgroundOptions"
               :value="settingsStore.background" @select="handleBackgroundSelect">
             </SelectSettingCard>
@@ -153,13 +146,13 @@ async function clearBackgroundImage() {
                 </MyCustomButton>
               </div>
             </BasicSettingCard>
-            <BasicSettingCard title="模糊强度" :description="`${settingsStore.backgroundOverlay.blur}px`">
-              <Slider v-model="backgroundBlur" :min="0" :max="24" :step="1" class="w-32 sm:w-40" />
-            </BasicSettingCard>
-            <BasicSettingCard title="透明度"
-              :description="`${(settingsStore.backgroundOverlay.opacity * 100).toFixed(0)}%`">
-              <Slider v-model="backgroundOpacity" :min="0" :max="1" :step="0.01" class="w-32 sm:w-40" />
-            </BasicSettingCard>
+            <SliderSettingCard title="模糊强度" :description="`${settingsStore.backgroundOverlay.blur}px`"
+              :model-value="settingsStore.backgroundOverlay.blur" :min="0" :max="24" :step="1"
+              @update:model-value="settingsStore.setBackgroundBlur" />
+            <SliderSettingCard title="透明度"
+              :description="`${(settingsStore.backgroundOverlay.opacity * 100).toFixed(0)}%`"
+              :model-value="settingsStore.backgroundOverlay.opacity" :min="0" :max="1" :step="0.01"
+              @update:model-value="settingsStore.setBackgroundOpacity" />
           </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">

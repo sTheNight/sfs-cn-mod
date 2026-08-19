@@ -40,12 +40,15 @@ function handleSelect(value: AcceptableValue) {
 }
 
 function openSelect() {
+  if (props.disabled) return
   isOpen.value = true
 }
 </script>
 <template>
-  <BasicSettingCard :title="props.title" :description="props.description" @click="openSelect">
-    <Select v-model:open="isOpen" :model-value="props.value" @update:model-value="handleSelect">
+  <BasicSettingCard :title="props.title" :description="props.description" :show-undo="props.showUndo"
+    :disabled="props.disabled" @click="openSelect">
+    <Select v-model:open="isOpen" :disabled="props.disabled" :model-value="props.value"
+      @update:model-value="handleSelect">
       <SelectTrigger @click.stop>
         <SelectPrimitiveValue class="text-xs" :placeholder="placeholder ?? undefined" />
       </SelectTrigger>
