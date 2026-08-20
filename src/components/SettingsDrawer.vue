@@ -10,16 +10,18 @@ import SwitchSettingCard from './setting/SwitchSettingCard.vue'
 import SliderSettingCard from './setting/SliderSettingCard.vue'
 import { themeOptions } from '@/data/themeOptions.ts'
 import { transitionOptions } from '@/data/transitionOptions.ts'
-import { backgroundOptions } from '@/data/backgroundOptions.ts'
+import { backgroundOptions, imageSourceOptions } from '@/data/backgroundOptions.ts'
 import { removeCustomBackground, saveCustomBackground } from '@/utils/customBackgroundStorage'
-import { ref, useTemplateRef } from 'vue'
+import { onMounted, ref, useTemplateRef } from 'vue'
 import CollapseTransition from './CollapseTransition.vue'
+import Input from './ui/input/Input.vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
 const backgroundInput = useTemplateRef<HTMLInputElement>('background-input')
 const backgroundError = ref('')
 const MAX_BACKGROUND_SIZE = 10 * 1024 * 1024
+const url = ref("")
 
 async function handleResetAllSetting() {
   await removeCustomBackground()
@@ -58,6 +60,19 @@ async function clearBackgroundImage() {
   settingsStore.setBackground('grid')
   backgroundError.value = ''
 }
+
+async function handleSaveBackgroundUrl(e: KeyboardEvent) {
+  if (e.key === 'Enter') settingsStore.setCustomBackgroundName(url.value)
+}
+
+onMounted(() => {
+  if (
+    settingsStore.imageBackgroundState.imageSource == 'url'
+    && settingsStore.imageBackgroundState.name !== ''
+  ) {
+    url.value = settingsStore.imageBackgroundState.name
+  }
+})
 </script>
 
 <template>
@@ -112,28 +127,35 @@ async function clearBackgroundImage() {
           </SettingSection>
           <CollapseTransition :show="settingsStore.background === 'custom-image'">
             <SettingSection name="自定义背景">
-              <BasicSettingCard title="背景图片"
-                :description="backgroundError || settingsStore.customBackgroundName || '从本机选择一张图片，最大 10 MB'">
+              <SelectSettingCard title="图片来源" description="背景图片从哪里来呢" :select="imageSourceOptions"
+                @update:model-value="settingsStore.setImageSource"
+                :model-value="settingsStore.imageBackgroundState.imageSource">
+              </SelectSettingCard>
+              <BasicSettingCard v-if="settingsStore.imageBackgroundState.imageSource === 'local'" title="背景图片"
+                :description="backgroundError || settingsStore.imageBackgroundState.name || '从本机选择一张图片，最大 10 MB'">
                 <div class="flex gap-2">
                   <input ref="background-input" class="hidden" type="file" accept="image/*"
                     @change="handleBackgroundFile" />
                   <MyCustomButton variant="outline" size="sm" class="text-xs" @click="selectBackgroundImage">
                     选择
                   </MyCustomButton>
-                  <MyCustomButton v-if="settingsStore.customBackgroundName" variant="outline" size="sm" class="text-xs"
-                    aria-label="清除背景图片" @click="clearBackgroundImage">
+                  <MyCustomButton v-if="settingsStore.imageBackgroundState.name" variant="outline" size="sm"
+                    class="text-xs" aria-label="清除背景图片" @click="clearBackgroundImage">
                     <Trash2 :size="14" />
                   </MyCustomButton>
                 </div>
               </BasicSettingCard>
-              <SliderSettingCard title="模糊强度" :description="`${settingsStore.backgroundOverlay.blur}px`"
-                :model-value="settingsStore.backgroundOverlay.blur"
-                :default-value="DEFAULT_SETTINGS.backgroundOverlay.blur" :min="0" :max="24" :step="1"
+              <BasicSettingCard v-else title="背景图片" description="输入后请按回车保存">
+                <Input v-model="url" @keydown="handleSaveBackgroundUrl"></Input>
+              </BasicSettingCard>
+              <SliderSettingCard title="模糊强度" :description="`${settingsStore.imageBackgroundState.blur}px`"
+                :model-value="settingsStore.imageBackgroundState.blur"
+                :default-value="DEFAULT_SETTINGS.imageBackgroundState.blur" :min="0" :max="24" :step="1"
                 @update:model-value="settingsStore.setBackgroundBlur" />
               <SliderSettingCard title="透明度"
-                :description="`${(settingsStore.backgroundOverlay.opacity * 100).toFixed(0)}%`"
-                :model-value="settingsStore.backgroundOverlay.opacity"
-                :default-value="DEFAULT_SETTINGS.backgroundOverlay.opacity" :min="0" :max="1" :step="0.01"
+                :description="`${(settingsStore.imageBackgroundState.opacity * 100).toFixed(0)}%`"
+                :model-value="settingsStore.imageBackgroundState.opacity"
+                :default-value="DEFAULT_SETTINGS.imageBackgroundState.opacity" :min="0" :max="1" :step="0.01"
                 @update:model-value="settingsStore.setBackgroundOpacity" />
             </SettingSection>
           </CollapseTransition>

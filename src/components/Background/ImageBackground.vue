@@ -7,6 +7,10 @@ const settingsStore = useSettingsStore()
 const imageUrl = ref('')
 
 async function loadImage() {
+  if (settingsStore.imageBackgroundState.imageSource == 'url') {
+    imageUrl.value = settingsStore.imageBackgroundState.name
+    return
+  }
   const previousUrl = imageUrl.value
   const image = await getCustomBackground()
   imageUrl.value = image ? URL.createObjectURL(image) : ''
@@ -24,10 +28,10 @@ onBeforeUnmount(() => {
   <div class="fixed inset-0 -z-1 overflow-hidden pointer-events-none" aria-hidden="true">
     <img v-if="imageUrl" :src="imageUrl" alt="" class="absolute inset-0 size-full object-cover" />
     <div v-if="imageUrl" class="bg-img absolute inset-0" :style="{
-      '--ol-blur-radius': `${settingsStore.backgroundOverlay.blur}px`
+      '--ol-blur-radius': `${settingsStore.imageBackgroundState.blur}px`
     }"></div>
     <div v-if="imageUrl" class="background-overlay absolute inset-0 bg-background" :style="{
-      '--ol-opacity': settingsStore.backgroundOverlay.opacity,
+      '--ol-opacity': settingsStore.imageBackgroundState.opacity,
     }"></div>
   </div>
 </template>

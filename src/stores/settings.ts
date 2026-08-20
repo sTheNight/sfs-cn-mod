@@ -1,11 +1,16 @@
+import { removeCustomBackground } from '@/utils/customBackgroundStorage'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 export type ThemePreference = 'system' | 'light' | 'dark'
 export type TransitionPreference = 'x-fade' | 'y-fade' | 'opacity-fade'
-export type BackgroundPreference = 'none' | 'grid' | 'custom-image'
 
-interface BackgroundOverlay {
+export type BackgroundPreference = 'none' | 'grid' | 'custom-image'
+export type ImageSource = 'local' | 'url'
+
+export interface ImageBackgroundState {
+  imageSource: ImageSource,
+  name: string,
   blur: number,
   opacity: number
 }
@@ -18,10 +23,11 @@ export const DEFAULT_SETTINGS = {
   enableTitleGlow: true,
   transition: 'x-fade' as TransitionPreference,
   background: 'grid' as BackgroundPreference,
-  customBackgroundName: '',
-  backgroundOverlay: {
+  imageBackgroundState: {
+    imageSource: 'url' as ImageSource,
+    name: '/szm.png',
     blur: 0,
-    opacity: 0.75,
+    opacity: 0.8,
   },
 } as const
 
@@ -78,10 +84,9 @@ export const useSettingsStore = defineStore('settings', () => {
   // 界面 &  背景
   const transition = ref<TransitionPreference>(DEFAULT_SETTINGS.transition)
   const background = ref<BackgroundPreference>(DEFAULT_SETTINGS.background)
-  const customBackgroundName = ref<string>(DEFAULT_SETTINGS.customBackgroundName)
   const customBackgroundRevision = ref(0)
-  const backgroundOverlay = ref<BackgroundOverlay>({
-    ...DEFAULT_SETTINGS.backgroundOverlay,
+  const imageBackgroundState = ref<ImageBackgroundState>({
+    ...DEFAULT_SETTINGS.imageBackgroundState,
   })
 
   function applyMotionPreference() {
@@ -90,15 +95,23 @@ export const useSettingsStore = defineStore('settings', () => {
   function setBackground(val: BackgroundPreference) {
     background.value = val
   }
-  function setCustomBackgroundName(value: string) {
-    customBackgroundName.value = value
+  function setCustomBackgroundName(value: string | number) {
+    value = value.toString()
+    imageBackgroundState.value.name = value
     customBackgroundRevision.value += 1
   }
   function setBackgroundBlur(value: number) {
-    backgroundOverlay.value.blur = value
+    imageBackgroundState.value.blur = value
   }
   function setBackgroundOpacity(value: number) {
-    backgroundOverlay.value.opacity = value
+    imageBackgroundState.value.opacity = value
+  }
+  async function setImageSource(value: ImageSource) {
+    imageBackgroundState.value.name = '';
+    if (value == 'url') {
+      await removeCustomBackground()
+    }
+    imageBackgroundState.value.imageSource = value
   }
   return {
     theme,
@@ -107,10 +120,9 @@ export const useSettingsStore = defineStore('settings', () => {
     enableRippleEffect,
     enableTitleGlow,
     background,
-    customBackgroundName,
     customBackgroundRevision,
     transition,
-    backgroundOverlay,
+    imageBackgroundState,
     setTheme,
     setBackground,
     setCustomBackgroundName,
@@ -123,11 +135,12 @@ export const useSettingsStore = defineStore('settings', () => {
     initializeMotionPreference,
     resetAllSetting,
     setTransition,
-    setBackgroundOpacity
+    setBackgroundOpacity,
+    setImageSource
   }
 }, {
   persist: {
     key: 'sfs-settings',
-    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'enableTitleGlow', 'background', 'customBackgroundName', 'backgroundOverlay'],
+    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'enableTitleGlow', 'background', 'customBackgroundName', 'imageBackgroundState'],
   },
 })
