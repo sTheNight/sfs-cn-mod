@@ -41,6 +41,8 @@ export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior(_to, _from) {
-    return { left: 0, top: 0 }
+    if ((_to.name === 'mod' && _from.name === 'mod-details') ||
+      (_to.name === 'mod-details' && _from.name === 'mod'))
+      return { left: 0, top: 0 }
   },
 })
