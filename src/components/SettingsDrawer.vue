@@ -146,7 +146,7 @@ onMounted(() => {
                 </div>
               </BasicSettingCard>
               <BasicSettingCard v-else title="背景图片" description="输入后请按回车保存">
-                <Input v-model="url" @keydown="handleSaveBackgroundUrl"></Input>
+                <Input class="text-xs" v-model="url" @keydown="handleSaveBackgroundUrl"></Input>
               </BasicSettingCard>
               <SliderSettingCard title="模糊强度" :description="`${settingsStore.imageBackgroundState.blur}px`"
                 :model-value="settingsStore.imageBackgroundState.blur"
