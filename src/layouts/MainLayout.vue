@@ -167,9 +167,7 @@ onMounted(() => {
       </div>
       <RouterView v-slot="{ Component }">
         <Transition :name="transition" mode="out-in">
-          <KeepAlive include="ModView">
-            <component :is="Component" :key="route.fullPath" />
-          </KeepAlive>
+          <component :is="Component" :key="route.fullPath" />
         </Transition>
       </RouterView>
       <div :style="{ height: `${safePadding}px` }" aria-hidden="true"></div>

@@ -40,12 +40,7 @@ const routes: RouteRecordRaw[] = [
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior(_to, _from, savedPosition) {
-    if (!savedPosition) return { left: 0, top: 0 }
-
-    // 等待 MainLayout 的 150ms 页面离场动画结束，再恢复缓存页面的位置。
-    return new Promise((resolve) => {
-      window.setTimeout(() => resolve(savedPosition), 200)
-    })
+  scrollBehavior(_to, _from) {
+    return { left: 0, top: 0 }
   },
 })
