@@ -26,13 +26,13 @@ function getModListByCategory(category: ModCategory, source: ModInfo[] = files):
 }
 
 function getModListByKeyword(keyword: string, source: ModInfo[] = files): ModInfo[] {
-  keyword = keyword.trim()
+  keyword = keyword.trim().toLowerCase()
   if (keyword === "") return source
   return source.filter((mod) =>
-    mod.author.includes(keyword) ||
-    mod.name.includes(keyword) ||
-    mod.desc.includes(keyword) ||
-    mod.tags.some((tag) => tag.includes(keyword))
+    mod.author.toLowerCase().includes(keyword) ||
+    mod.name.toLowerCase().includes(keyword) ||
+    mod.desc.toLowerCase().includes(keyword) ||
+    mod.tags.some((tag) => tag.toLowerCase().includes(keyword))
   )
 }
 
@@ -50,7 +50,7 @@ function applyFilter() {
 }
 
 function handleKeywordFilterKeyDown(e: KeyboardEvent) {
-  if (e.code == "Enter") applyFilter()
+  if (e.key == "Enter") applyFilter()
 }
 
 async function loadModInfo(forceRefresh = false) {
@@ -77,7 +77,7 @@ onMounted(() => {
 <template>
   <div>
     <!-- 检索栏 -->
-    <div class="grid gap-2 text-sm sm:flex sm:items-center sm:justify-between">
+    <div class="grid gap-2 text-sm sm:flex sm:items-center sm:justify-between select-none">
       <div class="flex items-center flex-wrap justify-between gap-2 sm:justify-start">
         <div
           class="border-input bg-card flex h-9 w-fit items-center gap-2 rounded-md border px-3 py-2 text-sm whitespace-nowrap shadow-xs">
