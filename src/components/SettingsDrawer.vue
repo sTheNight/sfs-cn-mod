@@ -79,13 +79,12 @@ onMounted(() => {
   <Drawer v-model:open="open" direction="right" :handle-only="true">
     <DrawerContent class="w-full!">
       <div class="scrollbar-hidden relative h-dvh w-full overflow-y-scroll box-border">
-        <div
-          class="sticky top-0 left-0 z-2 flex h-16 w-full items-center justify-between bg-background/50 px-6 box-border">
+        <div class="sticky top-0 left-0 z-2 flex h-16 w-full items-center justify-between px-6 box-border">
           <h2 class="text-xl font-bold text-foreground">设置</h2>
-          <MyCustomButton class="h-8 w-8" variant="outline" aria-label="关闭设置" @click="open = false">
+          <MyCustomButton class="h-8 w-8 rounded-full" variant="outline" aria-label="关闭设置" @click="open = false">
             <X />
           </MyCustomButton>
-          <div class="absolute inset-0 -z-10">
+          <div class="absolute inset-0 -z-10 bg-linear-to-b from-background/60 to-transparent">
             <div class="pointer-events-none absolute inset-0"
               style="backdrop-filter: blur(0px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 1; z-index: 0;">
             </div>
@@ -93,13 +92,13 @@ onMounted(() => {
               style="backdrop-filter: blur(2px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 0.975; z-index: 1;">
             </div>
             <div class="pointer-events-none absolute inset-0"
-              style="backdrop-filter: blur(4px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 0.95; z-index: 2;">
+              style="backdrop-filter: blur(3px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 0.95; z-index: 2;">
             </div>
             <div class="pointer-events-none absolute inset-0"
-              style="backdrop-filter: blur(6px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 0.925; z-index: 3;">
+              style="backdrop-filter: blur(4px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 0.925; z-index: 3;">
             </div>
             <div class="pointer-events-none absolute inset-0"
-              style="backdrop-filter: blur(8px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 0.9; z-index: 4;">
+              style="backdrop-filter: blur(5px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 0.9; z-index: 4;">
             </div>
           </div>
         </div>
