@@ -199,9 +199,12 @@ watch(
             <img v-if="mod.images?.length" class="absolute inset-0 h-full w-full object-cover" :src="mod.images[0]"
               :alt="`${mod.name}封面`" />
             <div v-else class="flex h-full items-center justify-center text-7xl">📦</div>
-            <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent"></div>
+            <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent">
+              <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>
+            </div>
             <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-              <h1 class="mod-title-transition text-2xl font-bold leading-tight text-white sm:text-3xl">
+              <h1
+                class="mod-title-transition text-2xl font-bold leading-tight text-white sm:text-3xl opacity-85 text-shadow-[0_0_24px_rgba(255,255,255,0.45)]">
                 {{ mod.name }}
               </h1>
               <div v-if="mod.tags.length" class="mt-2 flex flex-wrap gap-1.5">
