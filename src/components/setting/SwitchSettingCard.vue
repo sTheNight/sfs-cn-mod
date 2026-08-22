@@ -23,8 +23,8 @@ function toggle() {
 }
 </script>
 <template>
-  <BasicSettingCard @click="toggle" :title="props.title" :description="props.description"
-    :disabled="props.disabled">
+  <BasicSettingCard :is-experiment="props.isExperiment" @click="toggle" :title="props.title"
+    :description="props.description" :disabled="props.disabled">
     <Switch @click.stop :disabled="props.disabled" :model-value="props.modelValue" @update:model-value="updateValue">
     </Switch>
   </BasicSettingCard>

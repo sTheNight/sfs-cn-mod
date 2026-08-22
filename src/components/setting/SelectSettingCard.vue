@@ -57,8 +57,8 @@ function openSelect() {
 }
 </script>
 <template>
-  <BasicSettingCard :title="props.title" :description="props.description" :show-undo="canUndo"
-    :disabled="props.disabled" @click="openSelect" @undo="undo">
+  <BasicSettingCard :is-experiment="props.isExperiment" :title="props.title" :description="props.description"
+    :show-undo="canUndo" :disabled="props.disabled" @click="openSelect" @undo="undo">
     <Select v-model:open="isOpen" :disabled="props.disabled" :model-value="props.modelValue"
       @update:model-value="handleSelect">
       <SelectTrigger @click.stop>

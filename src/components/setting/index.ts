@@ -2,6 +2,7 @@ export interface BasicSettingCardProps {
   title: string,
   description?: string,
   showUndo?: boolean,
+  isExperiment?: boolean,
   disabled?: boolean
 }
 

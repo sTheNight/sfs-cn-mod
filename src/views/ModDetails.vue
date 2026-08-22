@@ -221,7 +221,7 @@ watch(
             </div>
             <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 flex justify-between items-end">
               <div>
-                <h1 class="mod-title-transition text-2xl font-bold leading-tight text-white sm:text-3xl">
+                <h1 class="mod-title-transition text-xl sm:text-2xl font-bold leading-tight text-white">
                   {{ mod.name }}
                 </h1>
                 <div v-if="mod.tags.length" class="mt-2 flex flex-wrap gap-1.5">

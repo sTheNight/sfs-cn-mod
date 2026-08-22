@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ModInfo } from '@/models/ModInfo';
-import { Calendar, Download, History, Info, Save, UserRound } from '@lucide/vue';
+import { Calendar, Download, History, Info, Save, Share2, UserRound } from '@lucide/vue';
 import { ref, useTemplateRef } from 'vue'
 
 export interface ModCardProps {
@@ -12,15 +12,19 @@ export interface ModCardEmits {
   (e: 'onDownloadButtonClicked', url: string): void
 }
 defineEmits<ModCardEmits>()
-defineProps<ModCardProps>()
+const props = defineProps<ModCardProps>()
 
 import { useIntersectionObserver } from '@vueuse/core'
 import { MyCustomButton } from '../MyCustomButton';
 import RippleProvider from '../RippleProvider.vue';
+import CompactButton from '../CompactButton/CompactButton.vue';
+import { showToast } from '../Toast/useToast.ts';
+import { useSettingsStore } from '@/stores/settings.ts';
 
 
 const cardRef = useTemplateRef<HTMLElement>('card')
 const hasEnteredViewport = ref(false)
+const setting = useSettingsStore()
 
 useIntersectionObserver(
   cardRef,
@@ -28,11 +32,29 @@ useIntersectionObserver(
     hasEnteredViewport.value = entry?.isIntersecting ?? false
   }
 )
+
+async function share() {
+  const baseUrl = window.location.origin
+  const modDetailUrl = `${baseUrl}/mods/${props.item.name}`
+  if (!navigator.share) {
+    navigator.clipboard.writeText(modDetailUrl)
+    showToast("已复制链接")
+    return;
+  }
+  showToast("正在调起分享")
+  await navigator.share({
+    title: '分享这个模组',
+    url: modDetailUrl
+  })
+}
 </script>
 <template>
   <RippleProvider :is-dark-ripple='true' tag="div" ref="card"
-    class="bg-card-surface fade-in-card border text-card-foreground select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
-    :class="{ 'fade-in-card--visible': hasEnteredViewport }">
+    class="bg-card-surface relative fade-in-card border text-card-foreground select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
+    :class="{ 'fade-in-card--visible': hasEnteredViewport, 'backdrop-blur-lg': setting.cardBlurEffect }">
+    <CompactButton backdrop class="absolute right-0 top-0 m-2" @click="share">
+      <Share2 />
+    </CompactButton>
     <img @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
       :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
     <div @click="$emit('openDetail', item)" v-else

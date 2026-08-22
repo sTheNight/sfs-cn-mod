@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSettingsStore } from '@/stores/settings';
 import { computed, useSlots } from 'vue'
 
 interface BasicCardProps {
@@ -8,9 +9,11 @@ interface BasicCardProps {
 const { title } = defineProps<BasicCardProps>()
 const slots = useSlots()
 const hasTag = computed(() => Boolean(slots.tag))
+const setting = useSettingsStore()
 </script>
 <template>
-  <div class="bg-card-surface border rounded-2xl p-4 shadow-xs transition-all duration-150">
+  <div class="bg-card-surface border rounded-2xl p-4 shadow-xs transition-all duration-150"
+    :class="setting.cardBlurEffect ? 'backdrop-blur-lg' : ''">
     <div class="flex justify-between">
       <div class="flex items-center gap-3">
         <div v-if="hasTag" class="flex size-9 shrink-0 items-center justify-center rounded-lg border bg-muted">

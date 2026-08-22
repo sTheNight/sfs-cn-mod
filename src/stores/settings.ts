@@ -16,40 +16,36 @@ export interface ImageBackgroundState {
 }
 
 export const DEFAULT_SETTINGS = {
+  // 界面
   theme: 'system' as ThemePreference,
-  neverShowWarningDialog: false,
-  enableAnimations: true,
-  enableRippleEffect: true,
-  enableTitleGlow: true,
   cardOpacity: 1,
-  transition: 'x-fade' as TransitionPreference,
   background: 'grid' as BackgroundPreference,
+  cardBlurEffect: false,
+  // 自定义背景
   imageBackgroundState: {
     imageSource: 'url' as ImageSource,
     name: '/szm.png',
     blur: 0,
     opacity: 0.8,
   },
+  // 效果
+  enableAnimations: true,
+  transition: 'x-fade' as TransitionPreference,
+  enableRippleEffect: true,
+  enableTitleGlow: true,
+  // 其他页面
+  neverShowWarningDialog: false,
 } as const
 
 const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches
 
 export const useSettingsStore = defineStore('settings', () => {
-  const neverShowWarningDialog = ref<boolean>(DEFAULT_SETTINGS.neverShowWarningDialog)
-
-  function setNeverShowWarningDialog(val: boolean) {
-    neverShowWarningDialog.value = val
-  }
-  function resetAllSetting() {
-    localStorage.removeItem('sfs-settings')
-  }
-  // 外观
+  // 界面
   const theme = ref<ThemePreference>(DEFAULT_SETTINGS.theme)
-  const enableAnimations = ref<boolean>(DEFAULT_SETTINGS.enableAnimations)
-  const enableRippleEffect = ref<boolean>(DEFAULT_SETTINGS.enableRippleEffect)
-  const enableTitleGlow = ref<boolean>(DEFAULT_SETTINGS.enableTitleGlow)
   const cardOpacity = ref<number>(DEFAULT_SETTINGS.cardOpacity)
+  const background = ref<BackgroundPreference>(DEFAULT_SETTINGS.background)
   const isDark = computed(() => theme.value === 'dark' || (theme.value === 'system' && prefersDark()))
+  const cardBlurEffect = ref(false) // 影响范围：ModCard BasicInfoCard MainLayout导航按钮 ModView检索栏 InfoCard
 
   function applyTheme() {
     const dark = isDark.value
@@ -60,18 +56,8 @@ export const useSettingsStore = defineStore('settings', () => {
     theme.value = value
     applyTheme()
   }
-  function setTransition(value: TransitionPreference) {
-    transition.value = value
-  }
-  function setEnableAnimations(value: boolean) {
-    enableAnimations.value = value
-    applyMotionPreference()
-  }
-  function setEnableRippleEffect(value: boolean) {
-    enableRippleEffect.value = value
-  }
-  function setEnableTitleGlow(value: boolean) {
-    enableTitleGlow.value = value
+  function setCardBlurEffect(value: boolean) {
+    cardBlurEffect.value = value
   }
   function applyCardOpacity() {
     document.documentElement.style.setProperty('--card-opacity', String(cardOpacity.value))
@@ -89,24 +75,16 @@ export const useSettingsStore = defineStore('settings', () => {
       if (theme.value === 'system') applyTheme()
     })
   }
-  function initializeMotionPreference() {
-    applyMotionPreference()
+  function setBackground(val: BackgroundPreference) {
+    background.value = val
   }
 
-  // 界面 &  背景
-  const transition = ref<TransitionPreference>(DEFAULT_SETTINGS.transition)
-  const background = ref<BackgroundPreference>(DEFAULT_SETTINGS.background)
+  // 自定义背景
   const customBackgroundRevision = ref(0)
   const imageBackgroundState = ref<ImageBackgroundState>({
     ...DEFAULT_SETTINGS.imageBackgroundState,
   })
 
-  function applyMotionPreference() {
-    document.documentElement.dataset.reduceMotion = String(!enableAnimations.value)
-  }
-  function setBackground(val: BackgroundPreference) {
-    background.value = val
-  }
   function setCustomBackgroundName(value: string | number) {
     value = value.toString()
     imageBackgroundState.value.name = value
@@ -119,12 +97,51 @@ export const useSettingsStore = defineStore('settings', () => {
     imageBackgroundState.value.opacity = value
   }
   async function setImageSource(value: ImageSource) {
-    imageBackgroundState.value.name = '';
+    imageBackgroundState.value.name = ''
     if (value == 'url') {
       await removeCustomBackground()
     }
     imageBackgroundState.value.imageSource = value
   }
+
+  // 效果
+  const enableAnimations = ref<boolean>(DEFAULT_SETTINGS.enableAnimations)
+  const transition = ref<TransitionPreference>(DEFAULT_SETTINGS.transition)
+  const enableRippleEffect = ref<boolean>(DEFAULT_SETTINGS.enableRippleEffect)
+  const enableTitleGlow = ref<boolean>(DEFAULT_SETTINGS.enableTitleGlow)
+
+  function applyMotionPreference() {
+    document.documentElement.dataset.reduceMotion = String(!enableAnimations.value)
+  }
+  function setEnableAnimations(value: boolean) {
+    enableAnimations.value = value
+    applyMotionPreference()
+  }
+  function initializeMotionPreference() {
+    applyMotionPreference()
+  }
+  function setTransition(value: TransitionPreference) {
+    transition.value = value
+  }
+  function setEnableRippleEffect(value: boolean) {
+    enableRippleEffect.value = value
+  }
+  function setEnableTitleGlow(value: boolean) {
+    enableTitleGlow.value = value
+  }
+
+  // 其他页面
+  const neverShowWarningDialog = ref<boolean>(DEFAULT_SETTINGS.neverShowWarningDialog)
+
+  function setNeverShowWarningDialog(val: boolean) {
+    neverShowWarningDialog.value = val
+  }
+
+  // 操作
+  function resetAllSetting() {
+    localStorage.removeItem('sfs-settings')
+  }
+
   return {
     theme,
     neverShowWarningDialog,
@@ -136,6 +153,7 @@ export const useSettingsStore = defineStore('settings', () => {
     customBackgroundRevision,
     transition,
     imageBackgroundState,
+    cardBlurEffect,
     setTheme,
     setBackground,
     setCustomBackgroundName,
@@ -151,11 +169,12 @@ export const useSettingsStore = defineStore('settings', () => {
     resetAllSetting,
     setTransition,
     setBackgroundOpacity,
-    setImageSource
+    setImageSource,
+    setCardBlurEffect
   }
 }, {
   persist: {
     key: 'sfs-settings',
-    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'enableTitleGlow', 'cardOpacity', 'background', 'customBackgroundName', 'imageBackgroundState'],
+    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'enableTitleGlow', 'cardOpacity', 'background', 'customBackgroundName', 'imageBackgroundState', 'cardBlurEffect'],
   },
 })

@@ -43,8 +43,8 @@ const sliderValue = computed<number[]>({
 </script>
 
 <template>
-  <BasicSettingCard :title="props.title" :description="props.description" :show-undo="canUndo"
-    :disabled="props.disabled" @undo="undo">
+  <BasicSettingCard :is-experiment="props.isExperiment" :title="props.title" :description="props.description"
+    :show-undo="canUndo" :disabled="props.disabled" @undo="undo">
     <Slider v-model="sliderValue" :min="props.min" :max="props.max" :step="props.step" :disabled="props.disabled"
       :class="props.sliderClass" />
   </BasicSettingCard>

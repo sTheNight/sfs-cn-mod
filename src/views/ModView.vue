@@ -12,6 +12,7 @@ import AlertMessage from '@/components/AlertMessage.vue';
 import { useRouter } from 'vue-router';
 import CollapseTransition from '@/components/CollapseTransition.vue';
 import { CompactButton } from '@/components/CompactButton';
+import { useSettingsStore } from '@/stores/settings';
 
 const shownList = ref<ModInfo[]>([])
 const isLoading = ref(true)
@@ -20,6 +21,7 @@ const categoryFilter = ref<ModCategory>("all")
 const searchText = ref("")
 const isWarningAlertShow = ref(true)
 const router = useRouter()
+const settingsStore = useSettingsStore()
 
 function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
   if (category == "all") return source
@@ -78,10 +80,11 @@ onMounted(() => {
 <template>
   <div>
     <!-- 检索栏 -->
-    <div class="grid gap-2 text-sm sm:flex sm:items-center sm:justify-between select-none">
+    <div :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''"
+      class="grid gap-3 text-sm sm:flex sm:items-center sm:justify-between select-none border p-3 rounded-2xl bg-card-surface shadow-xs">
       <div class="flex items-center flex-wrap justify-between gap-2 sm:justify-start">
         <div
-          class="border-input bg-card flex h-9 w-fit items-center gap-2 rounded-md border px-3 py-2 text-sm whitespace-nowrap shadow-xs">
+          class="border-input bg-card flex h-9 w-fit items-center gap-3 rounded-md border px-3 py-2 text-sm whitespace-nowrap shadow-xs">
           <Folder :size="16" />
           <Transition name="switch-fade" mode="out-in">
             <span :key="shownList.length">共 {{ shownList.length }} 个文件</span>

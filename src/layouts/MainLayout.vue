@@ -156,14 +156,17 @@ onMounted(() => {
           汉化模组下载中心
         </h2>
       </header>
-      <div class="flex gap-2 items-center justify-center mb-4">
-        <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
-          class="rounded-full active:scale-90 select-none cursor-pointer" variant="ghost"
-          :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-50 dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-blue-950/60 dark:bg-blue-950/60': isActiveRoute(item.key) }"
-          @click="router.push(item.route)">
-          <component :is="item.icon" :size="14" />
-          {{ item.title }}
-        </MyCustomButton>
+      <div class="flex items-center justify-center mb-4">
+        <div class="flex gap-2 items-center justify-center border bg-card-surface p-1.5 rounded-full shadow-xs"
+          :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''">
+          <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
+            class="rounded-full active:scale-90 select-none cursor-pointer" variant="ghost"
+            :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-100/50 dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-blue-950/60 dark:bg-blue-950/60': isActiveRoute(item.key) }"
+            @click="router.push(item.route)">
+            <component :is="item.icon" :size="14" />
+            {{ item.title }}
+          </MyCustomButton>
+        </div>
       </div>
       <RouterView v-slot="{ Component }">
         <Transition :name="transition" mode="out-in">

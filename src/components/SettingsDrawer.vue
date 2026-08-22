@@ -121,6 +121,9 @@ onMounted(() => {
               :model-value="settingsStore.background" :default-value="DEFAULT_SETTINGS.background"
               @update:model-value="settingsStore.setBackground">
             </SelectSettingCard>
+            <SwitchSettingCard is-experiment title="卡片模糊效果" description="实验性功能，建议降低卡片透明度食用"
+              :model-value="settingsStore.cardBlurEffect" @update:model-value="settingsStore.setCardBlurEffect">
+            </SwitchSettingCard>
           </SettingSection>
           <CollapseTransition :show="settingsStore.background === 'custom-image'">
             <SettingSection name="自定义背景">
@@ -150,7 +153,7 @@ onMounted(() => {
                 :default-value="DEFAULT_SETTINGS.imageBackgroundState.blur" :min="0" :max="24" :step="1"
                 @update:model-value="settingsStore.setBackgroundBlur" />
               <SliderSettingCard title="透明度"
-                :description="`${settingsStore.imageBackgroundState.opacity < 0.4 ? '你喜欢就好：' : ''}${(settingsStore.imageBackgroundState.opacity * 100).toFixed(0)}%`"
+                :description="`${settingsStore.imageBackgroundState.opacity < 0.4 ? '这合适吗：' : ''}${(settingsStore.imageBackgroundState.opacity * 100).toFixed(0)}%`"
                 :model-value="settingsStore.imageBackgroundState.opacity"
                 :default-value="DEFAULT_SETTINGS.imageBackgroundState.opacity" :min="0" :max="1" :step="0.01"
                 @update:model-value="settingsStore.setBackgroundOpacity" />
