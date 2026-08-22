@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import BasicInfoCard from '@/components/Card/BasicInfoCard.vue';
+import FloatButton from '@/components/FloatButton.vue';
 import InfoCard from '@/components/ModInfo/InfoCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
+import { showToast } from '@/components/Toast/useToast';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { files, getModInfo } from '@/data/modInfo';
 import type { ModInfo } from '@/models/ModInfo';
@@ -87,14 +89,16 @@ function getStarFill(index: number) {
 }
 
 async function share() {
-  console.log(route)
+  const url = window.location.href
   if (!navigator.share) {
-    navigator.clipboard.writeText(route.fullPath)
+    navigator.clipboard.writeText(url)
+    showToast("已复制链接")
     return;
   }
+  showToast("正在调起分享")
   await navigator.share({
     title: '分享这个模组',
-    url: route.path
+    url: url
   })
 }
 
@@ -204,7 +208,8 @@ watch(
         <MyCustomButton @click="openUrl(mod.link)">
           <Download />下载
         </MyCustomButton>
-        <MyCustomButton variant="ghost" @click="share">
+        <div class="bg-border w-px h-5"></div>
+        <MyCustomButton class="w-9 h-9 rounded-full" variant="ghost" @click="share">
           <Share2 />
         </MyCustomButton>
       </div>
@@ -231,7 +236,6 @@ watch(
             </div>
           </div>
         </section>
-
         <div class="grid gap-2 text-sm text-muted-foreground grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
           <InfoCard title="作者" :icon="UserRound">{{ mod.author }}</InfoCard>
           <InfoCard title="版本" :icon="HistoryIcon">{{ mod.version }}</InfoCard>

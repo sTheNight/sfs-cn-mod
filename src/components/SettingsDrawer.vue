@@ -15,6 +15,7 @@ import { removeCustomBackground, saveCustomBackground } from '@/utils/customBack
 import { onMounted, ref, useTemplateRef } from 'vue'
 import CollapseTransition from './CollapseTransition.vue'
 import Input from './ui/input/Input.vue'
+import { showToast } from './Toast/useToast.ts'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
@@ -39,10 +40,14 @@ async function handleBackgroundFile(event: Event) {
   input.value = ''
   if (!file) return
 
-  if (!file.type.startsWith('image/'))
+  if (!file.type.startsWith('image/')) {
+    showToast("你选择的好像不是图片")
     return
-  if (file.size > MAX_BACKGROUND_SIZE)
+  }
+  if (file.size > MAX_BACKGROUND_SIZE) {
+    showToast("这背景图有点大了吧")
     return
+  }
 
   try {
     await saveCustomBackground(file)
