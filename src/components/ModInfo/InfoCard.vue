@@ -9,7 +9,7 @@ export interface InfoCardProps {
 const props = defineProps<InfoCardProps>()
 </script>
 <template>
-  <div class="box-border border rounded-sm p-2.5 gap-3 flex items-start bg-background">
+  <div class="bg-card-surface box-border border rounded-sm p-2.5 gap-3 flex items-start">
     <div class=" box-border border rounded-sm p-1 bg-muted">
       <component :is="props.icon" :size="14" />
     </div>

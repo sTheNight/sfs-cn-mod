@@ -36,6 +36,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-card-surface: color-mix(in oklch, var(--card) calc(var(--card-opacity) * 100%), transparent);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --radius-sm: calc(var(--radius) - 4px);
@@ -50,6 +51,7 @@
 
 :root {
   --radius: 0.625rem;
+  --card-opacity: 1;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

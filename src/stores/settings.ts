@@ -21,6 +21,7 @@ export const DEFAULT_SETTINGS = {
   enableAnimations: true,
   enableRippleEffect: true,
   enableTitleGlow: true,
+  cardOpacity: 1,
   transition: 'x-fade' as TransitionPreference,
   background: 'grid' as BackgroundPreference,
   imageBackgroundState: {
@@ -47,6 +48,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const enableAnimations = ref<boolean>(DEFAULT_SETTINGS.enableAnimations)
   const enableRippleEffect = ref<boolean>(DEFAULT_SETTINGS.enableRippleEffect)
   const enableTitleGlow = ref<boolean>(DEFAULT_SETTINGS.enableTitleGlow)
+  const cardOpacity = ref<number>(DEFAULT_SETTINGS.cardOpacity)
   const isDark = computed(() => theme.value === 'dark' || (theme.value === 'system' && prefersDark()))
 
   function applyTheme() {
@@ -70,6 +72,16 @@ export const useSettingsStore = defineStore('settings', () => {
   }
   function setEnableTitleGlow(value: boolean) {
     enableTitleGlow.value = value
+  }
+  function applyCardOpacity() {
+    document.documentElement.style.setProperty('--card-opacity', String(cardOpacity.value))
+  }
+  function setCardOpacity(value: number) {
+    cardOpacity.value = Math.min(1, Math.max(0.2, value))
+    applyCardOpacity()
+  }
+  function initializeCardOpacity() {
+    setCardOpacity(cardOpacity.value)
   }
   function initializeTheme() {
     applyTheme()
@@ -119,6 +131,7 @@ export const useSettingsStore = defineStore('settings', () => {
     enableAnimations,
     enableRippleEffect,
     enableTitleGlow,
+    cardOpacity,
     background,
     customBackgroundRevision,
     transition,
@@ -130,9 +143,11 @@ export const useSettingsStore = defineStore('settings', () => {
     initializeTheme,
     setEnableRippleEffect,
     setEnableTitleGlow,
+    setCardOpacity,
     setNeverShowWarningDialog,
     setEnableAnimations,
     initializeMotionPreference,
+    initializeCardOpacity,
     resetAllSetting,
     setTransition,
     setBackgroundOpacity,
@@ -141,6 +156,6 @@ export const useSettingsStore = defineStore('settings', () => {
 }, {
   persist: {
     key: 'sfs-settings',
-    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'enableTitleGlow', 'background', 'customBackgroundName', 'imageBackgroundState'],
+    pick: ['theme', 'neverShowWarningDialog', 'enableAnimations', 'transition', 'enableRippleEffect', 'enableTitleGlow', 'cardOpacity', 'background', 'customBackgroundName', 'imageBackgroundState'],
   },
 })

@@ -17,5 +17,6 @@ app.use(router)
 const settingsStore = useSettingsStore(pinia)
 settingsStore.initializeTheme()
 settingsStore.initializeMotionPreference()
+settingsStore.initializeCardOpacity()
 
 app.mount('#app')

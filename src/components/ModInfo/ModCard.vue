@@ -31,7 +31,7 @@ useIntersectionObserver(
 </script>
 <template>
   <RippleProvider :is-dark-ripple='true' tag="div" ref="card"
-    class="fade-in-card border bg-card text-card-foreground select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
+    class="bg-card-surface fade-in-card border text-card-foreground select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
     :class="{ 'fade-in-card--visible': hasEnteredViewport }">
     <img @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
       :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />

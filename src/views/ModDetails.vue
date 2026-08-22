@@ -194,7 +194,7 @@ watch(
       </div>
       <div class="flex flex-col gap-4">
         <!-- 封面与基础信息 -->
-        <section class="overflow-hidden rounded-2xl border bg-background shadow-xs">
+        <section class="bg-card-surface overflow-hidden rounded-2xl border shadow-xs">
           <div class="relative h-64 bg-amber-100 dark:bg-amber-950/60 sm:h-72">
             <img v-if="mod.images?.length" class="absolute inset-0 h-full w-full object-cover" :src="mod.images[0]"
               :alt="`${mod.name}封面`" />
@@ -203,8 +203,7 @@ watch(
               <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>
             </div>
             <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-              <h1
-                class="mod-title-transition text-2xl font-bold leading-tight text-white sm:text-3xl opacity-85 text-shadow-[0_0_24px_rgba(255,255,255,0.45)]">
+              <h1 class="mod-title-transition text-2xl font-bold leading-tight text-white sm:text-3xl">
                 {{ mod.name }}
               </h1>
               <div v-if="mod.tags.length" class="mt-2 flex flex-wrap gap-1.5">

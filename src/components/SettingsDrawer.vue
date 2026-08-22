@@ -103,22 +103,13 @@ onMounted(() => {
           </div>
         </div>
         <div class="w-full box-border pb-2">
-          <SettingSection name="外观">
+          <SettingSection name="界面">
             <SelectSettingCard description="选择主题模式" :model-value="settingsStore.theme"
               :default-value="DEFAULT_SETTINGS.theme" :select="themeOptions" title="主题"
               @update:model-value="settingsStore.setTheme" />
-            <SwitchSettingCard :model-value="settingsStore.enableAnimations" title="动画效果"
-              description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" @update:model-value="settingsStore.setEnableAnimations" />
-            <SwitchSettingCard :disabled="!settingsStore.enableAnimations"
-              :model-value="settingsStore.enableRippleEffect" title="水波纹效果" description="按住按钮后的水波纹效果"
-              @update:model-value="settingsStore.setEnableRippleEffect" />
-            <SwitchSettingCard :disabled="!settingsStore.enableAnimations" :model-value="settingsStore.enableTitleGlow"
-              title="标题发光" description="显示页面标题的背景发光效果" @update:model-value="settingsStore.setEnableTitleGlow" />
-          </SettingSection>
-          <SettingSection name="界面">
-            <SelectSettingCard :disabled="!settingsStore.enableAnimations" title="切换动画"
-              description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions" :model-value="settingsStore.transition"
-              :default-value="DEFAULT_SETTINGS.transition" @update:model-value="settingsStore.setTransition" />
+            <SliderSettingCard title="卡片透明度" :description="`${(settingsStore.cardOpacity * 100).toFixed(0)}%`"
+              :model-value="settingsStore.cardOpacity" :default-value="DEFAULT_SETTINGS.cardOpacity" :min="0.2" :max="1"
+              :step="0.01" @update:model-value="settingsStore.setCardOpacity" />
             <SelectSettingCard title="背景样式" description="选择主页背景样式" :select="backgroundOptions"
               :model-value="settingsStore.background" :default-value="DEFAULT_SETTINGS.background"
               @update:model-value="settingsStore.setBackground">
@@ -158,6 +149,18 @@ onMounted(() => {
                 @update:model-value="settingsStore.setBackgroundOpacity" />
             </SettingSection>
           </CollapseTransition>
+          <SettingSection name="效果">
+            <SwitchSettingCard :model-value="settingsStore.enableAnimations" title="动画效果"
+              description="关闭后将减少动画效果，或许能提升一定的页面渲染性能" @update:model-value="settingsStore.setEnableAnimations" />
+            <SelectSettingCard :disabled="!settingsStore.enableAnimations" title="切换动画"
+              description="选择路由切换动画，需要开启动画效果后才能生效" :select="transitionOptions" :model-value="settingsStore.transition"
+              :default-value="DEFAULT_SETTINGS.transition" @update:model-value="settingsStore.setTransition" />
+            <SwitchSettingCard :disabled="!settingsStore.enableAnimations"
+              :model-value="settingsStore.enableRippleEffect" title="水波纹效果" description="按住按钮后的水波纹效果"
+              @update:model-value="settingsStore.setEnableRippleEffect" />
+            <SwitchSettingCard :disabled="!settingsStore.enableAnimations" :model-value="settingsStore.enableTitleGlow"
+              title="标题发光" description="显示页面标题的背景发光效果" @update:model-value="settingsStore.setEnableTitleGlow" />
+          </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">
               <MyCustomButton @click="handleResetAllSetting" variant="destructive" size="sm" class="text-xs">
