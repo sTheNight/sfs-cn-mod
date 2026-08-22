@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { MyCustomButton } from '@/components/MyCustomButton'
+import { CompactButton } from '@/components/CompactButton'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
 import { DEFAULT_SETTINGS, useSettingsStore } from '@/stores/settings'
 import { Trash2, X } from '@lucide/vue'
@@ -86,9 +87,9 @@ onMounted(() => {
       <div class="scrollbar-hidden relative h-dvh w-full overflow-y-scroll box-border">
         <div class="sticky top-0 left-0 z-2 flex h-16 w-full items-center justify-between px-6 box-border">
           <h2 class="text-xl font-bold text-foreground">设置</h2>
-          <MyCustomButton class="h-8 w-8 rounded-full" variant="outline" aria-label="关闭设置" @click="open = false">
+          <CompactButton aria-label="关闭设置" @click="open = false">
             <X />
-          </MyCustomButton>
+          </CompactButton>
           <div class="absolute inset-0 -z-10 bg-linear-to-b from-background/60 to-transparent">
             <div class="pointer-events-none absolute inset-0"
               style="backdrop-filter: blur(0px); mask-image: linear-gradient(360deg, transparent 0%, black 100%); opacity: 1; z-index: 0;">
@@ -135,10 +136,10 @@ onMounted(() => {
                   <MyCustomButton variant="outline" size="sm" class="text-xs" @click="selectBackgroundImage">
                     选择
                   </MyCustomButton>
-                  <MyCustomButton v-if="settingsStore.imageBackgroundState.name" variant="outline" size="sm"
-                    class="text-xs" aria-label="清除背景图片" @click="clearBackgroundImage">
+                  <CompactButton v-if="settingsStore.imageBackgroundState.name" size="sm" aria-label="清除背景图片"
+                    @click="clearBackgroundImage">
                     <Trash2 :size="14" />
-                  </MyCustomButton>
+                  </CompactButton>
                 </div>
               </BasicSettingCard>
               <BasicSettingCard v-else title="背景图片" description="输入后请按回车保存">

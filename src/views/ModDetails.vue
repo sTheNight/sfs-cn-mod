@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BasicInfoCard from '@/components/Card/BasicInfoCard.vue';
+import { CompactButton } from '@/components/CompactButton';
 import InfoCard from '@/components/ModInfo/InfoCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import { showToast } from '@/components/Toast/useToast';
@@ -211,16 +212,12 @@ watch(
               <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>
             </div>
             <div class="absolute top-0 w-full flex justify-between items-center p-3">
-              <MyCustomButton
-                class="group/action  h-8 text-white rounded-full border bg-black/10 border-white/15 hover:bg-white/5 backdrop-blur-lg hover:text-white active:scale-95 text-xs"
-                variant="ghost" @click="goBack">
+              <CompactButton class="group/action" backdrop @click="goBack">
                 <ArrowLeft class="transition-transform group-hover/action:-translate-x-0.5" />返回
-              </MyCustomButton>
-              <MyCustomButton
-                class="w-8 h-8 text-white rounded-full border bg-black/10 border-white/15 hover:bg-white/5 backdrop-blur-sm hover:text-white active:scale-95"
-                variant="ghost" @click="share">
+              </CompactButton>
+              <CompactButton backdrop aria-label="分享" @click="share">
                 <Share2 />
-              </MyCustomButton>
+              </CompactButton>
             </div>
             <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 flex justify-between items-end">
               <div>
@@ -267,10 +264,9 @@ watch(
                 <Star :size="18" />
               </template>
               <template #prefix>
-                <MyCustomButton class="w-8 h-8 rounded-full" variant="ghost" size="sm"
-                  @click="isRatingDialogShow = !isRatingDialogShow">
+                <CompactButton class=" shadow-none" aria-label="编辑评分" @click="isRatingDialogShow = !isRatingDialogShow">
                   <SquarePen :size="16"></SquarePen>
-                </MyCustomButton>
+                </CompactButton>
               </template>
               <div class="flex min-h-7 items-center">
                 <template v-if="isRatingLoading">
@@ -325,27 +321,27 @@ watch(
       <DialogContent class="w-[calc(100%-2rem)] max-w-5xl border-0 bg-transparent p-0 shadow-none sm:max-w-5xl"
         :show-close-button="false">
         <div class="relative grid max-h-[calc(100vh-2rem)] overflow-hidden rounded-lg bg-black">
-          <img v-if="currentPreviewImage" class="max-h-[calc(100vh-6rem)] w-full object-contain"
-            :src="currentPreviewImage" :alt="`${mod?.name}截图 ${previewImageIndex + 1}`">
-          <MyCustomButton variant="ghost" size="icon"
-            class="absolute right-2 top-2 bg-black/10 text-white backdrop-blur-xl hover:bg-white/15 hover:text-white"
+          <Transition name="image-fade" mode="out-in">
+            <img v-if="currentPreviewImage" :key="previewImageIndex"
+              class="max-h-[calc(100vh-6rem)] w-full object-contain" :src="currentPreviewImage"
+              :alt="`${mod?.name}截图 ${previewImageIndex + 1}`">
+          </Transition>
+          <CompactButton class="absolute right-2 top-2 bg-transparent backdrop-blur-none border-0" size="lg" backdrop
             aria-label="关闭预览" @click="isImagePreviewShow = false">
             <X />
-          </MyCustomButton>
+          </CompactButton>
           <template v-if="hasMultiplePreviewImages">
-            <MyCustomButton variant="ghost" size="icon"
-              class="absolute left-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/15 hover:text-white"
-              aria-label="上一张截图" @click="switchPreviewImage(-1)">
+            <CompactButton class="absolute left-2 top-1/2 -translate-y-1/2 bg-transparent backdrop-blur-none border-0"
+              size="lg" backdrop aria-label="上一张截图" @click="switchPreviewImage(-1)">
               <ChevronLeft />
-            </MyCustomButton>
-            <MyCustomButton variant="ghost" size="icon"
-              class="absolute right-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/15 hover:text-white"
-              aria-label="下一张截图" @click="switchPreviewImage(1)">
+            </CompactButton>
+            <CompactButton class="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent backdrop-blur-none border-0"
+              size="lg" backdrop aria-label="下一张截图" @click="switchPreviewImage(1)">
               <ChevronRight />
-            </MyCustomButton>
+            </CompactButton>
           </template>
           <div v-if="mod?.images?.length"
-            class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
+            class="absolute select-none bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
             {{ previewImageIndex + 1 }} / {{ mod.images.length }}
           </div>
         </div>
@@ -376,3 +372,19 @@ watch(
     </Dialog>
   </div>
 </template>
+<style lang="css" scoped>
+.image-fade-enter-active,
+.image-fade-leave-active {
+  transition: all .1s;
+}
+
+.image-fade-enter-from {
+  opacity: 0;
+  transform: scale(.9);
+}
+
+.image-fade-leave-to {
+  opacity: 0;
+  transform: scale(.9);
+}
+</style>
