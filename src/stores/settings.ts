@@ -77,7 +77,7 @@ export const useSettingsStore = defineStore('settings', () => {
     document.documentElement.style.setProperty('--card-opacity', String(cardOpacity.value))
   }
   function setCardOpacity(value: number) {
-    cardOpacity.value = Math.min(1, Math.max(0.2, value))
+    cardOpacity.value = value
     applyCardOpacity()
   }
   function initializeCardOpacity() {

@@ -17,6 +17,7 @@ import {
   LoaderCircle,
   PackageX,
   SaveIcon,
+  Share2,
   SquarePen,
   Star,
   UserRound,
@@ -83,6 +84,18 @@ function switchPreviewImage(offset: number) {
 function getStarFill(index: number) {
   const fill = Math.min(1, Math.max(0, normalizedRating.value - index + 1))
   return `${fill * 100}%`
+}
+
+async function share() {
+  console.log(route)
+  if (!navigator.share) {
+    navigator.clipboard.writeText(route.fullPath)
+    return;
+  }
+  await navigator.share({
+    title: '分享这个模组',
+    url: route.path
+  })
 }
 
 async function submitScore(score: number) {
@@ -191,13 +204,16 @@ watch(
         <MyCustomButton @click="openUrl(mod.link)">
           <Download />下载
         </MyCustomButton>
+        <MyCustomButton variant="ghost" @click="share">
+          <Share2 />
+        </MyCustomButton>
       </div>
       <div class="flex flex-col gap-4">
         <!-- 封面与基础信息 -->
         <section class="bg-card-surface overflow-hidden rounded-2xl border shadow-xs">
           <div class="relative h-64 bg-amber-100 dark:bg-amber-950/60 sm:h-72">
-            <img v-if="mod.images?.length" class="absolute inset-0 h-full w-full object-cover" :src="mod.images[0]"
-              :alt="`${mod.name}封面`" />
+            <img v-if="mod.images?.length" class="absolute inset-0 h-full w-full object-cover select-none"
+              :src="mod.images[0]" :alt="`${mod.name}封面`" />
             <div v-else class="flex h-full items-center justify-center text-7xl">📦</div>
             <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent">
               <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>

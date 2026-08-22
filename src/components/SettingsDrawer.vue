@@ -107,8 +107,9 @@ onMounted(() => {
             <SelectSettingCard description="选择主题模式" :model-value="settingsStore.theme"
               :default-value="DEFAULT_SETTINGS.theme" :select="themeOptions" title="主题"
               @update:model-value="settingsStore.setTheme" />
-            <SliderSettingCard title="卡片透明度" :description="`${(settingsStore.cardOpacity * 100).toFixed(0)}%`"
-              :model-value="settingsStore.cardOpacity" :default-value="DEFAULT_SETTINGS.cardOpacity" :min="0.2" :max="1"
+            <SliderSettingCard title="卡片透明度"
+              :description="`${settingsStore.cardOpacity <= 0.6 && settingsStore.background == 'custom-image' ? settingsStore.cardOpacity <= 0.3 ? '你喜欢就好：' : '真的要这样吗：' : ''}${(settingsStore.cardOpacity * 100).toFixed(0)}%`"
+              :model-value="settingsStore.cardOpacity" :default-value="DEFAULT_SETTINGS.cardOpacity" :max="1"
               :step="0.01" @update:model-value="settingsStore.setCardOpacity" />
             <SelectSettingCard title="背景样式" description="选择主页背景样式" :select="backgroundOptions"
               :model-value="settingsStore.background" :default-value="DEFAULT_SETTINGS.background"
@@ -143,7 +144,7 @@ onMounted(() => {
                 :default-value="DEFAULT_SETTINGS.imageBackgroundState.blur" :min="0" :max="24" :step="1"
                 @update:model-value="settingsStore.setBackgroundBlur" />
               <SliderSettingCard title="透明度"
-                :description="`${(settingsStore.imageBackgroundState.opacity * 100).toFixed(0)}%`"
+                :description="`${settingsStore.imageBackgroundState.opacity < 0.4 ? '你喜欢就好：' : ''}${(settingsStore.imageBackgroundState.opacity * 100).toFixed(0)}%`"
                 :model-value="settingsStore.imageBackgroundState.opacity"
                 :default-value="DEFAULT_SETTINGS.imageBackgroundState.opacity" :min="0" :max="1" :step="0.01"
                 @update:model-value="settingsStore.setBackgroundOpacity" />
@@ -159,7 +160,7 @@ onMounted(() => {
               :model-value="settingsStore.enableRippleEffect" title="水波纹效果" description="按住按钮后的水波纹效果"
               @update:model-value="settingsStore.setEnableRippleEffect" />
             <SwitchSettingCard :disabled="!settingsStore.enableAnimations" :model-value="settingsStore.enableTitleGlow"
-              title="标题发光" description="显示页面标题的背景发光效果" @update:model-value="settingsStore.setEnableTitleGlow" />
+              title="标题发光" description="主页标题的发光效果，可能有兼容性问题" @update:model-value="settingsStore.setEnableTitleGlow" />
           </SettingSection>
           <SettingSection name="操作">
             <BasicSettingCard title="重置设置" description="清除自定义设置选项">
