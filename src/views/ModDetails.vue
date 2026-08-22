@@ -200,18 +200,6 @@ watch(
     </div>
 
     <template v-else>
-      <div class="flex items-center gap-3 py-4">
-        <MyCustomButton class="backdrop-blur-lg" variant="outline" @click="goBack">
-          <ArrowLeft />返回
-        </MyCustomButton>
-        <MyCustomButton @click="openUrl(mod.link)">
-          <Download />下载
-        </MyCustomButton>
-        <div class="bg-border w-px h-5"></div>
-        <MyCustomButton class="w-9 h-9 rounded-full" variant="ghost" @click="share">
-          <Share2 />
-        </MyCustomButton>
-      </div>
       <div class="flex flex-col gap-4">
         <!-- 封面与基础信息 -->
         <section class="bg-card-surface overflow-hidden rounded-2xl border shadow-xs">
@@ -222,16 +210,36 @@ watch(
             <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent">
               <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>
             </div>
-            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-              <h1 class="mod-title-transition text-2xl font-bold leading-tight text-white sm:text-3xl">
-                {{ mod.name }}
-              </h1>
-              <div v-if="mod.tags.length" class="mt-2 flex flex-wrap gap-1.5">
-                <span v-for="tag in mod.tags" :key="tag"
-                  class="rounded-full bg-white/15 px-2.5 py-0.5 text-xs text-white/90 backdrop-blur-sm">
-                  {{ tag }}
-                </span>
+            <div class="absolute top-0 w-full flex justify-between items-center p-3">
+              <MyCustomButton
+                class="group/action  h-8 text-white rounded-full border bg-black/10 border-white/15 hover:bg-white/5 backdrop-blur-lg hover:text-white active:scale-95 text-xs"
+                variant="ghost" @click="goBack">
+                <ArrowLeft class="transition-transform group-hover/action:-translate-x-0.5" />返回
+              </MyCustomButton>
+              <MyCustomButton
+                class="w-8 h-8 text-white rounded-full border bg-black/10 border-white/15 hover:bg-white/5 backdrop-blur-sm hover:text-white active:scale-95"
+                variant="ghost" @click="share">
+                <Share2 />
+              </MyCustomButton>
+            </div>
+            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 flex justify-between items-end">
+              <div>
+                <h1 class="mod-title-transition text-2xl font-bold leading-tight text-white sm:text-3xl">
+                  {{ mod.name }}
+                </h1>
+                <div v-if="mod.tags.length" class="mt-2 flex flex-wrap gap-1.5">
+                  <span v-for="tag in mod.tags" :key="tag"
+                    class="rounded-full bg-white/15 px-2.5 py-0.5 text-xs text-white/90 backdrop-blur-sm">
+                    {{ tag }}
+                  </span>
+                </div>
               </div>
+              <MyCustomButton size="lg"
+                class="rounded-full cursor-pointer w-10 h-10 sm:w-auto bg-white/90 text-black hover:bg-white/90 hover:text-black"
+                @click="openUrl(mod.link)">
+                <Download />
+                <span class="hidden sm:inline">下载</span>
+              </MyCustomButton>
             </div>
           </div>
         </section>
