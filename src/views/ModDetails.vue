@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import BasicInfoCard from '@/components/Card/BasicInfoCard.vue';
-import FloatButton from '@/components/FloatButton.vue';
 import InfoCard from '@/components/ModInfo/InfoCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import { showToast } from '@/components/Toast/useToast';
