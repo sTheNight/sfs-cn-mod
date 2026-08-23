@@ -21,22 +21,15 @@ const emit = defineEmits<BasicSettingCardEmits>()
     <ripple-provider v-bind="$attrs" tag="div" :is-dark-ripple="true" :inert="props.disabled || undefined"
       :aria-disabled="props.disabled || undefined" :class="[
         'border rounded-xl box-border py-3 px-4 transition-all duration-200 text-sm relative',
-        props.disabled ? 'pointer-events-none select-none opacity-50' : 'hover:bg-accent/70 dark:hover:bg-input/50',
+        props.disabled ? 'pointer-events-none select-none opacity-50' : 'hover:bg-accent dark:hover:bg-input/50',
       ]">
-      <div v-if="isExperiment" class="absolute inset-0 -z-1">
-        <div class="
-              absolute right-0 w-125 h-37.5
-              translate-x-1/2 -translate-y-1/2
-              bg-radial
-            from-blue-400/20
-            via-blue-400/10
-              to-transparent
-              " />
+      <div v-if="isExperiment" class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-linear-to-l from-blue-200/30 to-transparent"></div>
         <p class="absolute text-blue-500/30 mr-2 mt-1 select-none right-0 font-mono">Experiment</p>
       </div>
       <div class="flex items-center justify-between gap-3">
         <div class="min-w-0 flex-1">
-          <h3 class="flex items-center gap-1">
+          <h3 class="flex items-center gap-1 text-accent-foreground">
             {{ props.title }}
             <button v-if="props.showUndo" type="button"
               class="cursor-pointer rounded-sm text-muted-foreground hover:text-foreground" aria-label="恢复默认值"

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import BasicInfoCard from '@/components/Card/BasicInfoCard.vue';
+import CreditCard from '@/components/CreditCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import { homeCardInfo } from '@/data/homeCardInfo';
-import { AlertTriangle, Download, Globe, HeartHandshake, MessageCircle, Tv, Users, type LucideIcon } from '@lucide/vue';
+import { AlertTriangle, Download, Globe, MessageCircle, Tv, Users, type LucideIcon } from '@lucide/vue';
 
 const cardIcons = [Download, AlertTriangle, MessageCircle]
 
@@ -47,36 +48,8 @@ const credits: [string, string, number?, string?][] = [
     </basic-info-card>
     <basic-info-card title="鸣谢名单">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <div
-          class="group/sponsor-card select-none flex justify-between text-accent-foreground border rounded-2xl p-3 relative z-1 overflow-hidden"
-          v-for="(item, index) in credits" :key="index">
-          <div class="absolute inset-0 -z-1">
-            <div class="
-              absolute right-0 w-125 h-37.5
-              translate-x-1/2 -translate-y-1/2
-              bg-radial from-amber-200/30 to-transparent
-              opacity-50
-              group-hover/sponsor-card:opacity-90
-              group-hover/sponsor-card:w-150
-              group-hover/sponsor-card:h-50
-              transition-opacity duration-300
-              transition-width transition-height
-              " />
-            <HeartHandshake :size="64"
-              class="absolute transition-opacity duration-300 group-hover/sponsor-card:opacity-20 text-amber-500 opacity-15 right-0 rotate-20" />
-          </div>
-          <div class="flex items-center gap-2">
-            <img class="w-8 h-8 rounded-full border" :src="item[1]" :alt="item[0]">
-            <span>{{ item[0] }}</span>
-          </div>
-          <div>
-            <my-custom-button class="text-xs" size="sm" variant="outline" v-if="item[2] && item[3]"
-              @click="openUrl(item[3])">
-              <users />
-              {{ item[2] }}
-            </my-custom-button>
-          </div>
-        </div>
+        <CreditCard v-for="(item, index) in credits" :key="index" :name="item[0]" :avatar="item[1]"
+          :group-number="item[2]" :group-url="item[3]" />
       </div>
     </basic-info-card>
     <h4 class="text-sm text-muted-foreground px-4 mt-2">声明信息</h4>
