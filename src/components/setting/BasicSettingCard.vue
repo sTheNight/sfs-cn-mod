@@ -20,10 +20,10 @@ const emit = defineEmits<BasicSettingCardEmits>()
   <div :class="props.disabled && 'cursor-not-allowed'">
     <ripple-provider v-bind="$attrs" tag="div" :is-dark-ripple="true" :inert="props.disabled || undefined"
       :aria-disabled="props.disabled || undefined" :class="[
-        'border rounded-xl box-border py-3 px-4 transition-all duration-200 text-sm relative',
+        'border rounded-xl box-border py-3 px-4 transition-all duration-200 text-sm relative isolate overflow-hidden',
         props.disabled ? 'pointer-events-none select-none opacity-50' : 'hover:bg-accent dark:hover:bg-input/50',
       ]">
-      <div v-if="isExperiment" class="absolute inset-0 z-0">
+      <div v-if="isExperiment" class="absolute inset-0 -z-1 pointer-events-none">
         <div class="absolute inset-0 bg-linear-to-l from-blue-200/30 to-transparent"></div>
         <p class="absolute text-blue-500/30 mr-2 mt-1 select-none right-0 font-mono">Experiment</p>
       </div>

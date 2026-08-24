@@ -16,12 +16,12 @@ const links: [string, string, LucideIcon][] = [
   ['https://sfszhmod.pages.dev/', '原版站点', Globe]
 ]
 
-const credits: [string, string, number?, string?][] = [
-  ['重铬酸钠', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/%E9%87%8D%E9%93%AC%E9%85%B8%E9%92%A0.webp', 1078113418, "https://qm.qq.com/q/elEN4eyqaY"],
-  ['蓝鲸公益', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/%E8%93%9D%E9%B2%B8%E5%85%AC%E7%9B%8A.webp', 879487979, "https://qm.qq.com/q/6J9eoSDyWk"],
-  ['PS201_', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/PS201_.webp'],
-  ['555_55', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/555_5.webp'],
-  ['10086', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/10086.webp']
+const credits: [string, string, string?, number?, string?][] = [
+  ['重铬酸钠', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/%E9%87%8D%E9%93%AC%E9%85%B8%E9%92%A0.webp', "协助制作", 1078113418, "https://qm.qq.com/q/elEN4eyqaY"],
+  ['蓝鲸公益', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/%E8%93%9D%E9%B2%B8%E5%85%AC%E7%9B%8A.webp', "子站点托管", 879487979, "https://qm.qq.com/q/6J9eoSDyWk"],
+  ['PS201_', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/PS201_.webp', '模组辅助测试'],
+  ['555_55', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/555_5.webp', '模组辅助测试'],
+  ['10086', 'https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/10086.webp', '模组辅助测试']
 ]
 </script>
 <template>
@@ -48,8 +48,8 @@ const credits: [string, string, number?, string?][] = [
     </basic-info-card>
     <basic-info-card title="鸣谢名单">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <CreditCard v-for="(item, index) in credits" :key="index" :name="item[0]" :avatar="item[1]"
-          :group-number="item[2]" :group-url="item[3]" />
+        <CreditCard :badge-text="item[2]" v-for="(item, index) in credits" :key="index" :name="item[0]"
+          :avatar="item[1]" :group-number="item[3]" :group-url="item[4]" />
       </div>
     </basic-info-card>
     <h4 class="text-sm text-muted-foreground px-4 mt-2">声明信息</h4>
