@@ -67,7 +67,8 @@ function handleSave() {
     :title="props.title" :description="props.description" :disabled="props.disabled">
     <div class="w-full">
       <div class="flex gap-2 text-accent-foreground">
-        <Input @update:model-value="handleTextChanged" v-model:model-value="inputText" class="flex-1 min-w-0"></Input>
+        <Input @update:model-value="handleTextChanged" v-model:model-value="inputText"
+          class="flex-1 min-w-0 text-xs"></Input>
         <div class="shrink-0">
           <MyCustomButton :class="{ 'cursor-not-allowed bg-zinc-600 hover:bg-zinc-600': !isChanged }"
             :show-ripple="isChanged" class="w-9 h-9" @click="handleSave">
