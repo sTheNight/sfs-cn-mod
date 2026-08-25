@@ -15,8 +15,8 @@ import { backgroundOptions, imageSourceOptions } from '@/data/backgroundOptions.
 import { removeCustomBackground, saveCustomBackground } from '@/utils/customBackgroundStorage'
 import { onMounted, ref, useTemplateRef } from 'vue'
 import CollapseTransition from './CollapseTransition.vue'
-import Input from './ui/input/Input.vue'
 import { showToast } from './Toast/useToast.ts'
+import InputSettingCard from './setting/InputSettingCard.vue'
 
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
@@ -67,8 +67,8 @@ async function clearBackgroundImage() {
   backgroundError.value = ''
 }
 
-async function handleSaveBackgroundUrl(e: KeyboardEvent) {
-  if (e.key === 'Enter') settingsStore.setCustomBackgroundName(url.value)
+async function handleSaveBackgroundUrl(value: string) {
+  settingsStore.setCustomBackgroundName(value)
 }
 
 onMounted(() => {
@@ -145,9 +145,9 @@ onMounted(() => {
                   </CompactButton>
                 </div>
               </BasicSettingCard>
-              <BasicSettingCard v-else title="背景图片" description="输入后请按回车保存">
-                <Input class="text-xs" v-model="url" @keydown="handleSaveBackgroundUrl"></Input>
-              </BasicSettingCard>
+              <InputSettingCard title="背景图片" description="输入后请按回车保存"
+                :current-text="settingsStore.imageBackgroundState.name"
+                :default-value="DEFAULT_SETTINGS.imageBackgroundState.name" @save="handleSaveBackgroundUrl" />
               <SliderSettingCard title="模糊强度" :description="`${settingsStore.imageBackgroundState.blur}px`"
                 :model-value="settingsStore.imageBackgroundState.blur"
                 :default-value="DEFAULT_SETTINGS.imageBackgroundState.blur" :min="0" :max="24" :step="1"

@@ -154,6 +154,7 @@ export const useSettingsStore = defineStore('settings', () => {
     transition,
     imageBackgroundState,
     cardBlurEffect,
+    isDark,
     setTheme,
     setBackground,
     setCustomBackgroundName,

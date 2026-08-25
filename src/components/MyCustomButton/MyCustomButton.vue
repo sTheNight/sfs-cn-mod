@@ -9,11 +9,13 @@ import RippleProvider from "../RippleProvider.vue"
 interface Props extends PrimitiveProps {
   variant?: ButtonVariants["variant"]
   size?: ButtonVariants["size"]
-  class?: HTMLAttributes["class"]
+  class?: HTMLAttributes["class"],
+  showRipple?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   as: "button",
+  showRipple: true
 })
 const isDarkRipple = () => {
   switch (props.variant) {
@@ -28,7 +30,8 @@ const isDarkRipple = () => {
 </script>
 
 <template>
-  <RippleProvider :is-dark-ripple="isDarkRipple()" :class="cn(buttonVariants({ variant, size }), props.class)">
+  <RippleProvider :show-ripple="showRipple" :is-dark-ripple="isDarkRipple()"
+    :class="cn(buttonVariants({ variant, size }), props.class)">
     <slot />
   </RippleProvider>
 </template>

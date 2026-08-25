@@ -9,10 +9,16 @@ import SettingSection from '@/components/setting/SettingSection.vue'
 import { showToast } from '@/components/Toast/useToast'
 import { BadgeJapaneseYen } from '@lucide/vue'
 import AlertMessage from '@/components/AlertMessage.vue'
+import InputSettingCard from '@/components/setting/InputSettingCard.vue'
 
 const bannerX = ref(0)
 const bannerY = ref(0)
 const bannerHovered = ref(false)
+
+const testText = ref("Hello")
+function handleSaveText(value: string) {
+  testText.value = value
+}
 
 function handleBannerMouseMove(event: MouseEvent) {
   const target = event.currentTarget as HTMLElement
@@ -33,7 +39,7 @@ function handleBannerMouseMove(event: MouseEvent) {
     </BasicInfoCard>
 
     <BasicInfoCard title="Settings">
-      <SettingSection name="Hello ">
+      <SettingSection name="Hello" class="max-w-100">
         <BasicSettingCard title="Hello World" description="你好，世界！">
           <FloatButton :icon="BadgeJapaneseYen" />
         </BasicSettingCard>
@@ -49,6 +55,11 @@ function handleBannerMouseMove(event: MouseEvent) {
             Click Me
           </MyCustomButton>
         </BasicSettingCard>
+        <InputSettingCard default-value="Hello World" title="Input Test" description="没有绑定外部值，内部值改变了就会显示撤销" />
+        <InputSettingCard default-value="Hello World" :current-text="testText" @save="handleSaveText" title="Input Test"
+          description="绑定了一个外部值，外部值改变了才会显示撤销" />
+        <InputSettingCard default-value="Hello World" :save-while-undo="false" :current-text="testText"
+          @save="handleSaveText" title="Input Test" description="绑定外部值，但撤销的时候不会立刻保存" />
       </SettingSection>
     </BasicInfoCard>
 

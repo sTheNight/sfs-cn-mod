@@ -12,7 +12,8 @@ defineOptions({ inheritAttrs: false })
 const props = withDefaults(defineProps<BasicSettingCardProps>(), {
   showUndo: false,
   disabled: false,
-  isExperiment: false
+  isExperiment: false,
+  vertical: false
 })
 const emit = defineEmits<BasicSettingCardEmits>()
 </script>
@@ -27,15 +28,17 @@ const emit = defineEmits<BasicSettingCardEmits>()
         <div class="absolute inset-0 bg-linear-to-l from-blue-200/30 to-transparent"></div>
         <p class="absolute text-blue-500/30 mr-2 mt-1 select-none right-0 font-mono">Experiment</p>
       </div>
-      <div class="flex items-center justify-between gap-3">
+      <div class="flex gap-3" :class="{ 'justify-between items-center': !props.vertical, 'flex-col': props.vertical }">
         <div class="min-w-0 flex-1">
           <h3 class="flex items-center gap-1 text-accent-foreground">
             {{ props.title }}
-            <button v-if="props.showUndo" type="button"
-              class="cursor-pointer rounded-sm text-muted-foreground hover:text-foreground" aria-label="恢复默认值"
-              title="恢复默认值" @click.prevent.stop="emit('undo')">
-              <undo2 :size="12" />
-            </button>
+            <transition name="undo-fade" mode="out-in">
+              <button v-if="props.showUndo" type="button"
+                class="cursor-pointer rounded-sm text-muted-foreground hover:text-foreground" aria-label="恢复默认值"
+                title="恢复默认值" @click.prevent.stop="emit('undo')">
+                <undo2 :size="12" />
+              </button>
+            </transition>
           </h3>
           <p v-if="props.description" class="text-muted-foreground text-xs wrap-break-word">
             {{ props.description }}
@@ -48,3 +51,17 @@ const emit = defineEmits<BasicSettingCardEmits>()
     </ripple-provider>
   </div>
 </template>
+<style lang="css" scoped>
+.undo-fade-enter-active,
+.undo-fade-leave-active {
+  transition:
+    opacity .2s,
+    transform .2s cubic-bezier(0.25, 0.10, 0.22, 1.69);
+}
+
+.undo-fade-enter-from,
+.undo-fade-leave-to {
+  opacity: 0;
+  transform: scale(0);
+}
+</style>
