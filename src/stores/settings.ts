@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 export type ThemePreference = 'system' | 'light' | 'dark'
-export type TransitionPreference = 'x-fade' | 'y-fade' | 'opacity-fade'
+export type TransitionPreference = 'x-fade' | 'y-fade' | 'opacity-fade' | 'none'
 
 export type BackgroundPreference = 'none' | 'grid' | 'custom-image'
 export type ImageSource = 'local' | 'url'
@@ -19,7 +19,7 @@ export const DEFAULT_SETTINGS = {
   // 界面
   theme: 'system' as ThemePreference,
   cardOpacity: 1,
-  background: 'grid' as BackgroundPreference,
+  background: 'custom-image' as BackgroundPreference,
   cardBlurEffect: false,
   // 自定义背景
   imageBackgroundState: {
