@@ -13,8 +13,10 @@ import AndroidTutor from './Tutorial/AndroidTutor.vue';
 import IOSTutor from './Tutorial/iOSTutor.vue';
 import PCTutor from './Tutorial/PCTutor.vue';
 import QA from './Tutorial/QA.vue';
+import { useSettingsStore } from '@/stores/settings.ts';
 
 const currentTutor: Ref<TutorType> = ref("android")
+const setting = useSettingsStore()
 
 const tutorTabs: { type: TutorType, label: string, icon: Component }[] = [
   { type: "android", label: "安卓", icon: BotIcon },
@@ -39,7 +41,7 @@ function isActiveTutorSection(tutor: TutorType): boolean {
       </Button>
     </ButtonGroup>
     <div class="mt-4">
-      <Transition mode="out-in" name="y-fade">
+      <Transition mode="out-in" :name="setting.transition">
         <AndroidTutor v-if="currentTutor == 'android'" />
         <IOSTutor v-else-if="currentTutor == 'ios'" />
         <PCTutor v-else-if="currentTutor == 'pc'" />
