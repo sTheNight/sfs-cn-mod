@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Save } from '@lucide/vue';
 import MyCustomButton from '../MyCustomButton/MyCustomButton.vue';
 import Input from '../ui/input/Input.vue';
 import BasicSettingCard from './BasicSettingCard.vue';
@@ -22,6 +21,7 @@ const props = withDefaults(defineProps<InputSettingCardProps>(), {
 const emits = defineEmits<InputSettingCardEmits>()
 
 const inputText = ref<string>("")
+const editStartText = ref<string>("")
 const isChanged = ref(false)
 
 const { canUndo, undo } = useResettableSetting(
@@ -35,6 +35,8 @@ watch(
   (currentText) => {
     if (currentText !== undefined) {
       inputText.value = currentText
+      editStartText.value = currentText
+      isChanged.value = false
     }
   },
   { immediate: true },
@@ -44,21 +46,33 @@ function setInputText(value: string) {
   inputText.value = value
 }
 
-function handleTextChanged() {
-  isChanged.value = true
+function handleTextChanged(value: string | number) {
+  if (!isChanged.value) {
+    editStartText.value = inputText.value
+  }
+
+  inputText.value = String(value)
+  isChanged.value = inputText.value !== editStartText.value
+}
+
+function handleCancel() {
+  inputText.value = editStartText.value
+  isChanged.value = false
 }
 
 function realUndo() {
   undo()
   if (props.saveWhileUndo) {
     emits('save', inputText.value)
+    editStartText.value = inputText.value
     isChanged.value = false
   } else {
-    isChanged.value = true
+    isChanged.value = inputText.value !== editStartText.value
   }
 }
 function handleSave() {
   emits('save', inputText.value)
+  editStartText.value = inputText.value
   isChanged.value = false
 }
 </script>
@@ -66,18 +80,20 @@ function handleSave() {
   <BasicSettingCard vertical :show-undo="canUndo" @undo="realUndo" :is-experiment="props.isExperiment"
     :title="props.title" :description="props.description" :disabled="props.disabled">
     <div class="w-full">
-      <div class="flex gap-2 text-accent-foreground">
-        <Input @update:model-value="handleTextChanged" v-model:model-value="inputText"
-          class="flex-1 min-w-0 text-xs"></Input>
-        <div class="shrink-0">
-          <MyCustomButton :class="{ 'cursor-not-allowed bg-zinc-600 hover:bg-zinc-600 dark:bg-zinc-400': !isChanged }"
-            :show-ripple="isChanged" class="w-9 h-9" @click="handleSave">
-            <Save />
-          </MyCustomButton>
-        </div>
-      </div>
+      <Input :model-value="inputText" @update:model-value="handleTextChanged"
+        class="w-full text-accent-foreground"></Input>
       <CollapseTransition :show="isChanged">
-        <p class="text-xs text-red-600 mt-2">已更改但未保存</p>
+        <div class="flex justify-between items-center mt-2">
+          <p class="text-xs text-red-600">已更改但未保存</p>
+          <div class="flex gap-1">
+            <MyCustomButton variant="outline" size="sm" @click="handleCancel">
+              取消
+            </MyCustomButton>
+            <MyCustomButton :show-ripple="isChanged" size="sm" @click="handleSave">
+              保存
+            </MyCustomButton>
+          </div>
+        </div>
       </CollapseTransition>
     </div>
   </BasicSettingCard>
