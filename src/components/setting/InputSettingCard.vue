@@ -86,10 +86,10 @@ function handleSave() {
         <div class="flex justify-between items-center mt-2">
           <p class="text-xs text-red-600">已更改但未保存</p>
           <div class="flex gap-1">
-            <MyCustomButton variant="outline" size="sm" @click="handleCancel">
+            <MyCustomButton class="text-xs" variant="outline" size="sm" @click="handleCancel">
               取消
             </MyCustomButton>
-            <MyCustomButton :show-ripple="isChanged" size="sm" @click="handleSave">
+            <MyCustomButton class="text-xs" :show-ripple="isChanged" size="sm" @click="handleSave">
               保存
             </MyCustomButton>
           </div>
