@@ -81,7 +81,7 @@ function handleSave() {
     :title="props.title" :description="props.description" :disabled="props.disabled">
     <div class="w-full">
       <Input :model-value="inputText" @update:model-value="handleTextChanged"
-        class="w-full text-accent-foreground"></Input>
+        class="w-full text-accent-foreground text-xs"></Input>
       <CollapseTransition :show="isChanged">
         <div class="flex justify-between items-center mt-2">
           <p class="text-xs text-red-600">已更改但未保存</p>
