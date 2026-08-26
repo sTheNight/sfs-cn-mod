@@ -72,6 +72,11 @@ const routeButtons: RouteButton[] = [
   }
 ]
 
+const activeRouteIndex = computed(() => {
+  const index = routeButtons.findIndex(item => isActiveRoute(item.key))
+  return index === -1 ? 0 : index
+})
+
 function isActiveRoute(name: string) {
   if (name === 'mod') return route.name === 'mod' || route.name === 'mod-details'
   return route.name == name
@@ -157,15 +162,21 @@ onMounted(() => {
         </h2>
       </header>
       <div class="flex items-center justify-center mb-4">
-        <div class="flex gap-2 items-center justify-center border bg-card-surface p-1.5 rounded-full shadow-xs"
+        <div class="border bg-card-surface p-1.5 rounded-full shadow-xs"
           :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''">
-          <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
-            class="rounded-full active:scale-90 select-none cursor-pointer" variant="ghost"
-            :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-blue-50 bg-blue-100/50 dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-blue-950/60 dark:bg-blue-950/60': isActiveRoute(item.key) }"
-            @click="router.push(item.route)">
-            <component :is="item.icon" :size="14" />
-            {{ item.title }}
-          </MyCustomButton>
+          <div class="relative grid grid-cols-3 gap-2 items-center justify-center">
+            <span aria-hidden="true"
+              class="route-button-indicator absolute inset-y-0 left-0 rounded-full bg-blue-100/50 dark:bg-blue-950/60"
+              :class="{ 'route-button-indicator-animated': settingsStore.enableAnimations }"
+              :style="{ transform: `translateX(calc(${activeRouteIndex} * (100% + 0.5rem)))` }" />
+            <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
+              class="relative z-1 rounded-full active:scale-90 select-none cursor-pointer" variant="ghost"
+              :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-transparent dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-transparent': isActiveRoute(item.key) }"
+              @click="router.push(item.route)">
+              <component :is="item.icon" :size="14" />
+              {{ item.title }}
+            </MyCustomButton>
+          </div>
         </div>
       </div>
       <RouterView v-slot="{ Component }">
@@ -233,6 +244,14 @@ onMounted(() => {
 .float-button-fade-leave-to {
   transform: scale(0.2);
   opacity: 0;
+}
+
+.route-button-indicator {
+  width: calc((100% - 1rem) / 3);
+}
+
+.route-button-indicator-animated {
+  transition: transform 300ms cubic-bezier(.22, 1, .36, 1);
 }
 </style>
 
