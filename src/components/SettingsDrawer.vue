@@ -21,7 +21,6 @@ import InputSettingCard from './setting/InputSettingCard.vue'
 const open = defineModel<boolean>('open', { default: false })
 const settingsStore = useSettingsStore()
 const backgroundInput = useTemplateRef<HTMLInputElement>('background-input')
-const backgroundError = ref('')
 const MAX_BACKGROUND_SIZE = 10 * 1024 * 1024
 const url = ref("")
 
@@ -54,17 +53,14 @@ async function handleBackgroundFile(event: Event) {
     await saveCustomBackground(file)
     settingsStore.setCustomBackgroundName(file.name)
     settingsStore.setBackground('custom-image')
-    backgroundError.value = ''
   } catch {
-    backgroundError.value = '图片保存失败，请检查浏览器存储权限'
+    showToast('图片保存失败，请检查浏览器存储权限')
   }
 }
 
 async function clearBackgroundImage() {
   await removeCustomBackground()
   settingsStore.setCustomBackgroundName('')
-  settingsStore.setBackground('grid')
-  backgroundError.value = ''
 }
 
 async function handleSaveBackgroundUrl(value: string) {
@@ -132,17 +128,18 @@ onMounted(() => {
                 :model-value="settingsStore.imageBackgroundState.imageSource">
               </SelectSettingCard>
               <BasicSettingCard v-if="settingsStore.imageBackgroundState.imageSource === 'local'" title="背景图片"
-                :description="backgroundError || settingsStore.imageBackgroundState.name || '从本机选择一张图片，最大 10 MB'">
+                :description="settingsStore.imageBackgroundState.name || '从本机选择一张图片，最大 10 MB'">
                 <div class="flex gap-2">
                   <input ref="background-input" class="hidden" type="file" accept="image/*"
                     @change="handleBackgroundFile" />
                   <MyCustomButton variant="outline" size="sm" class="text-xs" @click="selectBackgroundImage">
                     选择
                   </MyCustomButton>
-                  <CompactButton v-if="settingsStore.imageBackgroundState.name" size="sm" aria-label="清除背景图片"
+                  <MyCustomButton class="w-8 h-8 text-red-500 hover:text-red-500"
+                    v-if="settingsStore.imageBackgroundState.name" size="sm" variant="outline" aria-label="清除背景图片"
                     @click="clearBackgroundImage">
                     <Trash2 :size="14" />
-                  </CompactButton>
+                  </MyCustomButton>
                 </div>
               </BasicSettingCard>
               <InputSettingCard v-if="settingsStore.imageBackgroundState.imageSource === 'url'" title="背景图片"
