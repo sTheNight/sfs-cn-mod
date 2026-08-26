@@ -145,8 +145,8 @@ onMounted(() => {
                   </CompactButton>
                 </div>
               </BasicSettingCard>
-              <InputSettingCard title="背景图片" description="输入后请按回车保存"
-                :current-text="settingsStore.imageBackgroundState.name"
+              <InputSettingCard v-if="settingsStore.imageBackgroundState.imageSource === 'url'" title="背景图片"
+                description="输入后请按回车保存" :current-text="settingsStore.imageBackgroundState.name"
                 :default-value="DEFAULT_SETTINGS.imageBackgroundState.name" @save="handleSaveBackgroundUrl" />
               <SliderSettingCard title="模糊强度" :description="`${settingsStore.imageBackgroundState.blur}px`"
                 :model-value="settingsStore.imageBackgroundState.blur"

@@ -10,14 +10,19 @@ interface Props extends PrimitiveProps {
   variant?: ButtonVariants["variant"]
   size?: ButtonVariants["size"]
   class?: HTMLAttributes["class"],
-  showRipple?: boolean
+  showRipple?: boolean,
+  rippleFollowTheme?: boolean,
+  isDarkRipple?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   as: "button",
-  showRipple: true
+  showRipple: true,
+  rippleFollowTheme: true,
+  isDarkRipple: undefined
 })
 const isDarkRipple = () => {
+  if (props.isDarkRipple !== undefined) return props.isDarkRipple
   switch (props.variant) {
     case "destructive":
     case "ghost":
@@ -30,7 +35,7 @@ const isDarkRipple = () => {
 </script>
 
 <template>
-  <RippleProvider :show-ripple="showRipple" :is-dark-ripple="isDarkRipple()"
+  <RippleProvider :follow-theme="rippleFollowTheme" :show-ripple="showRipple" :is-dark-ripple="isDarkRipple()"
     :class="cn(buttonVariants({ variant, size }), props.class)">
     <slot />
   </RippleProvider>

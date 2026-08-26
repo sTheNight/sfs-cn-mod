@@ -11,13 +11,15 @@ defineOptions({
 interface RippleProviderProps {
   tag?: keyof HTMLElementTagNameMap
   isDarkRipple?: boolean,
-  showRipple?: boolean
+  showRipple?: boolean,
+  followTheme?: boolean
 }
 
 withDefaults(defineProps<RippleProviderProps>(), {
   tag: 'span',
   isDarkRipple: false,
-  showRipple: true
+  showRipple: true,
+  followTheme: true
 })
 
 const attrs = useAttrs()
@@ -106,7 +108,7 @@ function hideRipple() {
     <Transition name="ripple-fade">
       <span v-if="isRippleShow && settingStore.enableAnimations && settingStore.enableRippleEffect && showRipple"
         :key="rippleKey"
-        :class="['absolute z-100 rounded-full pointer-events-none', isDarkRipple ? 'bg-black/20 dark:bg-white/30' : 'bg-white/30 dark:bg-black/20']"
+        :class="['absolute z-100 rounded-full pointer-events-none', isDarkRipple ? 'bg-black/20 ' : 'bg-white/30', isDarkRipple && followTheme ? 'dark:bg-white/30' : !isDarkRipple && followTheme ? 'dark:bg-black/20' : '']"
         :style="{
           left: `${ripple.x}px`,
           top: `${ripple.y}px`,

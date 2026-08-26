@@ -55,8 +55,8 @@ async function share() {
     <CompactButton backdrop class="absolute right-0 top-0 m-2" @click="share">
       <Share2 />
     </CompactButton>
-    <img @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0" v-if="item.images?.length"
-      :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
+    <img :draggable="false" @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0"
+      v-if="item.images?.length" :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
     <div @click="$emit('openDetail', item)" v-else
       class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl select-none">📦</div>
     <div class="p-4 flex flex-col flex-1 min-h-0">

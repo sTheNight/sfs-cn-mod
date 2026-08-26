@@ -205,8 +205,9 @@ watch(
         <!-- 封面与基础信息 -->
         <section class="bg-card-surface overflow-hidden rounded-2xl border shadow-xs">
           <div class="relative h-64 bg-amber-100 dark:bg-amber-950/60 sm:h-72">
-            <img v-if="mod.images?.length" class="absolute inset-0 h-full w-full object-cover select-none"
-              :src="mod.images[0]" :alt="`${mod.name}封面`" />
+            <img :draggable="false" v-if="mod.images?.length"
+              class="absolute inset-0 h-full w-full object-cover select-none" :src="mod.images[0]"
+              :alt="`${mod.name}封面`" />
             <div v-else class="flex h-full items-center justify-center text-7xl">📦</div>
             <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent">
               <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>
@@ -231,7 +232,7 @@ watch(
                   </span>
                 </div>
               </div>
-              <MyCustomButton size="lg"
+              <MyCustomButton size="lg" :ripple-follow-theme="false" is-dark-ripple
                 class="rounded-full cursor-pointer w-10 h-10 sm:w-auto bg-white/90 text-black hover:bg-white/90 hover:text-black"
                 @click="openUrl(mod.link)">
                 <Download />
