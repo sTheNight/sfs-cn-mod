@@ -72,10 +72,9 @@ const routeButtons: RouteButton[] = [
   }
 ]
 
-const activeRouteIndex = computed(() => {
-  const index = routeButtons.findIndex(item => isActiveRoute(item.key))
-  return index === -1 ? 0 : index
-})
+const activeRouteIndex = computed(() =>
+  routeButtons.findIndex(item => isActiveRoute(item.key))
+)
 
 function isActiveRoute(name: string) {
   if (name === 'mod') return route.name === 'mod' || route.name === 'mod-details'
@@ -165,7 +164,7 @@ onMounted(() => {
         <div class="border bg-card-surface p-1.5 rounded-full shadow-xs"
           :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''">
           <div class="relative grid grid-cols-3 gap-2 items-center justify-center">
-            <span aria-hidden="true"
+            <span aria-hidden="true" v-if="activeRouteIndex >= 0"
               class="route-button-indicator absolute inset-y-0 left-0 rounded-full bg-blue-100/50 dark:bg-blue-950/60"
               :class="{ 'route-button-indicator-animated': settingsStore.enableAnimations }"
               :style="{ transform: `translateX(calc(${activeRouteIndex} * (100% + 0.5rem)))` }" />

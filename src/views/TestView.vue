@@ -56,6 +56,7 @@ function handleBannerMouseMove(event: MouseEvent) {
           </MyCustomButton>
         </BasicSettingCard>
         <InputSettingCard default-value="Hello World" title="Input Test" description="没有绑定外部值，内部值改变了就会显示撤销" />
+        <InputSettingCard disabled default-value="Hello World" title="Input Test" description="我被禁用了" />
         <InputSettingCard default-value="Hello World" :current-text="testText" @save="handleSaveText" title="Input Test"
           description="绑定了一个外部值，外部值改变了才会显示撤销" />
         <InputSettingCard default-value="Hello World" :save-while-undo="false" :current-text="testText"
