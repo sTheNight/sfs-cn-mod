@@ -20,11 +20,13 @@ import RippleProvider from '../RippleProvider.vue';
 import CompactButton from '../CompactButton/CompactButton.vue';
 import { showToast } from '../Toast/useToast.ts';
 import { useSettingsStore } from '@/stores/settings.ts';
+import { useI18n } from 'vue-i18n';
 
 
 const cardRef = useTemplateRef<HTMLElement>('card')
 const hasEnteredViewport = ref(false)
 const setting = useSettingsStore()
+const { t } = useI18n()
 
 useIntersectionObserver(
   cardRef,
@@ -38,12 +40,12 @@ async function share() {
   const modDetailUrl = `${baseUrl}/mods/${props.item.name}`
   if (!navigator.share) {
     navigator.clipboard.writeText(modDetailUrl)
-    showToast("已复制链接")
+    showToast(t('mods.copied'))
     return;
   }
-  showToast("正在调起分享")
+  showToast(t('mods.sharing'))
   await navigator.share({
-    title: '分享这个模组',
+    title: t('mods.shareTitle'),
     url: modDetailUrl
   })
 }
@@ -56,7 +58,7 @@ async function share() {
       <Share2 />
     </CompactButton>
     <img :draggable="false" @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0"
-      v-if="item.images?.length" :src="item.images[0]" :alt="`${item.name}封面`" loading="lazy" decoding="async" />
+      v-if="item.images?.length" :src="item.images[0]" :alt="t('mods.coverAlt', { name: item.name })" loading="lazy" decoding="async" />
     <div @click="$emit('openDetail', item)" v-else
       class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl select-none">📦</div>
     <div class="p-4 flex flex-col flex-1 min-h-0">
@@ -92,11 +94,11 @@ async function share() {
         <div class="flex w-full justify-end mt-4 gap-2">
           <MyCustomButton variant="outline" @click="$emit('openDetail', item)">
             <Info />
-            详情
+            {{ t('common.details') }}
           </MyCustomButton>
           <MyCustomButton @click="$emit('onDownloadButtonClicked', item.link)">
             <Download />
-            下载
+            {{ t('common.download') }}
           </MyCustomButton>
         </div>
       </div>

@@ -12,9 +12,11 @@ import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import GridBackground from '@/components/Background/GridBackground.vue';
 import ImageBackground from '@/components/Background/ImageBackground.vue';
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const { y } = useWindowScroll({
   behavior: "smooth"
@@ -51,29 +53,29 @@ interface RouteButton {
   route: string
 }
 
-const routeButtons: RouteButton[] = [
+const routeButtons = computed<RouteButton[]>(() => [
   {
     icon: PackageIcon,
-    title: "模组",
+    title: t('nav.mods'),
     key: 'mod',
     route: '/'
   },
   {
     icon: CompassIcon,
-    title: '教程',
+    title: t('nav.tutorial'),
     key: 'tutorial',
     route: '/tutorial'
   },
   {
     icon: InfoIcon,
-    title: '关于',
+    title: t('nav.about'),
     key: 'info',
     route: '/info'
   }
-]
+])
 
 const activeRouteIndex = computed(() =>
-  routeButtons.findIndex(item => isActiveRoute(item.key))
+  routeButtons.value.findIndex(item => isActiveRoute(item.key))
 )
 
 function isActiveRoute(name: string) {
@@ -114,8 +116,8 @@ onMounted(() => {
       <DialogContent>
         <div class="w-full h-full">
           <h2 class="text-5xl text-center py-4">❤️</h2>
-          <h2 class="text-xl mt-2 font-bold text-center">赞助支持</h2>
-          <p class="text-center text-sm m-2 text-muted-foreground">感谢你的支持，我们会继续更新优质汉化模组！</p>
+          <h2 class="text-xl mt-2 font-bold text-center">{{ t('layout.sponsor') }}</h2>
+          <p class="text-center text-sm m-2 text-muted-foreground">{{ t('layout.sponsorThanks') }}</p>
           <div class="flex justify-center mt-2">
             <div class="border rounded-2xl p-4 shadow-md">
               <img src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/5.png" width="250">
@@ -128,25 +130,22 @@ onMounted(() => {
     <Dialog v-model:open="isShowWarningDialog">
       <DialogContent @interact-outside.prevent @escape-key-down.prevent>
         <DialogHeader>
-          <h2 class="text-xl font-bold">欢迎访问 SFS 汉化模组站</h2>
+          <h2 class="text-xl font-bold">{{ t('layout.welcome') }}</h2>
         </DialogHeader>
-        <p class="text-muted-foreground text-sm">
-          本站所有模组均为汉化版本，仅供学习交流使用。<br />
-          下载前请确认您已了解模组安装方法。<br />
-        </p>
+        <p class="text-muted-foreground text-sm whitespace-pre-line">{{ t('layout.warning') }}</p>
         <p class="text-sm text-muted-foreground">
-          额外说明：本站为重写版并非原站点，部分功能特性可能未同步，如有需要请访问<a class="px-2 outline-0 underline text-blue-500"
-            href="https://sfszhmod.pages.dev/">原站点</a>
+          {{ t('layout.extraPrefix') }}<a class="px-2 outline-0 underline text-blue-500"
+            href="https://sfszhmod.pages.dev/">{{ t('layout.originalSite') }}</a>
         </p>
         <div class="flex w-full justify-end text-sm">
           <div class="flex items-center gap-2 select-none" @click="isNeverShowDialogCheck = !isNeverShowDialogCheck">
-            <Checkbox @click.stop.prevent v-model:model-value="isNeverShowDialogCheck" /> 不再显示
+            <Checkbox @click.stop.prevent v-model:model-value="isNeverShowDialogCheck" /> {{ t('layout.neverShow') }}
           </div>
         </div>
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
             <MyCustomButton @click="closeWarningDialog">
-              <LogIn /> 进入
+              <LogIn /> {{ t('layout.enter') }}
             </MyCustomButton>
           </div>
         </DialogFooter>
@@ -154,10 +153,10 @@ onMounted(() => {
     </Dialog>
     <div class="w-full max-w-7xl min-h-screen ml-auto mr-auto px-4">
       <header class="w-full box-border flex items-center justify-center flex-col relative">
-        <h2 class="animated-title my-24 text-2xl sm:text-3xl font-bold">汉化模组下载中心</h2>
+        <h2 class="animated-title my-24 text-2xl sm:text-3xl font-bold">{{ t('layout.title') }}</h2>
         <h2 v-if="settingsStore.enableTitleGlow && settingsStore.enableAnimations"
           class="animated-title absolute top-1/2 left-1/2 -translate-1/2 text-2xl sm:text-3xl font-bold select-none -z-1 blur-2xl">
-          汉化模组下载中心
+          {{ t('layout.title') }}
         </h2>
       </header>
       <div class="flex items-center justify-center mb-4">
