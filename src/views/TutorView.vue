@@ -8,22 +8,24 @@ import {
   Laptop,
   MessageCircleQuestionIcon,
 } from '@lucide/vue';
-import { ref, type Component, type Ref } from 'vue';
+import { computed, ref, type Component, type Ref } from 'vue';
 import AndroidTutor from './Tutorial/AndroidTutor.vue';
 import IOSTutor from './Tutorial/iOSTutor.vue';
 import PCTutor from './Tutorial/PCTutor.vue';
 import QA from './Tutorial/QA.vue';
 import { useSettingsStore } from '@/stores/settings.ts';
+import { useI18n } from 'vue-i18n';
 
 const currentTutor: Ref<TutorType> = ref("android")
 const setting = useSettingsStore()
+const { t } = useI18n()
 
-const tutorTabs: { type: TutorType, label: string, icon: Component }[] = [
-  { type: "android", label: "安卓", icon: BotIcon },
-  { type: "ios", label: "iOS", icon: AppleIcon },
-  { type: "pc", label: "PC", icon: Laptop },
-  { type: "qa", label: "常见问题", icon: MessageCircleQuestionIcon },
-]
+const tutorTabs = computed<{ type: TutorType, label: string, icon: Component }[]>(() => [
+  { type: "android", label: t('tutorial.android'), icon: BotIcon },
+  { type: "ios", label: t('tutorial.ios'), icon: AppleIcon },
+  { type: "pc", label: t('tutorial.pc'), icon: Laptop },
+  { type: "qa", label: t('tutorial.qa'), icon: MessageCircleQuestionIcon },
+])
 
 function isActiveTutorSection(tutor: TutorType): boolean {
   return currentTutor.value == tutor

@@ -2,36 +2,35 @@
 import AlertMessage from '@/components/AlertMessage.vue';
 import BasicInfoCard from '@/components/Card/BasicInfoCard.vue';
 import MyCode from '@/components/MyCode.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 </script>
 <template>
   <div class="flex flex-col gap-2">
     <AlertMessage type="error">
-      <b>重要提示：</b>Steam版SFS的模组安装路径与手机版不同，请注意区分。
+      {{ t('tutorialContent.pc.warning') }}
     </AlertMessage>
-    <BasicInfoCard title="下载模组文件">
+    <BasicInfoCard :title="t('tutorialContent.pc.steps.0.title')">
       <template #tag>①</template>
-      <p>从本站下载需要的模组ZIP文件，解压到电脑任意位置。</p>
+      <p>{{ t('tutorialContent.pc.steps.0.description') }}</p>
     </BasicInfoCard>
-    <BasicInfoCard title="找到游戏安装目录">
+    <BasicInfoCard :title="t('tutorialContent.pc.steps.1.title')">
       <template #tag>②</template>
-      <p>Steam版SFS的存档和模组路径通常为：</p>
-      <MyCode>你的steam安装位置\SteamLibrary\steamapps\common\Spaceflight Simulator\Spaceflight Simulator Game</MyCode>
-      <p>或在Steam库中右键游戏 → 管理 → 浏览本地文件。</p>
+      <p>{{ t('tutorialContent.pc.steps.1.description') }}</p>
+      <MyCode>{{ t('tutorialContent.pc.steps.1.code') }}</MyCode>
     </BasicInfoCard>
-    <BasicInfoCard title="放置模组文件">
+    <BasicInfoCard :title="t('tutorialContent.pc.steps.2.title')">
       <template #tag>③</template>
-      <p>在游戏目录下创建或找到以下文件夹，将模组文件放入：</p>
-      <MyCode>
-        • 部件 → Spaceflight Simulator\Parts\<br />
-        • 涂装 → Spaceflight Simulator\Textures Packs\
-      </MyCode>
+      <p>{{ t('tutorialContent.pc.steps.2.description') }}</p>
+      <MyCode>{{ t('tutorialContent.pc.steps.2.code') }}</MyCode>
     </BasicInfoCard>
-    <BasicInfoCard title="启动游戏">
+    <BasicInfoCard :title="t('tutorialContent.pc.steps.3.title')">
       <template #tag>④</template>
-      <p>通过Steam启动游戏，进入游戏检查新部件是否正常显示。</p>
+      <p>{{ t('tutorialContent.pc.steps.3.description') }}</p>
     </BasicInfoCard>
-    <AlertMessage type="info" content="123">
-      <b>小技巧：</b>PC版是本地加载 加载模组速度极快
+    <AlertMessage type="info">
+      <b>{{ t('tutorialContent.tipLabel') }}</b>{{ t('tutorialContent.pc.tip') }}
     </AlertMessage>
   </div>
 </template>

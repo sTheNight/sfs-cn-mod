@@ -13,6 +13,7 @@ import { useRouter } from 'vue-router';
 import CollapseTransition from '@/components/CollapseTransition.vue';
 import { CompactButton } from '@/components/CompactButton';
 import { useSettingsStore } from '@/stores/settings';
+import { useI18n } from 'vue-i18n';
 
 const shownList = ref<ModInfo[]>([])
 const isLoading = ref(true)
@@ -22,6 +23,8 @@ const searchText = ref("")
 const isWarningAlertShow = ref(true)
 const router = useRouter()
 const settingsStore = useSettingsStore()
+const { t } = useI18n()
+const categoryKeys = Object.keys(categoryRecord) as ModCategory[]
 
 function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
   if (category == "all") return source
@@ -65,7 +68,7 @@ async function loadModInfo(forceRefresh = false) {
     applyFilter()
   } catch (error) {
     shownList.value = []
-    loadError.value = error instanceof Error ? error.message : "加载失败"
+    loadError.value = error instanceof Error ? error.message : t('mods.loadFailed', { error: '' })
   } finally {
     isLoading.value = false
   }
@@ -87,7 +90,7 @@ onMounted(() => {
           class="border-input bg-card flex h-9 w-fit items-center gap-3 rounded-md border px-3 py-2 text-sm whitespace-nowrap shadow-xs">
           <Folder :size="16" />
           <Transition name="switch-fade" mode="out-in">
-            <span :key="shownList.length">共 {{ shownList.length }} 个文件</span>
+            <span :key="shownList.length">{{ t('mods.fileCount', { count: shownList.length }) }}</span>
           </Transition>
         </div>
         <Select v-model:model-value="categoryFilter">
@@ -95,31 +98,31 @@ onMounted(() => {
           <SelectTrigger class="bg-card dark:bg-card dark:hover:bg-card">
             <div class="flex items-center gap-2">
               <Filter :size="16" />
-              <span>{{ categoryRecord[categoryFilter] }}</span>
+              <span>{{ t(`mods.categories.${categoryFilter}`) }}</span>
             </div>
           </SelectTrigger>
           <SelectContent class="bg-popover/80 backdrop-blur-xs">
             <SelectGroup>
-              <SelectLabel>分类</SelectLabel>
-              <SelectItem v-for="(value, key) in categoryRecord" :key="key" :value="key">
-                {{ value }}
+              <SelectLabel>{{ t('mods.category') }}</SelectLabel>
+              <SelectItem v-for="key in categoryKeys" :key="key" :value="key">
+                {{ t(`mods.categories.${key}`) }}
               </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
       <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-        <Input v-model="searchText" class="min-w-0 text-sm bg-card dark:bg-card" placeholder="请输入关键字"
+        <Input v-model="searchText" class="min-w-0 text-sm bg-card dark:bg-card" :placeholder="t('mods.searchPlaceholder')"
           @keydown="handleKeywordFilterKeyDown" />
-        <MyCustomButton class="px-3 w-9 h-9" @click="applyFilter">
+        <MyCustomButton class="px-3 w-9 h-9" :aria-label="t('common.search')" @click="applyFilter">
           <Search />
         </MyCustomButton>
       </div>
     </div>
     <CollapseTransition :show="isWarningAlertShow" scale>
       <AlertMessage class="mt-4 relative" type="warning">
-        <span class="pr-7">声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等bug</span>
-        <CompactButton class="absolute top-2 right-2 text-accent-foreground" size="sm" aria-label="关闭声明"
+        <span class="pr-7">{{ t('mods.notice') }}</span>
+        <CompactButton class="absolute top-2 right-2 text-accent-foreground" size="sm" :aria-label="t('mods.closeNotice')"
           @click="isWarningAlertShow = false">
           <X />
         </CompactButton>
@@ -128,19 +131,19 @@ onMounted(() => {
     <div v-if="isLoading || loadError || shownList.length === 0"
       class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-muted-foreground select-none">
       <div v-if="isLoading">
-        加载中...
+        {{ t('common.loading') }}
       </div>
       <div v-else-if="loadError" class="text-red-600 dark:text-red-400 flex flex-col justify-center items-center gap-2">
-        <div>加载失败：{{ loadError }}</div>
+        <div>{{ t('mods.loadFailed', { error: loadError }) }}</div>
         <div>
           <MyCustomButton size="sm" @click="loadModInfo(true)">
             <RefreshCcw />
-            重试
+            {{ t('common.retry') }}
           </MyCustomButton>
         </div>
       </div>
       <div v-else-if="shownList.length === 0">
-        未找到符合条件的模组
+        {{ t('mods.empty') }}
       </div>
     </div>
     <div v-else
