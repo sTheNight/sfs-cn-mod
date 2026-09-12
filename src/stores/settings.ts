@@ -24,7 +24,7 @@ export const DEFAULT_SETTINGS = {
   // 自定义背景
   imageBackgroundState: {
     imageSource: 'url' as ImageSource,
-    name: '/szm.png',
+    name: '/szm.webp',
     blur: 0,
     opacity: 0.8,
   },

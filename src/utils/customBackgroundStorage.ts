@@ -2,8 +2,12 @@ const DATABASE_NAME = 'sfs-custom-background'
 const STORE_NAME = 'images'
 const IMAGE_KEY = 'current'
 
+let databasePromise: Promise<IDBDatabase> | undefined
+
 function openDatabase(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
+  if (databasePromise) return databasePromise
+
+  databasePromise = new Promise((resolve, reject) => {
     const request = indexedDB.open(DATABASE_NAME, 1)
 
     request.onupgradeneeded = () => {
@@ -13,9 +17,21 @@ function openDatabase(): Promise<IDBDatabase> {
       }
     }
 
-    request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error)
+    request.onsuccess = () => {
+      const database = request.result
+      database.onversionchange = () => {
+        database.close()
+        databasePromise = undefined
+      }
+      resolve(database)
+    }
+    request.onerror = () => {
+      databasePromise = undefined
+      reject(request.error)
+    }
   })
+
+  return databasePromise
 }
 
 export async function saveCustomBackground(file: File): Promise<void> {
@@ -28,8 +44,6 @@ export async function saveCustomBackground(file: File): Promise<void> {
     transaction.onerror = () => reject(transaction.error)
     transaction.onabort = () => reject(transaction.error)
   })
-
-  database.close()
 }
 
 export async function getCustomBackground(): Promise<Blob | undefined> {
@@ -41,7 +55,6 @@ export async function getCustomBackground(): Promise<Blob | undefined> {
     request.onerror = () => reject(request.error)
   })
 
-  database.close()
   return image
 }
 
@@ -55,6 +68,4 @@ export async function removeCustomBackground(): Promise<void> {
     transaction.onerror = () => reject(transaction.error)
     transaction.onabort = () => reject(transaction.error)
   })
-
-  database.close()
 }

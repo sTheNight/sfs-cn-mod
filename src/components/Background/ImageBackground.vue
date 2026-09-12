@@ -26,7 +26,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="fixed inset-0 -z-1 overflow-hidden pointer-events-none" aria-hidden="true">
-    <img v-if="imageUrl" :src="imageUrl" alt="" class="absolute inset-0 size-full object-cover" />
+    <img v-if="imageUrl" :src="imageUrl" alt="" class="absolute inset-0 size-full object-cover" decoding="async" fetchpriority="high" />
     <div v-if="imageUrl" class="bg-img absolute inset-0" :style="{
       '--ol-blur-radius': `${settingsStore.imageBackgroundState.blur}px`
     }"></div>

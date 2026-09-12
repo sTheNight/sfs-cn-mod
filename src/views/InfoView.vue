@@ -38,7 +38,7 @@ const homeCards = computed(() => [
       <div class="flex flex-col gap-2">
         <div class="flex flex-wrap items-center gap-4">
           <img class=" w-16 h-16 rounded-full"
-            src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/A%20Future%20star.webp">
+            src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/A%20Future%20star.webp" width="64" height="64" decoding="async">
           <div>
             <h3 class="font-bold text-accent-foreground text-md">A Future Star</h3>
             <p>{{ t('info.introPlaceholder') }}</p>

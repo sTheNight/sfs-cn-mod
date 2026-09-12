@@ -67,7 +67,7 @@ function handleBannerMouseMove(event: MouseEvent) {
     <BasicInfoCard title="Banner">
       <div class="w-full h-50 rounded-2xl shadow-xs border overflow-hidden relative" @mousemove="handleBannerMouseMove"
         @mouseenter="bannerHovered = true" @mouseleave="bannerHovered = false">
-        <div class="absolute inset-0 bg-cover bg-center bg-[url('/szm.png')]" />
+        <div class="absolute inset-0 bg-cover bg-center bg-[url('/szm.webp')]" />
         <div class="
             pointer-events-none
             absolute inset-0 z-10 backdrop-blur-xl

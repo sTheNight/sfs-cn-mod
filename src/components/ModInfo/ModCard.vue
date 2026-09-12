@@ -58,7 +58,7 @@ async function share() {
       <Share2 />
     </CompactButton>
     <img :draggable="false" @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0"
-      v-if="item.images?.length" :src="item.images[0]" :alt="t('mods.coverAlt', { name: item.name })" loading="lazy" decoding="async" />
+      v-if="item.images?.length" :src="item.images[0]" :alt="t('mods.coverAlt', { name: item.name })" width="320" height="200" loading="lazy" decoding="async" />
     <div @click="$emit('openDetail', item)" v-else
       class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl select-none">📦</div>
     <div class="p-4 flex flex-col flex-1 min-h-0">

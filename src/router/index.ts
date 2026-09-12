@@ -1,4 +1,3 @@
-import TestView from '@/views/TestView.vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -40,7 +39,7 @@ const routes: RouteRecordRaw[] = [
 if (import.meta.env.DEV && routes[0]?.children) {
   routes[0].children.push({
     path: 'test',
-    component: TestView
+    component: () => import('@/views/TestView.vue'),
   })
 }
 

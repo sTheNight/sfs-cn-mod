@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import FloatButton from '@/components/FloatButton.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
-import SettingsDrawer from '@/components/SettingsDrawer.vue';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 import { useSettingsStore } from '@/stores/settings';
 import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
 import { useWindowScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import GridBackground from '@/components/Background/GridBackground.vue';
 import ImageBackground from '@/components/Background/ImageBackground.vue';
@@ -17,6 +16,7 @@ import { useI18n } from 'vue-i18n';
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+const SettingsDrawer = defineAsyncComponent(() => import('@/components/SettingsDrawer.vue'))
 
 const { y } = useWindowScroll({
   behavior: "smooth"
@@ -120,7 +120,7 @@ onMounted(() => {
           <p class="text-center text-sm m-2 text-muted-foreground">{{ t('layout.sponsorThanks') }}</p>
           <div class="flex justify-center mt-2">
             <div class="border rounded-2xl p-4 shadow-md">
-              <img src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/5.png" width="250">
+              <img src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/5.png" width="250" loading="lazy" decoding="async">
             </div>
           </div>
         </div>

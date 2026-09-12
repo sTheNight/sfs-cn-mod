@@ -27,7 +27,7 @@ function openUrl(link: string) {
         class="absolute transition-opacity duration-300 group-hover/sponsor-card:opacity-20 text-amber-500 opacity-15 right-0 rotate-20" />
     </div>
     <div class="flex items-center gap-2">
-      <img class="w-10 h-10 rounded-full border" :src="avatar" :alt="name">
+      <img class="w-10 h-10 rounded-full border" :src="avatar" :alt="name" width="40" height="40" loading="lazy" decoding="async">
       <div class="flex flex-col justify-center">
         <span>{{ name }}</span>
         <span v-if="badgeText"

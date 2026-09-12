@@ -5,7 +5,7 @@ import { files, getModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
 import type { ModInfo } from '@/models/ModInfo';
 import { Filter, Folder, RefreshCcw, Search, X } from '@lucide/vue';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, shallowRef, watch } from 'vue';
 import ModCard from '@/components/ModInfo/ModCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import AlertMessage from '@/components/AlertMessage.vue';
@@ -15,7 +15,7 @@ import { CompactButton } from '@/components/CompactButton';
 import { useSettingsStore } from '@/stores/settings';
 import { useI18n } from 'vue-i18n';
 
-const shownList = ref<ModInfo[]>([])
+const shownList = shallowRef<ModInfo[]>([])
 const isLoading = ref(true)
 const loadError = ref("")
 const categoryFilter = ref<ModCategory>("all")
