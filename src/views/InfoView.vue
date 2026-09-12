@@ -13,8 +13,8 @@ function openUrl(link: string) {
   window.open(link)
 }
 const links = computed<[string, string, LucideIcon][]>(() => [
-  ["https://qm.qq.com/q/8kXMyVI00g", "QQ群: 923038827", Users],
-  ['https://space.bilibili.com/3546673454254808', 'B站: A-Future-star', Tv],
+  ["https://qm.qq.com/q/8kXMyVI00g", t('info.qqGroup'), Users],
+  ['https://space.bilibili.com/3546673454254808', t('info.bilibili'), Tv],
   ['https://sfszhmod.pages.dev/', t('info.originalSite'), Globe]
 ])
 

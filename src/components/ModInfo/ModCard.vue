@@ -54,7 +54,7 @@ async function share() {
   <RippleProvider :is-dark-ripple='true' tag="div" ref="card"
     class="bg-card-surface relative fade-in-card border text-card-foreground select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
     :class="{ 'fade-in-card--visible': hasEnteredViewport, 'backdrop-blur-lg': setting.cardBlurEffect }">
-    <CompactButton backdrop class="absolute right-0 top-0 m-2" @click="share">
+    <CompactButton backdrop class="absolute right-0 top-0 m-2" :aria-label="t('common.share')" @click="share">
       <Share2 />
     </CompactButton>
     <img :draggable="false" @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0"

@@ -2,6 +2,7 @@
 import { Undo2 } from '@lucide/vue';
 import RippleProvider from '../RippleProvider.vue';
 import type { BasicSettingCardProps } from './index.ts';
+import { useI18n } from 'vue-i18n';
 
 interface BasicSettingCardEmits {
   (event: 'undo'): void
@@ -16,6 +17,7 @@ const props = withDefaults(defineProps<BasicSettingCardProps>(), {
   vertical: false
 })
 const emit = defineEmits<BasicSettingCardEmits>()
+const { t } = useI18n()
 </script>
 <template>
   <div :class="props.disabled && 'cursor-not-allowed'">
@@ -26,7 +28,7 @@ const emit = defineEmits<BasicSettingCardEmits>()
       ]">
       <div v-if="isExperiment" class="absolute inset-0 -z-1 pointer-events-none">
         <div class="absolute inset-0 bg-linear-to-l from-blue-200/30 to-transparent"></div>
-        <p class="absolute text-blue-500/30 mr-2 mt-1 select-none right-0 font-mono">Experiment</p>
+        <p class="absolute text-blue-500/30 mr-2 mt-1 select-none right-0 font-mono">{{ t('settings.experiment') }}</p>
       </div>
       <div class="flex gap-3" :class="{ 'justify-between items-center': !props.vertical, 'flex-col': props.vertical }">
         <div class="min-w-0 flex-1">
@@ -34,8 +36,8 @@ const emit = defineEmits<BasicSettingCardEmits>()
             {{ props.title }}
             <transition name="undo-fade" mode="out-in">
               <button v-if="props.showUndo" type="button"
-                class="cursor-pointer rounded-sm text-muted-foreground hover:text-foreground" aria-label="恢复默认值"
-                title="恢复默认值" @click.prevent.stop="emit('undo')">
+                class="cursor-pointer rounded-sm text-muted-foreground hover:text-foreground" :aria-label="t('settings.restoreDefault')"
+                :title="t('settings.restoreDefault')" @click.prevent.stop="emit('undo')">
                 <undo2 :size="12" />
               </button>
             </transition>

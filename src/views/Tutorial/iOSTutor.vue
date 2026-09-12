@@ -1,25 +1,28 @@
 <script setup lang="ts">
 import BasicInfoCard from '@/components/Card/BasicInfoCard.vue';
 import MyCode from '@/components/MyCode.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 </script>
 <template>
   <div class="flex flex-col gap-2">
-    <BasicInfoCard title="下载并解压文件">
+    <BasicInfoCard :title="t('tutorialContent.ios.steps.0.title')">
       <template #tag>①</template>
-      <p>下载模组ZIP文件后，解压。</p>
+      <p>{{ t('tutorialContent.ios.steps.0.description') }}</p>
     </BasicInfoCard>
-    <BasicInfoCard title="定位游戏目录">
+    <BasicInfoCard :title="t('tutorialContent.ios.steps.1.title')">
       <template #tag>②</template>
-      <p>iOS游戏数据路径为：</p>
-      <MyCode>我的设备\Spaceflight Simulator</MyCode>
+      <p>{{ t('tutorialContent.ios.steps.1.description') }}</p>
+      <MyCode>{{ t('tutorialContent.ios.steps.1.code') }}</MyCode>
     </BasicInfoCard>
-    <BasicInfoCard title="放置模组文件">
+    <BasicInfoCard :title="t('tutorialContent.ios.steps.2.title')">
       <template #tag>③</template>
-      <p>将解压后的模组移动到游戏目录的Parts或Textures Packs文件夹中，操作方式与Android类似。</p>
+      <p>{{ t('tutorialContent.ios.steps.2.description') }}</p>
     </BasicInfoCard>
-    <BasicInfoCard title="验证与排错">
+    <BasicInfoCard :title="t('tutorialContent.ios.steps.3.title')">
       <template #tag>④</template>
-      <p>重启游戏检查模组是否生效。iOS系统对文件权限要求严格，如遇问题请检查文件读写权限。</p>
+      <p>{{ t('tutorialContent.ios.steps.3.description') }}</p>
     </BasicInfoCard>
   </div>
 </template>

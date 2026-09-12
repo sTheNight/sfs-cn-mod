@@ -29,6 +29,7 @@ import {
 import axios, { isAxiosError } from 'axios';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 interface Rating {
   count: number
@@ -38,6 +39,7 @@ interface Rating {
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const mod = ref<ModInfo>()
 const isLoading = ref(true)
@@ -92,12 +94,12 @@ async function share() {
   const url = window.location.href
   if (!navigator.share) {
     navigator.clipboard.writeText(url)
-    showToast("已复制链接")
+    showToast(t('mods.copied'))
     return;
   }
-  showToast("正在调起分享")
+  showToast(t('mods.sharing'))
   await navigator.share({
-    title: '分享这个模组',
+    title: t('mods.shareTitle'),
     url: url
   })
 }
@@ -129,7 +131,7 @@ async function loadMod(name: string) {
     await getModInfo()
     mod.value = files.find((item) => item.name === name)
   } catch (error) {
-    loadError.value = error instanceof Error ? error.message : '加载失败'
+    loadError.value = error instanceof Error ? error.message : t('modDetails.loadError', { error: '' })
   } finally {
     isLoading.value = false
   }
@@ -178,25 +180,25 @@ watch(
   <div class="mx-auto w-full max-w-4xl relative">
     <div v-if="isLoading" class="flex min-h-60 items-center justify-center text-sm text-muted-foreground">
       <LoaderCircle :size="18" class="mr-2 animate-spin" />
-      正在加载模组信息...
+      {{ t('modDetails.loading') }}
     </div>
 
     <div v-else-if="loadError" class="flex min-h-60 flex-col items-center justify-center gap-3 text-center">
       <PackageX :size="36" class="text-muted-foreground" />
-      <p class="text-sm text-red-600 dark:text-red-400">加载失败：{{ loadError }}</p>
+      <p class="text-sm text-red-600 dark:text-red-400">{{ t('modDetails.loadError', { error: loadError }) }}</p>
       <MyCustomButton variant="outline" @click="router.push('/')">
-        <ArrowLeft />返回模组列表
+        <ArrowLeft />{{ t('modDetails.backToList') }}
       </MyCustomButton>
     </div>
 
     <div v-else-if="!mod" class="flex min-h-60 flex-col items-center justify-center gap-3 text-center">
       <PackageX :size="36" class="text-muted-foreground" />
       <div>
-        <h2 class="font-semibold">没有找到这个模组</h2>
-        <p class="mt-1 text-sm text-muted-foreground">也许不存在，也许你打错名字了</p>
+        <h2 class="font-semibold">{{ t('modDetails.notFoundTitle') }}</h2>
+        <p class="mt-1 text-sm text-muted-foreground">{{ t('modDetails.notFoundDescription') }}</p>
       </div>
       <MyCustomButton variant="outline" @click="router.push('/')">
-        <ArrowLeft />返回模组列表
+        <ArrowLeft />{{ t('modDetails.backToList') }}
       </MyCustomButton>
     </div>
 
@@ -207,16 +209,16 @@ watch(
           <div class="relative h-64 bg-amber-100 dark:bg-amber-950/60 sm:h-72">
             <img :draggable="false" v-if="mod.images?.length"
               class="absolute inset-0 h-full w-full object-cover select-none" :src="mod.images[0]"
-              :alt="`${mod.name}封面`" />
+              :alt="t('mods.coverAlt', { name: mod.name })" />
             <div v-else class="flex h-full items-center justify-center text-7xl">📦</div>
             <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent">
               <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>
             </div>
             <div class="absolute top-0 w-full flex justify-between items-center p-3">
               <CompactButton class="group/action" backdrop @click="goBack">
-                <ArrowLeft class="transition-transform group-hover/action:-translate-x-0.5" />返回
+                <ArrowLeft class="transition-transform group-hover/action:-translate-x-0.5" />{{ t('common.back') }}
               </CompactButton>
-              <CompactButton backdrop aria-label="分享" @click="share">
+              <CompactButton backdrop :aria-label="t('common.share')" @click="share">
                 <Share2 />
               </CompactButton>
             </div>
@@ -236,23 +238,23 @@ watch(
                 class="rounded-full cursor-pointer w-10 h-10 sm:w-auto bg-white/90 text-black hover:bg-white/90 hover:text-black"
                 @click="openUrl(mod.link)">
                 <Download />
-                <span class="hidden sm:inline">下载</span>
+                <span class="hidden sm:inline">{{ t('common.download') }}</span>
               </MyCustomButton>
             </div>
           </div>
         </section>
         <div class="grid gap-2 text-sm text-muted-foreground grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
-          <InfoCard title="作者" :icon="UserRound">{{ mod.author }}</InfoCard>
-          <InfoCard title="版本" :icon="HistoryIcon">{{ mod.version }}</InfoCard>
-          <InfoCard title="兼容版本" :icon="HistoryIcon">{{ mod.compat }}</InfoCard>
-          <InfoCard title="更新日期" :icon="Calendar">{{ mod.date }}</InfoCard>
-          <InfoCard title="大小" :icon="SaveIcon">{{ mod.size }}</InfoCard>
+          <InfoCard :title="t('modDetails.author')" :icon="UserRound">{{ mod.author }}</InfoCard>
+          <InfoCard :title="t('modDetails.version')" :icon="HistoryIcon">{{ mod.version }}</InfoCard>
+          <InfoCard :title="t('modDetails.compatibility')" :icon="HistoryIcon">{{ mod.compat }}</InfoCard>
+          <InfoCard :title="t('modDetails.updatedAt')" :icon="Calendar">{{ mod.date }}</InfoCard>
+          <InfoCard :title="t('modDetails.size')" :icon="SaveIcon">{{ mod.size }}</InfoCard>
         </div>
 
         <div class="grid gap-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- 简介 -->
-            <BasicInfoCard title="模组简介">
+            <BasicInfoCard :title="t('modDetails.description')">
               <template #tag>
                 <FileText :size="18" />
               </template>
@@ -260,26 +262,26 @@ watch(
             </BasicInfoCard>
 
             <!-- 评分 -->
-            <BasicInfoCard title="评分">
+            <BasicInfoCard :title="t('modDetails.rating')">
               <template #tag>
                 <Star :size="18" />
               </template>
               <template #prefix>
-                <CompactButton class=" shadow-none" aria-label="编辑评分" @click="isRatingDialogShow = !isRatingDialogShow">
+                <CompactButton class=" shadow-none" :aria-label="t('modDetails.editRating')" @click="isRatingDialogShow = !isRatingDialogShow">
                   <SquarePen :size="16"></SquarePen>
                 </CompactButton>
               </template>
               <div class="flex min-h-7 items-center">
                 <template v-if="isRatingLoading">
                   <LoaderCircle :size="15" class="mr-2 animate-spin" />
-                  正在加载评分...
+                  {{ t('modDetails.ratingLoading') }}
                 </template>
-                <span v-else-if="ratingLoadFailed">评分暂时无法加载</span>
+                <span v-else-if="ratingLoadFailed">{{ t('modDetails.ratingUnavailable') }}</span>
                 <div v-else-if="hasRating" class="flex flex-col gap-2">
                   <div class="flex items-baseline gap-1">
                     <span class="text-xl font-semibold tabular-nums text-foreground">{{ formattedRating }}</span>
                   </div>
-                  <div class="flex gap-0.5" :aria-label="`平均分数 ${formattedRating} 分`">
+                  <div class="flex gap-0.5" :aria-label="t('modDetails.averageRating', { rating: formattedRating })">
                     <span v-for="index in 5" :key="index" class="relative block h-4 w-4">
                       <Star :size="16" class="absolute inset-0 text-muted-foreground/25" />
                       <span class="absolute inset-0 overflow-hidden text-amber-500"
@@ -288,24 +290,24 @@ watch(
                       </span>
                     </span>
                   </div>
-                  <span>{{ rating?.count }} 人评分</span>
+                  <span>{{ t('modDetails.ratingCount', { count: rating?.count ?? 0 }) }}</span>
                 </div>
-                <span v-else>暂无评分</span>
+                <span v-else>{{ t('modDetails.noRating') }}</span>
               </div>
             </BasicInfoCard>
           </div>
 
           <!-- 截图 -->
-          <BasicInfoCard v-if="mod.images?.length" title="模组截图">
+          <BasicInfoCard v-if="mod.images?.length" :title="t('modDetails.screenshots')">
             <template #tag>
               <Image :size="18" />
             </template>
             <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
               <button v-for="(img, index) in mod.images" :key="index" type="button"
                 class="group relative aspect-video overflow-hidden rounded-lg border bg-muted text-left outline-none ring-ring transition-shadow hover:shadow-md focus-visible:ring-2"
-                :aria-label="`预览${mod.name}截图 ${index + 1}`" @click="openImagePreview(index)">
+                :aria-label="t('modDetails.previewScreenshot', { name: mod.name, index: index + 1 })" @click="openImagePreview(index)">
                 <img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  :src="img" :alt="`${mod.name}截图 ${index + 1}`" loading="lazy" decoding="async">
+                  :src="img" :alt="t('modDetails.screenshotAlt', { name: mod.name, index: index + 1 })" loading="lazy" decoding="async">
                 <span
                   class="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100 group-focus-visible:bg-black/30 group-focus-visible:opacity-100">
                   <ZoomInIcon :size="18" />
@@ -325,19 +327,19 @@ watch(
           <Transition name="image-fade" mode="out-in">
             <img v-if="currentPreviewImage" :key="previewImageIndex"
               class="max-h-[calc(100vh-6rem)] w-full object-contain" :src="currentPreviewImage"
-              :alt="`${mod?.name}截图 ${previewImageIndex + 1}`">
+              :alt="t('modDetails.screenshotAlt', { name: mod?.name ?? '', index: previewImageIndex + 1 })">
           </Transition>
           <CompactButton class="absolute right-2 top-2 bg-transparent backdrop-blur-none border-0" size="lg" backdrop
-            aria-label="关闭预览" @click="isImagePreviewShow = false">
+            :aria-label="t('modDetails.closePreview')" @click="isImagePreviewShow = false">
             <X />
           </CompactButton>
           <template v-if="hasMultiplePreviewImages">
             <CompactButton class="absolute left-2 top-1/2 -translate-y-1/2 bg-transparent backdrop-blur-none border-0"
-              size="lg" backdrop aria-label="上一张截图" @click="switchPreviewImage(-1)">
+              size="lg" backdrop :aria-label="t('modDetails.previousScreenshot')" @click="switchPreviewImage(-1)">
               <ChevronLeft />
             </CompactButton>
             <CompactButton class="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent backdrop-blur-none border-0"
-              size="lg" backdrop aria-label="下一张截图" @click="switchPreviewImage(1)">
+              size="lg" backdrop :aria-label="t('modDetails.nextScreenshot')" @click="switchPreviewImage(1)">
               <ChevronRight />
             </CompactButton>
           </template>
@@ -351,7 +353,7 @@ watch(
     <Dialog v-model:open="isRatingDialogShow">
       <DialogContent class="w-[calc(100%-2rem)] max-w-sm rounded-2xl p-6 sm:max-w-sm" :show-close-button="false">
         <div class="pr-8">
-          <h2 class="mt-4 text-lg font-bold">为模组评分</h2>
+          <h2 class="mt-4 text-lg font-bold">{{ t('modDetails.rateMod') }}</h2>
           <p class="mt-1 truncate text-sm text-muted-foreground">{{ mod?.name }}</p>
         </div>
         <template v-if="rating">
@@ -363,9 +365,9 @@ watch(
             </div>
           </div>
           <div class="flex justify-end gap-2">
-            <MyCustomButton variant="outline" @click="isRatingDialogShow = false">取消</MyCustomButton>
+            <MyCustomButton variant="outline" @click="isRatingDialogShow = false">{{ t('common.cancel') }}</MyCustomButton>
             <MyCustomButton :disabled="pendingRating === 0" @click="submitScore(pendingRating)">
-              提交
+              {{ t('common.submit') }}
             </MyCustomButton>
           </div>
         </template>

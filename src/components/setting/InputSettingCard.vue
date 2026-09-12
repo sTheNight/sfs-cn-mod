@@ -6,6 +6,7 @@ import type { ResettableSettingCardProps } from './index.ts';
 import { ref, watch } from 'vue';
 import { useResettableSetting } from '@/composables/useResettableSetting.ts';
 import CollapseTransition from '../CollapseTransition.vue';
+import { useI18n } from 'vue-i18n';
 
 type InputSettingCardProps = ResettableSettingCardProps<string> & {
   currentText?: string,
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<InputSettingCardProps>(), {
   saveWhileUndo: true
 })
 const emits = defineEmits<InputSettingCardEmits>()
+const { t } = useI18n()
 
 const inputText = ref<string>("")
 const editStartText = ref<string>("")
@@ -84,13 +86,13 @@ function handleSave() {
         class="w-full text-accent-foreground text-xs"></Input>
       <CollapseTransition :show="isChanged">
         <div class="flex justify-between items-center mt-2">
-          <p class="text-xs text-red-600">已更改但未保存</p>
+          <p class="text-xs text-red-600">{{ t('settings.unsavedChanges') }}</p>
           <div class="flex gap-1">
             <MyCustomButton class="text-xs" variant="outline" size="sm" @click="handleCancel">
-              取消
+              {{ t('common.cancel') }}
             </MyCustomButton>
             <MyCustomButton class="text-xs" :show-ripple="isChanged" size="sm" @click="handleSave">
-              保存
+              {{ t('common.save') }}
             </MyCustomButton>
           </div>
         </div>

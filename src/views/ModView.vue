@@ -114,7 +114,7 @@ onMounted(() => {
       <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
         <Input v-model="searchText" class="min-w-0 text-sm bg-card dark:bg-card" :placeholder="t('mods.searchPlaceholder')"
           @keydown="handleKeywordFilterKeyDown" />
-        <MyCustomButton class="px-3 w-9 h-9" @click="applyFilter">
+        <MyCustomButton class="px-3 w-9 h-9" :aria-label="t('common.search')" @click="applyFilter">
           <Search />
         </MyCustomButton>
       </div>
