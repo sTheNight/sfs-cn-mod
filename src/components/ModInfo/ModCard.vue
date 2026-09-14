@@ -58,7 +58,8 @@ async function share() {
       <Share2 />
     </CompactButton>
     <img :draggable="false" @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0"
-      v-if="item.images?.length" :src="item.images[0]" :alt="t('mods.coverAlt', { name: item.name })" width="320" height="200" loading="lazy" decoding="async" />
+      v-if="item.images?.length" :src="item.images[0]" :alt="t('mods.coverAlt', { name: item.name })" width="320"
+      height="200" loading="lazy" decoding="async" />
     <div @click="$emit('openDetail', item)" v-else
       class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl select-none">📦</div>
     <div class="p-4 flex flex-col flex-1 min-h-0">
@@ -70,6 +71,7 @@ async function share() {
           <span class="flex items-center justify-center gap-1">
             <UserRound :size="12" /><span>{{ item.author }}</span>
           </span>
+          <div class="w-px h-2.5 bg-border"></div>
           <span class="flex items-center justify-center gap-1">
             <History :size="12" /><span>{{ item.version }}</span>
           </span>
@@ -83,16 +85,16 @@ async function share() {
         <p class="my-4 text-muted-foreground text-sm">{{ item.desc }}</p>
       </div>
       <div class="shrink-0">
-        <div class="flex justify-evenly gap-2">
-          <div class="text-xs flex items-center border rounded-lg p-2 bg-muted flex-1">
+        <div class="flex justify-evenly gap-2 text-muted-foreground">
+          <div class="text-xs flex items-center rounded-lg p-2 bg-muted flex-1">
             <Save :size="16" class="mr-1" />{{ item.size }}
           </div>
-          <div class="text-xs flex items-center border rounded-lg p-2 bg-muted flex-1">
+          <div class="text-xs flex items-center rounded-lg p-2 bg-muted flex-1">
             <Calendar :size="16" class="mr-1" />{{ item.date }}
           </div>
         </div>
-        <div class="flex w-full justify-end mt-4 gap-2">
-          <MyCustomButton variant="outline" @click="$emit('openDetail', item)">
+        <div class="w-full grid grid-cols-2 mt-4 gap-2">
+          <MyCustomButton class="shadow-none" variant="outline" @click="$emit('openDetail', item)">
             <Info />
             {{ t('common.details') }}
           </MyCustomButton>

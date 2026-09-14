@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import BasicInfoCard from '@/components/Card/BasicInfoCard.vue'
 import FloatButton from '@/components/FloatButton.vue'
@@ -10,6 +10,7 @@ import { showToast } from '@/components/Toast/useToast'
 import { BadgeJapaneseYen } from '@lucide/vue'
 import AlertMessage from '@/components/AlertMessage.vue'
 import InputSettingCard from '@/components/setting/InputSettingCard.vue'
+import { useWindowScroll } from '@vueuse/core'
 
 const bannerX = ref(0)
 const bannerY = ref(0)
@@ -27,10 +28,24 @@ function handleBannerMouseMove(event: MouseEvent) {
   bannerX.value = event.clientX - rect.left
   bannerY.value = event.clientY - rect.top
 }
+const { y } = useWindowScroll({
+  behavior: "smooth"
+})
+const showMinimalToolbar = computed(() => y.value >= 350)
 </script>
 
 <template>
   <div class="max-w-2xl mx-auto flex flex-col gap-2">
+    <div class="w-full h-50 overflow-hidden rounded-2xl isolate relative">
+      <div class="bg-cover rounded-2xl border bg-gray-100 w-full h-full"></div>
+      <div class="absolute inset-0 z-2 p-2">{{ showMinimalToolbar }}{{ y }}</div>
+    </div>
+    <Transition mode="out-in" name="title-fade">
+      <div class="fixed p-2 top-1 shadow h-20 border rounded-2xl w-full max-w-2xl z-10 bg-gray-100"
+        v-if="showMinimalToolbar">
+        123
+      </div>
+    </Transition>
     <BasicInfoCard title="Toast">
       <MyCustomButton size="sm" class="text-xs" @click="showToast('Hello World')">
         Show
@@ -92,3 +107,14 @@ function handleBannerMouseMove(event: MouseEvent) {
     </BasicInfoCard>
   </div>
 </template>
+<style lang="css" scoped>
+.title-fade-enter-active,
+.title-fade-leave-active {
+  transition: transform .2s;
+}
+
+.title-fade-enter-from,
+.title-fade-leave-to {
+  transform: translateY(-100px);
+}
+</style>
