@@ -1,0 +1,110 @@
+const messages = {
+  language: { name: '简体中文', title: '语言', description: '选择界面显示语言' },
+  nav: { mods: '模组', tutorial: '教程', about: '关于' },
+  common: {
+    select: '选择', reset: '重置', cancel: '取消', save: '保存', submit: '提交',
+    download: '下载', details: '详情', retry: '重试', back: '返回', loading: '加载中...',
+    share: '分享', search: '搜索', close: '关闭', previous: '上一张', next: '下一张',
+  },
+  layout: {
+    title: '汉化模组下载中心', sponsor: '赞助支持', sponsorThanks: '感谢你的支持，我们会继续更新优质汉化模组！',
+    welcome: '欢迎访问 SFS 汉化模组站',
+    warning: '本站所有模组均为汉化版本，仅供学习交流使用。\n下载前请确认您已了解模组安装方法。',
+    extraPrefix: '额外说明：本站为重写版并非原站点，部分功能特性可能未同步，如有需要请访问',
+    originalSite: '原站点', neverShow: '不再显示', enter: '进入', github: 'Github', feedback: 'Feedback',
+    backToTop: '返回顶部', openSettings: '打开设置',
+  },
+  settings: {
+    title: '设置', close: '关闭设置', interface: '界面', theme: '主题', themeDesc: '选择主题模式',
+    cardOpacity: '卡片透明度', opacityLow: '真的要这样吗：', opacityVeryLow: '你喜欢就好：',
+    backgroundStyle: '背景样式', backgroundStyleDesc: '选择主页背景样式',
+    cardBlur: '卡片模糊效果', cardBlurDesc: '实验性功能，建议降低卡片透明度食用',
+    customBackground: '自定义背景', imageSource: '图片来源', imageSourceDesc: '背景图片从哪里来呢',
+    backgroundImage: '背景图片', localImageDesc: '从本机选择一张图片，最大 10 MB', clearImage: '清除背景图片',
+    urlDesc: '请输入一个 URL', blur: '模糊强度', opacity: '透明度', opacityWarning: '这合适吗：',
+    effects: '效果', animations: '动画效果', animationsDesc: '关闭后将减少动画效果，或许能提升一定的页面渲染性能',
+    transition: '切换动画', transitionDesc: '选择路由切换动画，需要开启动画效果后才能生效',
+    ripple: '水波纹效果', rippleDesc: '按住按钮后的水波纹效果', titleGlow: '标题发光',
+    titleGlowDesc: '主页标题的发光效果，可能有兼容性问题', actions: '操作', reset: '重置设置', resetDesc: '清除自定义设置选项',
+    experiment: '实验性', restoreDefault: '恢复默认值', unsavedChanges: '已更改但未保存',
+    notImage: '你选择的好像不是图片', imageTooLarge: '这背景图有点大了吧', imageSaveFailed: '图片保存失败，请检查浏览器存储权限',
+  },
+  options: {
+    theme: { system: '跟随系统', light: '浅色模式', dark: '深色模式' },
+    transition: { 'x-fade': 'X 轴切换', 'y-fade': 'Y 轴切换', 'opacity-fade': '淡入淡出', none: '无动画' },
+    background: { none: '无背景', grid: '网格背景', 'custom-image': '自定义图片' },
+    imageSource: { local: '本地', url: '自定义 URL' },
+  },
+  mods: {
+    fileCount: '共 {count} 个文件', category: '分类', searchPlaceholder: '请输入关键字',
+    notice: '声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等 bug',
+    closeNotice: '关闭声明', loadFailed: '加载失败：{error}', empty: '未找到符合条件的模组',
+    copied: '已复制链接', sharing: '正在调起分享', shareTitle: '分享这个模组', coverAlt: '{name}封面',
+    categories: { all: '全部', engine: '发动机', function: '功能性部件', entertain: '娱乐性部件', skin: '涂装包' },
+  },
+  tutorial: { android: '安卓', ios: 'iOS', pc: 'PC', qa: '常见问题' },
+  tutorialContent: {
+    tipLabel: '小技巧：',
+    android: {
+      steps: [
+        { title: '下载模组文件', description: '在本站找到需要的模组，点击“下载”按钮，将 ZIP 文件下载到手机。', code: '' },
+        { title: '解压模组文件', description: '使用文件管理器（如 MT 管理器、ES 文件浏览器等）找到下载的 ZIP 文件，解压后会得到 pack 文件或文件夹。', code: '模组文件夹：Parts / Textures Packs' },
+        { title: '定位游戏目录', description: '找到 SFS 游戏数据目录，路径通常为：某些手机系统的路径可能位于 data 内。', code: '/storage/emulated/0/Android/media/com.StefMorojna.SpaceflightSimulator/Mods/Custom_Assets/Parts/' },
+        { title: '复制模组文件', description: '将解压后的模组文件夹复制到游戏目录下的对应位置：', code: '• pack 模组 → Parts/\n• 涂装模组 → Textures Packs/' },
+        { title: '启动游戏验证', description: '重新启动 SFS，在主页面等待片刻，待模组加载器内显示该模组即为加载成功（注意下方的报错信息）。', code: '' },
+      ],
+      tip: '如果游戏加载模组速度过慢，可以尝试断网重启或开启 VPN。交流群：923038827',
+    },
+    ios: {
+      steps: [
+        { title: '下载并解压文件', description: '下载模组 ZIP 文件后，将其解压。', code: '' },
+        { title: '定位游戏目录', description: 'iOS 游戏数据路径为：', code: '我的设备\\Spaceflight Simulator' },
+        { title: '放置模组文件', description: '将解压后的模组移动到游戏目录的 Parts 或 Textures Packs 文件夹中，操作方式与 Android 类似。', code: '' },
+        { title: '验证与排错', description: '重启游戏检查模组是否生效。iOS 系统对文件权限要求严格，如遇问题请检查文件读写权限。', code: '' },
+      ],
+    },
+    pc: {
+      warning: '重要提示：Steam 版 SFS 的模组安装路径与手机版不同，请注意区分。',
+      steps: [
+        { title: '下载模组文件', description: '从本站下载需要的模组 ZIP 文件，解压到电脑任意位置。', code: '' },
+        { title: '找到游戏安装目录', description: 'Steam 版 SFS 的存档和模组路径通常为：也可以在 Steam 库中右键游戏 → 管理 → 浏览本地文件。', code: '你的 Steam 安装位置\\SteamLibrary\\steamapps\\common\\Spaceflight Simulator\\Spaceflight Simulator Game' },
+        { title: '放置模组文件', description: '在游戏目录下创建或找到以下文件夹，将模组文件放入：', code: '• 部件 → Spaceflight Simulator\\Parts\\n• 涂装 → Spaceflight Simulator\\Textures Packs\\' },
+        { title: '启动游戏', description: '通过 Steam 启动游戏，进入游戏检查新部件是否正常显示。', code: '' },
+      ],
+      tip: 'PC 版是本地加载，加载模组速度极快。',
+    },
+    qa: {
+      steps: [
+        { title: '部件名称显示为空白', description: '这是汉化模组的常见问题，说明汉化文件未正确加载或编码格式不匹配。解决方法：确保下载的是对应游戏版本的汉化包，并尝试重新安装汉化模组。' },
+        { title: '模组部件不显示或显示异常', description: '可能原因：贴图文件缺失、模型文件损坏或与其他模组冲突。解决方法：检查模组文件是否完整，关闭其他模组测试，并查看游戏日志获取详细错误信息。' },
+        { title: '如何卸载模组？', description: '找到游戏目录中对应的模组文件或文件夹，直接删除即可。建议：安装新模组前截图记录原有文件，方便卸载时恢复。' },
+        { title: '多个模组能否同时安装？', description: '可以，但需要注意模组之间可能存在冲突。建议：一次只安装一个新模组，测试正常后再安装下一个，避免同时安装功能重复的模组。' },
+        { title: '存档会受模组影响吗？', description: '使用模组部件建造的火箭存档，在卸载模组后可能无法正常加载（部件会消失）。建议：使用模组前备份存档，重要作品建议导出蓝图保存。' },
+      ],
+      feedback: '反馈交流：如遇其他问题，欢迎加入 QQ 群 923038827 交流讨论，或向模组作者反馈 bug。',
+    },
+  },
+  modDetails: {
+    loading: '正在加载模组信息...', loadError: '加载失败：{error}', backToList: '返回模组列表',
+    notFoundTitle: '没有找到这个模组', notFoundDescription: '也许不存在，也许你打错名字了',
+    author: '作者', version: '版本', compatibility: '兼容版本', updatedAt: '更新日期', size: '大小',
+    description: '模组简介', rating: '评分', editRating: '编辑评分', ratingLoading: '正在加载评分...',
+    ratingUnavailable: '评分暂时无法加载', averageRating: '平均分数 {rating} 分', ratingCount: '{count} 人评分',
+    noRating: '暂无评分', screenshots: '模组截图', previewScreenshot: '预览{name}截图 {index}',
+    screenshotAlt: '{name}截图 {index}', closePreview: '关闭预览', previousScreenshot: '上一张截图',
+    nextScreenshot: '下一张截图', rateMod: '为模组评分',
+  },
+  info: {
+    aboutUs: '关于我们', introPlaceholder: '请输入文本', intro: 'SFS 汉化模组下载中心，为 Spaceflight Simulator 玩家提供优质汉化模组资源。',
+    qqGroup: 'QQ群：923038827', bilibili: 'B站：A-Future-star',
+    originalSite: '原版站点', credits: '鸣谢名单', statements: '声明信息', assist: '协助制作', hosting: '子站点托管', testing: '模组辅助测试',
+    cards: {
+      downloadTitle: '关于下载', downloadDesc: '所有文件均存储于云盘，点击下载将跳转至对应网盘链接。建议使用浏览器自带下载功能以获得最佳体验。',
+      disclaimerTitle: '免责声明', disclaimerDesc: '本站所有汉化模组仅供学习交流使用，请于下载后24小时内删除，禁止用于商业用途。部分模组可能存在加载报错或空白文本等 BUG。',
+      feedbackTitle: '交流反馈', feedbackDesc: 'QQ群：923038827\nUP主：A Future star\n欢迎反馈汉化问题与模组兼容性情况',
+    },
+  },
+  notFound: { title: '404 没有找到', description: '人生无常，大肠包小肠', home: '回到主页' },
+} as const
+
+export default messages

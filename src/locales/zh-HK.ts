@@ -1,0 +1,110 @@
+const messages = {
+  language: { name: '粵語', title: '語言', description: '揀介面顯示語言' },
+  nav: { mods: '模組', tutorial: '教學', about: '關於' },
+  common: {
+    select: '揀選', reset: '重設', cancel: '取消', save: '儲存', submit: '提交',
+    download: '下載', details: '詳情', retry: '再試', back: '返去', loading: '載入緊...',
+    share: '分享', search: '搜尋', close: '關閉', previous: '上一張', next: '下一張',
+  },
+  layout: {
+    title: '漢化模組下載中心', sponsor: '贊助支持', sponsorThanks: '多謝你支持，我哋會繼續更新優質漢化模組！',
+    welcome: '歡迎嚟到 SFS 漢化模組站',
+    warning: '本站所有模組都係漢化版本，只供學習交流使用。\n下載之前，請確認你已經知道點樣安裝模組。',
+    extraPrefix: '額外說明：本站係重寫版，唔係原站點，部分功能可能未同步；有需要可以去',
+    originalSite: '原站點', neverShow: '唔再顯示', enter: '進入', github: 'Github', feedback: 'Feedback',
+    backToTop: '返到頂部', openSettings: '開啟設定',
+  },
+  settings: {
+    title: '設定', close: '閂設定', interface: '介面', theme: '主題', themeDesc: '揀主題模式',
+    cardOpacity: '卡片透明度', opacityLow: '真係要咁樣？：', opacityVeryLow: '你鍾意就好：',
+    backgroundStyle: '背景樣式', backgroundStyleDesc: '揀首頁背景樣式',
+    cardBlur: '卡片模糊效果', cardBlurDesc: '實驗性功能，建議降低卡片透明度使用',
+    customBackground: '自訂背景', imageSource: '圖片來源', imageSourceDesc: '張背景圖由邊度嚟？',
+    backgroundImage: '背景圖片', localImageDesc: '喺部機揀一張圖片，最大 10 MB', clearImage: '清除背景圖片',
+    urlDesc: '請輸入一個 URL', blur: '模糊強度', opacity: '透明度', opacityWarning: '咁樣合適咩？：',
+    effects: '效果', animations: '動畫效果', animationsDesc: '閂咗之後會減少動畫效果，可能會提升頁面渲染效能',
+    transition: '切換動畫', transitionDesc: '揀路由切換動畫，要開咗動畫效果先會生效',
+    ripple: '水波紋效果', rippleDesc: '撳住按鈕之後嘅水波紋效果', titleGlow: '標題發光',
+    titleGlowDesc: '首頁標題嘅發光效果，可能有相容性問題', actions: '操作', reset: '重設設定', resetDesc: '清除自訂設定選項',
+    experiment: '實驗性', restoreDefault: '恢復預設值', unsavedChanges: '已更改但未儲存',
+    notImage: '你揀嗰個好似唔係圖片', imageTooLarge: '張背景圖好似太大喇', imageSaveFailed: '圖片儲存失敗，請檢查瀏覽器儲存權限',
+  },
+  options: {
+    theme: { system: '跟隨系統', light: '淺色模式', dark: '深色模式' },
+    transition: { 'x-fade': 'X 軸切換', 'y-fade': 'Y 軸切換', 'opacity-fade': '淡入淡出', none: '冇動畫' },
+    background: { none: '冇背景', grid: '網格背景', 'custom-image': '自訂圖片' },
+    imageSource: { local: '本機', url: '自訂 URL' },
+  },
+  mods: {
+    fileCount: '一共有 {count} 個檔案', category: '分類', searchPlaceholder: '請輸入關鍵字',
+    notice: '聲明：本站所有漢化模組只供學習交流，請喺下載後 24 小時內刪除，禁止用喺商業用途。部分模組可能會載入出錯、部件名稱或者描述留白',
+    closeNotice: '閂聲明', loadFailed: '載入失敗：{error}', empty: '搵唔到符合條件嘅模組',
+    copied: '已複製連結', sharing: '開緊分享', shareTitle: '分享呢個模組', coverAlt: '{name}封面',
+    categories: { all: '全部', engine: '發動機', function: '功能性部件', entertain: '娛樂性部件', skin: '塗裝包' },
+  },
+  tutorial: { android: 'Android', ios: 'iOS', pc: 'PC', qa: '常見問題' },
+  tutorialContent: {
+    tipLabel: '小技巧：',
+    android: {
+      steps: [
+        { title: '下載模組檔案', description: '喺本站搵到需要嘅模組，撳「下載」按鈕，將 ZIP 檔案下載到手機。', code: '' },
+        { title: '解壓模組檔案', description: '用檔案管理器（例如 MT 管理器、ES 檔案瀏覽器等）搵到下載嘅 ZIP 檔案，解壓後會得到 pack 檔案或者資料夾。', code: '模組資料夾：Parts / Textures Packs' },
+        { title: '定位遊戲目錄', description: '搵到 SFS 遊戲資料目錄，路徑通常係：部分手機系統嘅路徑可能喺 data 入面。', code: '/storage/emulated/0/Android/media/com.StefMorojna.SpaceflightSimulator/Mods/Custom_Assets/Parts/' },
+        { title: '複製模組檔案', description: '將解壓後嘅模組資料夾複製到遊戲目錄下嘅相應位置：', code: '• pack 模組 → Parts/\n• 塗裝模組 → Textures Packs/' },
+        { title: '啟動遊戲驗證', description: '重新啟動 SFS，喺主頁面等一陣，等模組載入器顯示該模組就代表載入成功（留意下面嘅錯誤訊息）。', code: '' },
+      ],
+      tip: '如果遊戲載入模組速度太慢，可以試下斷網重啟或者開 VPN。交流群：923038827',
+    },
+    ios: {
+      steps: [
+        { title: '下載並解壓檔案', description: '下載模組 ZIP 檔案後，將佢解壓。', code: '' },
+        { title: '定位遊戲目錄', description: 'iOS 遊戲資料路徑係：', code: '我嘅裝置\\Spaceflight Simulator' },
+        { title: '放置模組檔案', description: '將解壓後嘅模組移動到遊戲目錄嘅 Parts 或 Textures Packs 資料夾，操作方法同 Android 類似。', code: '' },
+        { title: '驗證與排錯', description: '重啟遊戲檢查模組有冇生效。iOS 系統對檔案權限要求嚴格，如果有問題請檢查檔案讀寫權限。', code: '' },
+      ],
+    },
+    pc: {
+      warning: '重要提示：Steam 版 SFS 嘅模組安裝路徑同手機版唔同，請注意分辨。',
+      steps: [
+        { title: '下載模組檔案', description: '喺本站下載需要嘅模組 ZIP 檔案，解壓到電腦任意位置。', code: '' },
+        { title: '搵到遊戲安裝目錄', description: 'Steam 版 SFS 嘅存檔同模組路徑通常係：亦可以喺 Steam 庫入面右鍵遊戲 → 管理 → 瀏覽本機檔案。', code: '你嘅 Steam 安裝位置\\SteamLibrary\\steamapps\\common\\Spaceflight Simulator\\Spaceflight Simulator Game' },
+        { title: '放置模組檔案', description: '喺遊戲目錄下面建立或者搵到以下資料夾，將模組檔案放入：', code: '• 部件 → Spaceflight Simulator\\Parts\\n• 塗裝 → Spaceflight Simulator\\Textures Packs\\' },
+        { title: '啟動遊戲', description: '透過 Steam 啟動遊戲，入到遊戲檢查新部件有冇正常顯示。', code: '' },
+      ],
+      tip: 'PC 版係本機載入，載入模組速度極快。',
+    },
+    qa: {
+      steps: [
+        { title: '部件名稱顯示空白', description: '呢個係漢化模組常見問題，代表漢化檔案未正確載入或者編碼格式唔匹配。解決方法：確保下載嘅係對應遊戲版本嘅漢化包，再試下重新安裝漢化模組。' },
+        { title: '模組部件唔顯示或者顯示異常', description: '可能原因：貼圖檔案缺失、模型檔案損壞或者同其他模組衝突。解決方法：檢查模組檔案係咪完整，關閉其他模組測試，再睇遊戲日誌攞詳細錯誤資訊。' },
+        { title: '點樣卸載模組？', description: '搵到遊戲目錄入面對應嘅模組檔案或者資料夾，直接刪除就得。建議：安裝新模組前影低原有檔案，方便卸載時恢復。' },
+        { title: '可唔可以同時安裝多個模組？', description: '可以，但要留意模組之間可能有衝突。建議：一次只安裝一個新模組，測試正常先再裝下一個，避免同時安裝功能重複嘅模組。' },
+        { title: '存檔會唔會受模組影響？', description: '用模組部件整嘅火箭存檔，卸載模組後可能無法正常載入（部件會消失）。建議：用模組前備份存檔，重要作品最好匯出藍圖保存。' },
+      ],
+      feedback: '回饋交流：如果遇到其他問題，歡迎加入 QQ 群 923038827 交流討論，或者向模組作者回報 bug。',
+    },
+  },
+  modDetails: {
+    loading: '載入緊模組資訊...', loadError: '載入失敗：{error}', backToList: '返去模組列表',
+    notFoundTitle: '搵唔到呢個模組', notFoundDescription: '可能唔存在，可能你打錯名喇',
+    author: '作者', version: '版本', compatibility: '相容版本', updatedAt: '更新日期', size: '大小',
+    description: '模組簡介', rating: '評分', editRating: '編輯評分', ratingLoading: '載入緊評分...',
+    ratingUnavailable: '評分暫時載入唔到', averageRating: '平均分數 {rating} 分', ratingCount: '{count} 人評分',
+    noRating: '暫時冇評分', screenshots: '模組截圖', previewScreenshot: '預覽{name}截圖 {index}',
+    screenshotAlt: '{name}截圖 {index}', closePreview: '關閉預覽', previousScreenshot: '上一張截圖',
+    nextScreenshot: '下一張截圖', rateMod: '為模組評分',
+  },
+  info: {
+    aboutUs: '關於我哋', introPlaceholder: '請輸入文字', intro: 'SFS 漢化模組下載中心，為 Spaceflight Simulator 玩家提供優質漢化模組資源。',
+    qqGroup: 'QQ 群：923038827', bilibili: 'B 站：A-Future-star',
+    originalSite: '原版站點', credits: '鳴謝名單', statements: '聲明資訊', assist: '協助製作', hosting: '子站點託管', testing: '模組輔助測試',
+    cards: {
+      downloadTitle: '關於下載', downloadDesc: '所有檔案都放喺雲端硬碟，撳下載就會去相應嘅連結。建議用瀏覽器內置下載功能，體驗會最好。',
+      disclaimerTitle: '免責聲明', disclaimerDesc: '本站所有漢化模組只供學習交流，請喺下載後 24 小時內刪除，禁止用喺商業用途。部分模組可能會載入出錯或者文字留白。',
+      feedbackTitle: '交流回饋', feedbackDesc: 'QQ 群：923038827\nUP 主：A Future star\n歡迎回饋漢化問題同模組相容性情況',
+    },
+  },
+  notFound: { title: '404 搵唔到頁面', description: '人生無常，大腸包小腸', home: '返去首頁' },
+} as const
+
+export default messages
