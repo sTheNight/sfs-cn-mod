@@ -26,7 +26,7 @@ const messages = {
     transition: '切换动画', transitionDesc: '选择路由切换动画，需要开启动画效果后才能生效',
     ripple: '水波纹效果', rippleDesc: '按住按钮后的水波纹效果', titleGlow: '标题发光',
     titleGlowDesc: '主页标题的发光效果，可能有兼容性问题', actions: '操作', reset: '重置设置', resetDesc: '清除自定义设置选项',
-    experiment: '实验性', restoreDefault: '恢复默认值', unsavedChanges: '已更改但未保存',
+    restoreDefault: '恢复默认值', unsavedChanges: '已更改但未保存',
     notImage: '你选择的好像不是图片', imageTooLarge: '这背景图有点大了吧', imageSaveFailed: '图片保存失败，请检查浏览器存储权限',
   },
   options: {

@@ -26,7 +26,7 @@ const messages = {
     transition: '切換動畫', transitionDesc: '選擇路由切換動畫，需要開啟動畫效果後才能生效',
     ripple: '水波紋效果', rippleDesc: '按住按鈕後的水波紋效果', titleGlow: '標題發光',
     titleGlowDesc: '首頁標題的發光效果，可能有相容性問題', actions: '操作', reset: '重設設定', resetDesc: '清除自訂設定選項',
-    experiment: '實驗性', restoreDefault: '恢復預設值', unsavedChanges: '已變更但未儲存',
+    restoreDefault: '恢復預設值', unsavedChanges: '已變更但未儲存',
     notImage: '你選擇的好像不是圖片', imageTooLarge: '這張背景圖似乎太大了', imageSaveFailed: '圖片儲存失敗，請檢查瀏覽器儲存權限',
   },
   options: {
