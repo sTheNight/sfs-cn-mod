@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { ButtonGroup } from '@/components/ui/button-group';
 import type { TutorType } from '@/models/Tutor';
 import {
   AppleIcon,
@@ -15,6 +13,7 @@ import PCTutor from './Tutorial/PCTutor.vue';
 import QA from './Tutorial/QA.vue';
 import { useSettingsStore } from '@/stores/settings.ts';
 import { useI18n } from 'vue-i18n';
+import MyCustomButton from '@/components/MyCustomButton/MyCustomButton.vue';
 
 const currentTutor: Ref<TutorType> = ref("android")
 const setting = useSettingsStore()
@@ -34,14 +33,14 @@ function isActiveTutorSection(tutor: TutorType): boolean {
 
 <template>
   <div class="w-full max-w-2xl mx-auto relative">
-    <ButtonGroup class="ml-auto mr-auto sticky top-4 z-5">
-      <Button class="bg-background/80 backdrop-blur-xs backdrop-saturate-200" v-for="tab in tutorTabs" :key="tab.type"
-        variant="outline" @click="currentTutor = tab.type"
-        :class="{ 'text-blue-600 hover:text-blue-600 bg-blue-50/80 hover:bg-blue-50/80 dark:text-blue-400 dark:hover:text-blue-400 dark:bg-blue-950/60 dark:hover:bg-blue-950/60': isActiveTutorSection(tab.type) }">
+    <div class="flex gap-2 flex-wrap">
+      <MyCustomButton variant="outline" class="rounded-full" v-for="tab in tutorTabs" :key="tab.type"
+        @click="currentTutor = tab.type"
+        :class="{ 'text-blue-600 hover:text-blue-600 bg-blue-50 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-400 dark:bg-blue-950 dark:hover:bg-blue-950': isActiveTutorSection(tab.type) }">
         <component :is="tab.icon" :size="14" />
         {{ tab.label }}
-      </Button>
-    </ButtonGroup>
+      </MyCustomButton>
+    </div>
     <div class="mt-4">
       <Transition mode="out-in" :name="setting.transition">
         <AndroidTutor v-if="currentTutor == 'android'" />

@@ -12,7 +12,7 @@ const hasTag = computed(() => Boolean(slots.tag))
 const setting = useSettingsStore()
 </script>
 <template>
-  <div class="bg-card-surface border rounded-2xl p-4 shadow-xs transition-all duration-150"
+  <div class="bg-card-surface border rounded-2xl p-4 shadow-xs"
     :class="setting.cardBlurEffect ? 'backdrop-blur-lg' : ''">
     <div class="flex justify-between">
       <div class="flex items-center gap-3">
