@@ -23,9 +23,10 @@ withDefaults(defineProps<RippleProviderProps>(), {
 })
 
 const attrs = useAttrs()
-const rootAttrs = computed(() => Object.fromEntries(
-  Object.entries(attrs).filter(([key]) => key !== 'class'),
-))
+const rootAttrs = computed(() => {
+  const { class: _class, ...rest } = attrs
+  return rest
+})
 // 判断是否存在 position
 const positionClasses = new Set(['static', 'fixed', 'absolute', 'relative', 'sticky'])
 const hasPositionClass = computed(() => {
