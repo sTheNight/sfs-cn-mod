@@ -12,6 +12,7 @@ import { useRoute, useRouter } from 'vue-router';
 import GridBackground from '@/components/Background/GridBackground.vue';
 import ImageBackground from '@/components/Background/ImageBackground.vue';
 import { useI18n } from 'vue-i18n';
+import AlertMessage from '@/components/AlertMessage.vue';
 
 const route = useRoute()
 const router = useRouter()
@@ -30,7 +31,7 @@ const isSettingDrawerShow = ref(false);
 
 const settingsStore = useSettingsStore()
 const { transition } = storeToRefs(settingsStore)
-const { setNeverShowWarningDialog, neverShowWarningDialog } = settingsStore
+const { setNeverShowWarningDialog } = settingsStore
 const showWarningDialog = ref(true)
 
 const floatGroupRef = useTemplateRef("float-group")
@@ -38,8 +39,9 @@ const safePadding = ref<number>(0)
 
 const isShowWarningDialog = computed<boolean>({
   get() {
-    if (!neverShowWarningDialog && showWarningDialog.value) return true
-    else return false
+    return showWarningDialog.value
+    // if (!neverShowWarningDialog && showWarningDialog.value) return true
+    // else return false
   },
   set(newValue) {
     showWarningDialog.value = newValue
@@ -107,10 +109,14 @@ onMounted(() => {
     <div ref="float-group"
       class="fixed bottom-0 right-0 px-4 py-8 sm:px-8 sm:py-8 z-10 flex gap-5 flex-col justify-center items-center">
       <Transition name="float-button-fade" mode="out-in">
-        <FloatButton :aria-label="t('layout.backToTop')" @on-button-click="backToTop" :icon="ArrowUp" v-if="showBackTop" />
-        <FloatButton v-else :aria-label="t('layout.sponsor')" :icon="CircleDollarSign" @on-button-click="isSponsorDialogShow = !isSponsorDialogShow" />
+        <FloatButton :aria-label="t('layout.backToTop')" @on-button-click="backToTop" :icon="ArrowUp"
+          v-if="showBackTop" />
+        <FloatButton v-else :aria-label="t('layout.sponsor')" :icon="CircleDollarSign"
+          @on-button-click="isSponsorDialogShow = !isSponsorDialogShow" />
       </Transition>
-      <FloatButton :aria-label="t('layout.openSettings')" :icon="Settings" @on-button-click="isSettingDrawerShow = true"></FloatButton>
+      <FloatButton :aria-label="t('layout.openSettings')" :icon="Settings"
+        @on-button-click="isSettingDrawerShow = true">
+      </FloatButton>
     </div>
     <Dialog v-model:open="isSponsorDialogShow">
       <DialogContent>
@@ -120,7 +126,8 @@ onMounted(() => {
           <p class="text-center text-sm m-2 text-muted-foreground">{{ t('layout.sponsorThanks') }}</p>
           <div class="flex justify-center mt-2">
             <div class="border rounded-2xl p-4 shadow-md">
-              <img src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/5.png" width="250" loading="lazy" decoding="async">
+              <img src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/5.png" width="250" loading="lazy"
+                decoding="async">
             </div>
           </div>
         </div>
@@ -132,11 +139,16 @@ onMounted(() => {
         <DialogHeader>
           <h2 class="text-xl font-bold">{{ t('layout.welcome') }}</h2>
         </DialogHeader>
-        <p class="text-muted-foreground text-sm whitespace-pre-line">{{ t('layout.warning') }}</p>
-        <p class="text-sm text-muted-foreground">
-          {{ t('layout.extraPrefix') }}<a class="px-2 outline-0 underline text-blue-500"
-            href="https://sfszhmod.pages.dev/">{{ t('layout.originalSite') }}</a>
-        </p>
+        <AlertMessage>
+          {{ t('layout.warning') }}
+        </AlertMessage>
+        <AlertMessage type="error">
+          <p>
+            {{ t('layout.extraPrefix') }}
+            <a class="px-2 outline-0 underline text-blue-500" href="https://sfszhmod.pages.dev/">{{
+              t('layout.originalSite') }}</a>
+          </p>
+        </AlertMessage>
         <div class="flex w-full justify-end text-sm">
           <div class="flex items-center gap-2 select-none" @click="isNeverShowDialogCheck = !isNeverShowDialogCheck">
             <Checkbox @click.stop.prevent v-model:model-value="isNeverShowDialogCheck" /> {{ t('layout.neverShow') }}
