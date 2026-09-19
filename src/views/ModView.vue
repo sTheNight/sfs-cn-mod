@@ -146,6 +146,11 @@ onMounted(() => {
         </CompactButton>
       </AlertMessage>
     </CollapseTransition>
+    <CollapseTransition :show="categoryFilter === 'dll'" scale>
+      <AlertMessage class="mt-4" type="error">
+        {{ t('mods.dllWarning') }}
+      </AlertMessage>
+    </CollapseTransition>
     <div v-if="isLoading || loadError || shownList.length === 0"
       class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-muted-foreground select-none">
       <div v-if="isLoading">

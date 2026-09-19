@@ -38,7 +38,7 @@ const messages = {
   mods: {
     fileCount: '共 {count} 个文件', category: '分类', searchPlaceholder: '请输入关键字',
     notice: '声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等 bug',
-    closeNotice: '关闭声明', loadFailed: '加载失败：{error}', empty: '未找到符合条件的模组',
+    closeNotice: '关闭声明', loadFailed: '加载失败：{error}', empty: '未找到符合条件的模组', dllWarning: 'DLL Mod 仅供 PC 使用！！',
     copied: '已复制链接', nfclipboard: '你的浏览器没有 clipboard 对象', shareTitle: '分享这个模组', coverAlt: '{name}封面',
     categories: { all: '全部', engine: '发动机', function: '功能性部件', entertain: '娱乐性部件', skin: '涂装包', dll: 'DLL' },
   },
