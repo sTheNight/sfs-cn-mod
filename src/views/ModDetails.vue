@@ -227,7 +227,7 @@ watch(
 
     <template v-else>
       <div class="flex flex-col gap-4">
-        <template v-if="!isPCDevice() && !isConfirmCouldNotDown">
+        <template v-if="!isPCDevice() && !isConfirmCouldNotDown && mod.category === 'dll'">
           <AlertMessage type="error">
             此模组在你的设备上不可用！
           </AlertMessage>
