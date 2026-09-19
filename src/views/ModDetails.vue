@@ -30,6 +30,10 @@ import axios, { isAxiosError } from 'axios';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import AlertMessage from '@/components/AlertMessage.vue';
+import { isPCDevice } from '@/utils/isPCDevice';
+import { Input } from '@/components/ui/input';
+import BasicSettingCard from '@/components/setting/BasicSettingCard.vue';
 
 interface Rating {
   count: number
@@ -62,6 +66,11 @@ const hasRating = computed(() => (rating.value?.count ?? 0) > 0)
 const isRatingDialogShow = ref(false)
 const pendingRating = ref(0)
 
+const confirmationText = '我已知晓并确认此模组无法在本设备运行'
+const isConfirmCouldNotDown = ref(false)
+const confirmationInput = ref('')
+const isConfirmationValid = computed(() => confirmationInput.value.trim() === confirmationText)
+
 function goBack() {
   if (window.history.length > 1) router.back()
   else void router.push('/')
@@ -69,6 +78,23 @@ function goBack() {
 
 function openUrl(url: string) {
   window.open(url, '_blank')
+}
+
+function goDownload(mdoInfo: ModInfo) {
+  if (!isPCDevice() && !isConfirmCouldNotDown.value) return
+  openUrl(mdoInfo.link)
+}
+
+function confirmUnavailableDevice() {
+  if (isConfirmCouldNotDown.value) return
+
+  if (!isConfirmationValid.value) {
+    showToast('内容不一致')
+    return
+  }
+
+  isConfirmCouldNotDown.value = true
+  confirmationInput.value = ''
 }
 
 function openImagePreview(index: number) {
@@ -122,6 +148,8 @@ async function loadMod(name: string) {
   isLoading.value = true
   loadError.value = ''
   mod.value = undefined
+  isConfirmCouldNotDown.value = false
+  confirmationInput.value = ''
 
   try {
     await getModInfo()
@@ -200,121 +228,155 @@ watch(
 
     <template v-else>
       <div class="flex flex-col gap-4">
-        <!-- 封面与基础信息 -->
-        <section class="bg-card-surface overflow-hidden rounded-2xl border shadow-xs">
-          <div class="relative h-64 bg-amber-100 dark:bg-amber-950/60 sm:h-72">
-            <img :draggable="false" v-if="mod.images?.length"
-              class="absolute inset-0 h-full w-full object-cover select-none" :src="mod.images[0]"
-              :alt="t('mods.coverAlt', { name: mod.name })" decoding="async" />
-            <div v-else class="flex h-full items-center justify-center text-7xl">📦</div>
-            <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent">
-              <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>
-            </div>
-            <div class="absolute top-0 w-full flex justify-between items-center p-3">
-              <CompactButton class="group/action" backdrop @click="goBack">
-                <ArrowLeft class="transition-transform group-hover/action:-translate-x-0.5" />{{ t('common.back') }}
-              </CompactButton>
-              <CompactButton backdrop :aria-label="t('common.share')" @click="share">
-                <Share2 />
-              </CompactButton>
-            </div>
-            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 flex justify-between items-end">
-              <div>
-                <h1 class="mod-title-transition text-xl sm:text-2xl font-bold leading-tight text-white">
-                  {{ mod.name }}
-                </h1>
-                <div v-if="mod.tags.length" class="mt-2 flex flex-wrap gap-1.5">
-                  <span v-for="tag in mod.tags" :key="tag"
-                    class="rounded-full bg-white/15 px-2.5 py-0.5 text-xs text-white/90 backdrop-blur-sm">
-                    {{ tag }}
-                  </span>
-                </div>
+        <template v-if="!isPCDevice() && !isConfirmCouldNotDown">
+          <AlertMessage type="error">
+            此模组在你的设备上不可用！
+          </AlertMessage>
+          <BasicSettingCard title="知情确认" description="此模组无法在移动设备上运行，确认后才会显示详情和下载入口。"
+            vertical>
+            <form class="flex w-full flex-col gap-3" @submit.prevent="confirmUnavailableDevice">
+              <div class="rounded-lg border bg-muted/40 p-3">
+                <p class="text-xs leading-5 text-muted-foreground">请完整输入以下内容：</p>
+                <p class="mt-2 rounded-md bg-border px-3 py-2 text-sm font-semibold leading-6 text-foreground break-words select-none"
+                  aria-label="需要输入的确认内容">
+                  {{ confirmationText }}
+                </p>
               </div>
-              <MyCustomButton size="lg" :ripple-follow-theme="false" is-dark-ripple
-                class="rounded-full cursor-pointer w-10 h-10 sm:w-auto bg-white/90 text-black hover:bg-white/90 hover:text-black"
-                @click="openUrl(mod.link)">
-                <Download />
-                <span class="hidden sm:inline">{{ t('common.download') }}</span>
-              </MyCustomButton>
-            </div>
-          </div>
-        </section>
-        <div class="grid gap-2 text-sm text-muted-foreground grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
-          <InfoCard :title="t('modDetails.author')" :icon="UserRound">{{ mod.author }}</InfoCard>
-          <InfoCard :title="t('modDetails.version')" :icon="HistoryIcon">{{ mod.version }}</InfoCard>
-          <InfoCard :title="t('modDetails.compatibility')" :icon="HistoryIcon">{{ mod.compat }}</InfoCard>
-          <InfoCard :title="t('modDetails.updatedAt')" :icon="Calendar">{{ mod.date }}</InfoCard>
-          <InfoCard :title="t('modDetails.size')" :icon="SaveIcon">{{ mod.size }}</InfoCard>
-        </div>
-
-        <div class="grid gap-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- 简介 -->
-            <BasicInfoCard :title="t('modDetails.description')">
-              <template #tag>
-                <FileText :size="18" />
-              </template>
-              <p class="whitespace-pre-line leading-6">{{ mod.desc }}</p>
-            </BasicInfoCard>
-
-            <!-- 评分 -->
-            <BasicInfoCard :title="t('modDetails.rating')">
-              <template #tag>
-                <Star :size="18" />
-              </template>
-              <template #prefix>
-                <CompactButton class=" shadow-none" :aria-label="t('modDetails.editRating')"
-                  @click="isRatingDialogShow = !isRatingDialogShow">
-                  <SquarePen :size="16"></SquarePen>
+              <div class="space-y-1.5">
+                <label for="mobile-device-confirmation" class="text-xs font-medium text-muted-foreground">
+                  确认内容
+                </label>
+                <Input id="mobile-device-confirmation" v-model="confirmationInput" type="text" autocomplete="off"
+                  spellcheck="false" aria-label="输入确认内容"
+                  @keydown.enter.prevent="confirmUnavailableDevice" />
+              </div>
+              <div class="flex justify-end pt-1">
+                <MyCustomButton type="submit" :disabled="!isConfirmationValid" class="w-full sm:w-auto"
+                  @click="confirmUnavailableDevice">
+                  确认并继续
+                </MyCustomButton>
+              </div>
+            </form>
+          </BasicSettingCard>
+        </template>
+        <template v-else>
+          <!-- 封面与基础信息 -->
+          <section class="bg-card-surface overflow-hidden rounded-2xl border shadow-xs">
+            <div class="relative h-64 bg-amber-100 dark:bg-amber-950/60 sm:h-72">
+              <img :draggable="false" v-if="mod.images?.length"
+                class="absolute inset-0 h-full w-full object-cover select-none" :src="mod.images[0]"
+                :alt="t('mods.coverAlt', { name: mod.name })" decoding="async" />
+              <div v-else class="flex h-full items-center justify-center text-7xl">📦</div>
+              <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent">
+                <div class="absolute inset-0 backdrop-blur-sm mask-t-from-10%"></div>
+              </div>
+              <div class="absolute top-0 w-full flex justify-between items-center p-3">
+                <CompactButton class="group/action" backdrop @click="goBack">
+                  <ArrowLeft class="transition-transform group-hover/action:-translate-x-0.5" />{{ t('common.back') }}
                 </CompactButton>
-              </template>
-              <div class="flex min-h-7 items-center">
-                <template v-if="isRatingLoading">
-                  <LoaderCircle :size="15" class="mr-2 animate-spin" />
-                  {{ t('modDetails.ratingLoading') }}
-                </template>
-                <span v-else-if="ratingLoadFailed">{{ t('modDetails.ratingUnavailable') }}</span>
-                <div v-else-if="hasRating" class="flex flex-col gap-2">
-                  <div class="flex items-baseline gap-1">
-                    <span class="text-xl font-semibold tabular-nums text-foreground">{{ formattedRating }}</span>
-                  </div>
-                  <div class="flex gap-0.5" :aria-label="t('modDetails.averageRating', { rating: formattedRating })">
-                    <span v-for="index in 5" :key="index" class="relative block h-4 w-4">
-                      <Star :size="16" class="absolute inset-0 text-muted-foreground/25" />
-                      <span class="absolute inset-0 overflow-hidden text-amber-500"
-                        :style="{ width: getStarFill(index) }">
-                        <Star :size="16" class="fill-current" />
-                      </span>
+                <CompactButton backdrop :aria-label="t('common.share')" @click="share">
+                  <Share2 />
+                </CompactButton>
+              </div>
+              <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 flex justify-between items-end">
+                <div>
+                  <h1 class="mod-title-transition text-xl sm:text-2xl font-bold leading-tight text-white">
+                    {{ mod.name }}
+                  </h1>
+                  <div v-if="mod.tags.length" class="mt-2 flex flex-wrap gap-1.5">
+                    <span v-for="tag in mod.tags" :key="tag"
+                      class="rounded-full bg-white/15 px-2.5 py-0.5 text-xs text-white/90 backdrop-blur-sm">
+                      {{ tag }}
                     </span>
                   </div>
-                  <span>{{ t('modDetails.ratingCount', { count: rating?.count ?? 0 }) }}</span>
                 </div>
-                <span v-else>{{ t('modDetails.noRating') }}</span>
+                <MyCustomButton size="lg" :ripple-follow-theme="false" is-dark-ripple
+                  class="rounded-full cursor-pointer w-10 h-10 sm:w-auto bg-white/90 text-black hover:bg-white/90 hover:text-black"
+                  @click="goDownload(mod)">
+                  <Download />
+                  <span class="hidden sm:inline">{{ t('common.download') }}</span>
+                </MyCustomButton>
+              </div>
+            </div>
+          </section>
+          <div
+            class="grid gap-2 text-sm text-muted-foreground grid-cols-[repeat(auto-fit,minmax(min(140px,100%),1fr))]">
+            <InfoCard :title="t('modDetails.author')" :icon="UserRound">{{ mod.author }}</InfoCard>
+            <InfoCard :title="t('modDetails.version')" :icon="HistoryIcon">{{ mod.version }}</InfoCard>
+            <InfoCard :title="t('modDetails.compatibility')" :icon="HistoryIcon">{{ mod.compat }}</InfoCard>
+            <InfoCard :title="t('modDetails.updatedAt')" :icon="Calendar">{{ mod.date }}</InfoCard>
+            <InfoCard :title="t('modDetails.size')" :icon="SaveIcon">{{ mod.size }}</InfoCard>
+          </div>
+
+          <div class="grid gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- 简介 -->
+              <BasicInfoCard :title="t('modDetails.description')">
+                <template #tag>
+                  <FileText :size="18" />
+                </template>
+                <p class="whitespace-pre-line leading-6">{{ mod.desc }}</p>
+              </BasicInfoCard>
+
+              <!-- 评分 -->
+              <BasicInfoCard :title="t('modDetails.rating')">
+                <template #tag>
+                  <Star :size="18" />
+                </template>
+                <template #prefix>
+                  <CompactButton class=" shadow-none" :aria-label="t('modDetails.editRating')"
+                    @click="isRatingDialogShow = !isRatingDialogShow">
+                    <SquarePen :size="16"></SquarePen>
+                  </CompactButton>
+                </template>
+                <div class="flex min-h-7 items-center">
+                  <template v-if="isRatingLoading">
+                    <LoaderCircle :size="15" class="mr-2 animate-spin" />
+                    {{ t('modDetails.ratingLoading') }}
+                  </template>
+                  <span v-else-if="ratingLoadFailed">{{ t('modDetails.ratingUnavailable') }}</span>
+                  <div v-else-if="hasRating" class="flex flex-col gap-2">
+                    <div class="flex items-baseline gap-1">
+                      <span class="text-xl font-semibold tabular-nums text-foreground">{{ formattedRating }}</span>
+                    </div>
+                    <div class="flex gap-0.5" :aria-label="t('modDetails.averageRating', { rating: formattedRating })">
+                      <span v-for="index in 5" :key="index" class="relative block h-4 w-4">
+                        <Star :size="16" class="absolute inset-0 text-muted-foreground/25" />
+                        <span class="absolute inset-0 overflow-hidden text-amber-500"
+                          :style="{ width: getStarFill(index) }">
+                          <Star :size="16" class="fill-current" />
+                        </span>
+                      </span>
+                    </div>
+                    <span>{{ t('modDetails.ratingCount', { count: rating?.count ?? 0 }) }}</span>
+                  </div>
+                  <span v-else>{{ t('modDetails.noRating') }}</span>
+                </div>
+              </BasicInfoCard>
+            </div>
+
+            <!-- 截图 -->
+            <BasicInfoCard v-if="mod.images?.length" :title="t('modDetails.screenshots')">
+              <template #tag>
+                <Image :size="18" />
+              </template>
+              <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                <button v-for="(img, index) in mod.images" :key="index" type="button"
+                  class="group relative aspect-video overflow-hidden rounded-lg border bg-muted text-left outline-none ring-ring transition-shadow hover:shadow-md focus-visible:ring-2"
+                  :aria-label="t('modDetails.previewScreenshot', { name: mod.name, index: index + 1 })"
+                  @click="openImagePreview(index)">
+                  <img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    :src="img" :alt="t('modDetails.screenshotAlt', { name: mod.name, index: index + 1 })" loading="lazy"
+                    decoding="async">
+                  <span
+                    class="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100 group-focus-visible:bg-black/30 group-focus-visible:opacity-100">
+                    <ZoomInIcon :size="18" />
+                  </span>
+                </button>
               </div>
             </BasicInfoCard>
           </div>
-
-          <!-- 截图 -->
-          <BasicInfoCard v-if="mod.images?.length" :title="t('modDetails.screenshots')">
-            <template #tag>
-              <Image :size="18" />
-            </template>
-            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              <button v-for="(img, index) in mod.images" :key="index" type="button"
-                class="group relative aspect-video overflow-hidden rounded-lg border bg-muted text-left outline-none ring-ring transition-shadow hover:shadow-md focus-visible:ring-2"
-                :aria-label="t('modDetails.previewScreenshot', { name: mod.name, index: index + 1 })"
-                @click="openImagePreview(index)">
-                <img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  :src="img" :alt="t('modDetails.screenshotAlt', { name: mod.name, index: index + 1 })" loading="lazy"
-                  decoding="async">
-                <span
-                  class="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100 group-focus-visible:bg-black/30 group-focus-visible:opacity-100">
-                  <ZoomInIcon :size="18" />
-                </span>
-              </button>
-            </div>
-          </BasicInfoCard>
-        </div>
+        </template>
       </div>
     </template>
 
