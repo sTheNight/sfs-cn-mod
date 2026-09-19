@@ -14,6 +14,7 @@ import CollapseTransition from '@/components/CollapseTransition.vue';
 import { CompactButton } from '@/components/CompactButton';
 import { useSettingsStore } from '@/stores/settings';
 import { useI18n } from 'vue-i18n';
+import { isPCDevice } from '@/utils/isPCDevice';
 
 const shownList = shallowRef<ModInfo[]>([])
 const isLoading = ref(true)
@@ -53,6 +54,11 @@ function openUrl(url: string) {
 
 function applyFilter() {
   shownList.value = getModListByKeyword(searchText.value, getModListByCategory(categoryFilter.value))
+  if (!isPCDevice()) {
+    shownList.value = shownList.value.filter((mod) =>
+      mod.category !== 'dll'
+    )
+  }
 }
 
 function handleKeywordFilterKeyDown(e: KeyboardEvent) {
@@ -112,8 +118,8 @@ onMounted(() => {
         </Select>
       </div>
       <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-        <Input v-model="searchText" class="min-w-0 text-sm bg-card dark:bg-card" :placeholder="t('mods.searchPlaceholder')"
-          @keydown="handleKeywordFilterKeyDown" />
+        <Input v-model="searchText" class="min-w-0 text-sm bg-card dark:bg-card"
+          :placeholder="t('mods.searchPlaceholder')" @keydown="handleKeywordFilterKeyDown" />
         <MyCustomButton class="px-3 w-9 h-9" :aria-label="t('common.search')" @click="applyFilter">
           <Search />
         </MyCustomButton>
@@ -122,8 +128,8 @@ onMounted(() => {
     <CollapseTransition :show="isWarningAlertShow" scale>
       <AlertMessage class="mt-4 relative" type="warning">
         <span class="pr-7">{{ t('mods.notice') }}</span>
-        <CompactButton class="absolute top-2 right-2 text-accent-foreground" size="sm" :aria-label="t('mods.closeNotice')"
-          @click="isWarningAlertShow = false">
+        <CompactButton class="absolute top-2 right-2 text-accent-foreground" size="sm"
+          :aria-label="t('mods.closeNotice')" @click="isWarningAlertShow = false">
           <X />
         </CompactButton>
       </AlertMessage>

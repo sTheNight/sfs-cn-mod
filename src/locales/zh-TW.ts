@@ -39,7 +39,7 @@ const messages = {
     fileCount: '共 {count} 個檔案', category: '分類', searchPlaceholder: '請輸入關鍵字',
     notice: '聲明：本站所有漢化模組僅供學習交流，請於下載後 24 小時內刪除，禁止用於商業用途。部分模組可能發生載入錯誤、部件名稱或描述空白等問題',
     closeNotice: '關閉聲明', loadFailed: '載入失敗：{error}', empty: '找不到符合條件的模組',
-    copied: '已複製連結', sharing: '正在開啟分享', shareTitle: '分享這個模組', coverAlt: '{name}封面',
+    copied: '已複製連結', shareTitle: '分享這個模組', coverAlt: '{name}封面',
     categories: { all: '全部', engine: '發動機', function: '功能性部件', entertain: '娛樂性部件', skin: '塗裝包', dll: 'DLL' },
   },
   tutorial: { android: 'Android', ios: 'iOS', pc: 'PC', qa: '常見問題' },

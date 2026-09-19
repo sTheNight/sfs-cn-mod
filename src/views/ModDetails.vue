@@ -92,16 +92,12 @@ function getStarFill(index: number) {
 
 async function share() {
   const url = window.location.href
-  if (!navigator.share) {
-    navigator.clipboard.writeText(url)
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(url)
     showToast(t('mods.copied'))
-    return;
+  } else {
+    showToast(t('mods.nfclipboard'))
   }
-  showToast(t('mods.sharing'))
-  await navigator.share({
-    title: t('mods.shareTitle'),
-    url: url
-  })
 }
 
 async function submitScore(score: number) {
@@ -267,7 +263,8 @@ watch(
                 <Star :size="18" />
               </template>
               <template #prefix>
-                <CompactButton class=" shadow-none" :aria-label="t('modDetails.editRating')" @click="isRatingDialogShow = !isRatingDialogShow">
+                <CompactButton class=" shadow-none" :aria-label="t('modDetails.editRating')"
+                  @click="isRatingDialogShow = !isRatingDialogShow">
                   <SquarePen :size="16"></SquarePen>
                 </CompactButton>
               </template>
@@ -305,9 +302,11 @@ watch(
             <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
               <button v-for="(img, index) in mod.images" :key="index" type="button"
                 class="group relative aspect-video overflow-hidden rounded-lg border bg-muted text-left outline-none ring-ring transition-shadow hover:shadow-md focus-visible:ring-2"
-                :aria-label="t('modDetails.previewScreenshot', { name: mod.name, index: index + 1 })" @click="openImagePreview(index)">
+                :aria-label="t('modDetails.previewScreenshot', { name: mod.name, index: index + 1 })"
+                @click="openImagePreview(index)">
                 <img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  :src="img" :alt="t('modDetails.screenshotAlt', { name: mod.name, index: index + 1 })" loading="lazy" decoding="async">
+                  :src="img" :alt="t('modDetails.screenshotAlt', { name: mod.name, index: index + 1 })" loading="lazy"
+                  decoding="async">
                 <span
                   class="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100 group-focus-visible:bg-black/30 group-focus-visible:opacity-100">
                   <ZoomInIcon :size="18" />
@@ -365,7 +364,8 @@ watch(
             </div>
           </div>
           <div class="flex justify-end gap-2">
-            <MyCustomButton variant="outline" @click="isRatingDialogShow = false">{{ t('common.cancel') }}</MyCustomButton>
+            <MyCustomButton variant="outline" @click="isRatingDialogShow = false">{{ t('common.cancel') }}
+            </MyCustomButton>
             <MyCustomButton :disabled="pendingRating === 0" @click="submitScore(pendingRating)">
               {{ t('common.submit') }}
             </MyCustomButton>
