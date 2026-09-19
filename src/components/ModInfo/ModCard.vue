@@ -37,16 +37,12 @@ useIntersectionObserver(
 async function share() {
   const baseUrl = window.location.origin
   const modDetailUrl = `${baseUrl}/mods/${props.item.name}`
-  if (!navigator.share) {
-    navigator.clipboard.writeText(modDetailUrl)
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(modDetailUrl)
     showToast(t('mods.copied'))
-    return;
+  } else {
+    showToast(t('mods.nfclipboard'))
   }
-  showToast(t('mods.sharing'))
-  await navigator.share({
-    title: t('mods.shareTitle'),
-    url: modDetailUrl
-  })
 }
 </script>
 <template>
