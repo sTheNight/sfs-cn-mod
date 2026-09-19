@@ -5,7 +5,7 @@ import { files, getModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
 import type { ModInfo } from '@/models/ModInfo';
 import { Filter, Folder, RefreshCcw, Search, X } from '@lucide/vue';
-import { onMounted, ref, shallowRef, watch } from 'vue';
+import { computed, onMounted, ref, shallowRef, watch } from 'vue';
 import ModCard from '@/components/ModInfo/ModCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
 import AlertMessage from '@/components/AlertMessage.vue';
@@ -22,10 +22,14 @@ const loadError = ref("")
 const categoryFilter = ref<ModCategory>("all")
 const searchText = ref("")
 const isWarningAlertShow = ref(true)
+const isPC = ref(isPCDevice())
 const router = useRouter()
 const settingsStore = useSettingsStore()
 const { t } = useI18n()
 const categoryKeys = Object.keys(categoryRecord) as ModCategory[]
+const visibleCategoryKeys = computed(() =>
+  isPC.value ? categoryKeys : categoryKeys.filter((key) => key !== 'dll')
+)
 
 function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
   if (category == "all") return source
@@ -53,12 +57,14 @@ function openUrl(url: string) {
 }
 
 function applyFilter() {
-  shownList.value = getModListByKeyword(searchText.value, getModListByCategory(categoryFilter.value))
-  if (!isPCDevice()) {
-    shownList.value = shownList.value.filter((mod) =>
-      mod.category !== 'dll'
-    )
-  }
+  const filteredList = getModListByKeyword(
+    searchText.value,
+    getModListByCategory(categoryFilter.value),
+  )
+
+  shownList.value = isPC.value
+    ? filteredList
+    : filteredList.filter((mod) => mod.category !== 'dll')
 }
 
 function handleKeywordFilterKeyDown(e: KeyboardEvent) {
@@ -83,6 +89,12 @@ async function loadModInfo(forceRefresh = false) {
 watch(categoryFilter, applyFilter)
 
 onMounted(() => {
+  isPC.value = isPCDevice()
+
+  if (!isPC.value && categoryFilter.value === 'dll') {
+    categoryFilter.value = 'all'
+  }
+
   void loadModInfo()
 })
 </script>
@@ -110,7 +122,7 @@ onMounted(() => {
           <SelectContent class="bg-popover/80 backdrop-blur-xs">
             <SelectGroup>
               <SelectLabel>{{ t('mods.category') }}</SelectLabel>
-              <SelectItem v-for="key in categoryKeys" :key="key" :value="key">
+              <SelectItem v-for="key in visibleCategoryKeys" :key="key" :value="key">
                 {{ t(`mods.categories.${key}`) }}
               </SelectItem>
             </SelectGroup>
