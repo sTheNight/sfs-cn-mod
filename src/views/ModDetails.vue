@@ -33,7 +33,6 @@ import { useI18n } from 'vue-i18n';
 import AlertMessage from '@/components/AlertMessage.vue';
 import { isPCDevice } from '@/utils/isPCDevice';
 import { Input } from '@/components/ui/input';
-import BasicSettingCard from '@/components/setting/BasicSettingCard.vue';
 
 interface Rating {
   count: number
@@ -232,32 +231,24 @@ watch(
           <AlertMessage type="error">
             此模组在你的设备上不可用！
           </AlertMessage>
-          <BasicSettingCard title="知情确认" description="此模组无法在移动设备上运行，确认后才会显示详情和下载入口。"
-            vertical>
-            <form class="flex w-full flex-col gap-3" @submit.prevent="confirmUnavailableDevice">
-              <div class="rounded-lg border bg-muted/40 p-3">
-                <p class="text-xs leading-5 text-muted-foreground">请完整输入以下内容：</p>
-                <p class="mt-2 rounded-md bg-border px-3 py-2 text-sm font-semibold leading-6 text-foreground break-words select-none"
-                  aria-label="需要输入的确认内容">
-                  {{ confirmationText }}
-                </p>
+          <BasicInfoCard title="知情确认">
+            <form class="text-accent-foreground flex flex-col gap-2 text-md" @submit.prevent="confirmUnavailableDevice">
+              <p class="font-bold text-red-500">请悉知，此模组现在不能，未来也几乎不可能在移动设备上运行</p>
+              <p>
+                若您执意要下载本模组，请在下方输入框输入以下内容：
+              </p>
+              <div class="rounded-md bg-border p-4 font-bold select-none" aria-label="需要输入的确认内容">
+                {{ confirmationText }}
               </div>
-              <div class="space-y-1.5">
-                <label for="mobile-device-confirmation" class="text-xs font-medium text-muted-foreground">
-                  确认内容
-                </label>
-                <Input id="mobile-device-confirmation" v-model="confirmationInput" type="text" autocomplete="off"
-                  spellcheck="false" aria-label="输入确认内容"
-                  @keydown.enter.prevent="confirmUnavailableDevice" />
-              </div>
-              <div class="flex justify-end pt-1">
-                <MyCustomButton type="submit" :disabled="!isConfirmationValid" class="w-full sm:w-auto"
-                  @click="confirmUnavailableDevice">
+              <Input v-model="confirmationInput" type="text" autocomplete="off" spellcheck="false" aria-label="输入确认内容"
+                @keydown.enter.prevent="confirmUnavailableDevice" />
+              <div class="flex justify-end">
+                <MyCustomButton type="submit" :disabled="!isConfirmationValid" @click="confirmUnavailableDevice">
                   确认并继续
                 </MyCustomButton>
               </div>
             </form>
-          </BasicSettingCard>
+          </BasicInfoCard>
         </template>
         <template v-else>
           <!-- 封面与基础信息 -->

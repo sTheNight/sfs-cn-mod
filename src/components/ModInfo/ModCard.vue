@@ -22,7 +22,6 @@ import { showToast } from '../Toast/useToast.ts';
 import { useSettingsStore } from '@/stores/settings.ts';
 import { useI18n } from 'vue-i18n';
 
-
 const cardRef = useTemplateRef<HTMLElement>('card')
 const hasEnteredViewport = ref(false)
 const setting = useSettingsStore()
@@ -82,7 +81,13 @@ async function share() {
             {{ tag }}
           </div>
         </div>
-        <p class="my-4 text-muted-foreground text-sm">{{ item.desc }}</p>
+        <p class="my-4 text-muted-foreground text-sm">
+          <span v-if="item.category === 'dll'"
+            class="mt-0.5 w-fit text-[11px] leading-4 px-1.5 rounded-full border border-red-500/20 bg-red-500/8 text-red-700 dark:text-red-300">
+            {{ t("common.pcOnly") }}
+          </span>
+          {{ item.desc }}
+        </p>
       </div>
       <div class="shrink-0">
         <div class="flex justify-evenly gap-2 text-muted-foreground">

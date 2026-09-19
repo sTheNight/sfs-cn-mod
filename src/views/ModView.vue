@@ -15,6 +15,7 @@ import { CompactButton } from '@/components/CompactButton';
 import { useSettingsStore } from '@/stores/settings';
 import { useI18n } from 'vue-i18n';
 import { isPCDevice } from '@/utils/isPCDevice';
+import { showToast } from '@/components/Toast/useToast';
 
 const shownList = shallowRef<ModInfo[]>([])
 const isLoading = ref(true)
@@ -52,8 +53,12 @@ function openModDetail(mod: ModInfo) {
   void router.push({ name: 'mod-details', params: { name: mod.name } })
 }
 
-function openUrl(url: string) {
-  window.open(url, "_blank")
+function goDownload(modInfo: ModInfo) {
+  // if (modInfo.category === 'dll' && !isPC.value) {
+  //   showToast("此模组仅 PC 可用")
+  //   return
+  // }
+  window.open(modInfo.link, "_blank")
 }
 
 function applyFilter() {
@@ -146,11 +151,6 @@ onMounted(() => {
         </CompactButton>
       </AlertMessage>
     </CollapseTransition>
-    <CollapseTransition :show="categoryFilter === 'dll'" scale>
-      <AlertMessage class="mt-4" type="error">
-        {{ t('mods.dllWarning') }}
-      </AlertMessage>
-    </CollapseTransition>
     <div v-if="isLoading || loadError || shownList.length === 0"
       class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-muted-foreground select-none">
       <div v-if="isLoading">
@@ -173,7 +173,7 @@ onMounted(() => {
       class="mt-4 grid w-full grid-cols-[minmax(0,1fr)] gap-4 mx-auto tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
       <!-- 模组信息卡片 -->
       <ModCard v-for="(item, index) in shownList" :key="index" :item="item" @open-detail="openModDetail"
-        @on-download-button-clicked="openUrl" />
+        @on-download-button-clicked="goDownload(item)" />
     </div>
   </div>
 </template>
