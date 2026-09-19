@@ -10,7 +10,7 @@ const messages = {
     title: '漢化模組下載中心', sponsor: '贊助支持', sponsorThanks: '多謝你支持，我哋會繼續更新優質漢化模組！',
     welcome: '歡迎嚟到 SFS 漢化模組站',
     warning: '本站所有模組都係漢化版本，只供學習交流使用。\n下載之前，請確認你已經知道點樣安裝模組。',
-    extraPrefix: '額外說明：本站係重寫版，唔係原站點，部分功能可能未同步；有需要可以去',
+    extraPrefix: '額外說明：因為個人精力問題，本站維護放慢咗，有需要可以去',
     originalSite: '原站點', neverShow: '唔再顯示', enter: '進入', github: 'Github', feedback: 'Feedback',
     backToTop: '返到頂部', openSettings: '開啟設定',
   },
