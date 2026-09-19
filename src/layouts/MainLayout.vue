@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import FloatButton from '@/components/FloatButton.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 import { useSettingsStore } from '@/stores/settings';
 import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
@@ -149,11 +148,11 @@ onMounted(() => {
               t('layout.originalSite') }}</a>
           </p>
         </AlertMessage>
-        <div class="flex w-full justify-end text-sm">
+        <!-- <div class="flex w-full justify-end text-sm">
           <div class="flex items-center gap-2 select-none" @click="isNeverShowDialogCheck = !isNeverShowDialogCheck">
             <Checkbox @click.stop.prevent v-model:model-value="isNeverShowDialogCheck" /> {{ t('layout.neverShow') }}
           </div>
-        </div>
+        </div> -->
         <DialogFooter>
           <div class="flex items-center justify-end gap-2.5">
             <MyCustomButton @click="closeWarningDialog">

@@ -1,4 +1,4 @@
-export type ModCategory = "all" | "engine" | "function" | "entertain" | "skin"
+export type ModCategory = "all" | "engine" | "function" | "entertain" | "skin" | "dll"
 
 export const categoryRecord: Record<ModCategory, string> = {
   "all": "全部",
@@ -6,4 +6,5 @@ export const categoryRecord: Record<ModCategory, string> = {
   "function": "功能性部件",
   "entertain": "娱乐性部件",
   "skin": "涂装包",
+  "dll": "DLL"
 }

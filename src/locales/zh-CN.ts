@@ -10,7 +10,7 @@ const messages = {
     title: '汉化模组下载中心', sponsor: '赞助支持', sponsorThanks: '感谢你的支持，我们会继续更新优质汉化模组！',
     welcome: '欢迎访问 SFS 汉化模组站',
     warning: '本站所有模组均为汉化版本，仅供学习交流使用。\n下载前请确认您已了解模组安装方法。',
-    extraPrefix: '额外说明：由于个人精力问题本站维护放缓，如有需要请访问',
+    extraPrefix: '由于个人精力问题本站维护放缓，如有需要请访问',
     originalSite: '原站点', neverShow: '不再显示', enter: '进入', github: 'Github', feedback: 'Feedback',
     backToTop: '返回顶部', openSettings: '打开设置',
   },
@@ -40,7 +40,7 @@ const messages = {
     notice: '声明：本站所有汉化模组仅供学习交流，请于下载后24小时内删除，禁止用于商业用途。部分模组存在加载完报错、部件名称描述为空白等 bug',
     closeNotice: '关闭声明', loadFailed: '加载失败：{error}', empty: '未找到符合条件的模组',
     copied: '已复制链接', sharing: '正在调起分享', shareTitle: '分享这个模组', coverAlt: '{name}封面',
-    categories: { all: '全部', engine: '发动机', function: '功能性部件', entertain: '娱乐性部件', skin: '涂装包' },
+    categories: { all: '全部', engine: '发动机', function: '功能性部件', entertain: '娱乐性部件', skin: '涂装包', dll: 'DLL' },
   },
   tutorial: { android: '安卓', ios: 'iOS', pc: 'PC', qa: '常见问题' },
   tutorialContent: {

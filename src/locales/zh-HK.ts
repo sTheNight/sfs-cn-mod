@@ -10,7 +10,7 @@ const messages = {
     title: '漢化模組下載中心', sponsor: '贊助支持', sponsorThanks: '多謝你支持，我哋會繼續更新優質漢化模組！',
     welcome: '歡迎嚟到 SFS 漢化模組站',
     warning: '本站所有模組都係漢化版本，只供學習交流使用。\n下載之前，請確認你已經知道點樣安裝模組。',
-    extraPrefix: '額外說明：因為個人精力問題，本站維護放慢咗，有需要可以去',
+    extraPrefix: '因為個人精力問題，本站維護放慢咗，有需要可以去',
     originalSite: '原站點', neverShow: '唔再顯示', enter: '進入', github: 'Github', feedback: 'Feedback',
     backToTop: '返到頂部', openSettings: '開啟設定',
   },
@@ -40,7 +40,7 @@ const messages = {
     notice: '聲明：本站所有漢化模組只供學習交流，請喺下載後 24 小時內刪除，禁止用喺商業用途。部分模組可能會載入出錯、部件名稱或者描述留白',
     closeNotice: '閂聲明', loadFailed: '載入失敗：{error}', empty: '搵唔到符合條件嘅模組',
     copied: '已複製連結', sharing: '開緊分享', shareTitle: '分享呢個模組', coverAlt: '{name}封面',
-    categories: { all: '全部', engine: '發動機', function: '功能性部件', entertain: '娛樂性部件', skin: '塗裝包' },
+    categories: { all: '全部', engine: '發動機', function: '功能性部件', entertain: '娛樂性部件', skin: '塗裝包', dll: 'DLL' },
   },
   tutorial: { android: 'Android', ios: 'iOS', pc: 'PC', qa: '常見問題' },
   tutorialContent: {
