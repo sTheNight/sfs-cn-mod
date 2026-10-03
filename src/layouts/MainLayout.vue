@@ -13,6 +13,7 @@ import GridBackground from '@/components/Background/GridBackground.vue';
 import ImageBackground from '@/components/Background/ImageBackground.vue';
 import { useI18n } from 'vue-i18n';
 import AlertMessage from '@/components/AlertMessage.vue';
+import RouteButton from '@/components/RouteButton.vue';
 
 const route = useRoute()
 const router = useRouter()
@@ -176,13 +177,8 @@ onMounted(() => {
         <div class="border bg-card-surface p-1.5 rounded-full shadow-xs"
           :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''">
           <div class="relative flex flex-wrap gap-2 items-center justify-center">
-            <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
-              class="relative z-1 rounded-full active:scale-90 select-none cursor-pointer" variant="ghost"
-              :class="{ 'text-blue-600 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-transparent bg-blue-50 hover:bg-blue-50': isActiveRoute(item.key) }"
-              @click="router.push(item.route)">
-              <component :is="item.icon" :size="14" />
-              <span v-if="isActiveRoute(item.key)">{{ item.title }}</span>
-            </MyCustomButton>
+            <RouteButton v-for="(item, index) in routeButtons" :key="index" :icon="item.icon" :text="item.title"
+              :is-checked="isActiveRoute(item.key)" @on-route-button-click="router.push(item.route)" />
           </div>
         </div>
       </div>

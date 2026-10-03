@@ -7,14 +7,16 @@ import MyCustomButton from '@/components/MyCustomButton/MyCustomButton.vue'
 import BasicSettingCard from '@/components/setting/BasicSettingCard.vue'
 import SettingSection from '@/components/setting/SettingSection.vue'
 import { showToast } from '@/components/Toast/useToast'
-import { BadgeJapaneseYen } from '@lucide/vue'
+import { BadgeJapaneseYen, Info } from '@lucide/vue'
 import AlertMessage from '@/components/AlertMessage.vue'
 import InputSettingCard from '@/components/setting/InputSettingCard.vue'
 import { useWindowScroll } from '@vueuse/core'
+import RouteButton from '@/components/RouteButton.vue'
 
 const bannerX = ref(0)
 const bannerY = ref(0)
 const bannerHovered = ref(false)
+const isToggleChecked = ref(false)
 
 const testText = ref("Hello")
 function handleSaveText(value: string) {
@@ -51,6 +53,13 @@ const showMinimalToolbar = computed(() => y.value >= 350)
         Show
       </MyCustomButton>
       <AlertMessage class="mt-2">如果你能在生产环境看到我那说明我可能犯了个很傻逼的错误</AlertMessage>
+    </BasicInfoCard>
+
+    <BasicInfoCard title="Toggle">
+      <div class="flex">
+        <RouteButton :icon="Info" :is-checked="isToggleChecked"
+          @on-route-button-click="isToggleChecked = !isToggleChecked" text="Hello World" />
+      </div>
     </BasicInfoCard>
 
     <BasicInfoCard title="Settings">
