@@ -4,7 +4,7 @@ import { MyCustomButton } from '@/components/MyCustomButton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 import { useSettingsStore } from '@/stores/settings';
-import { ArrowUp, CircleDollarSign, CompassIcon, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
+import { ArrowUp, CircleDollarSign, CompassIcon, FileBox, InfoIcon, LogIn, PackageIcon, Settings, type LucideIcon } from '@lucide/vue';
 import { useWindowScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent, onMounted, ref, useTemplateRef } from 'vue';
@@ -62,6 +62,12 @@ const routeButtons = computed<RouteButton[]>(() => [
     route: '/'
   },
   {
+    icon: FileBox,
+    title: "蓝图",
+    key: 'blueprints',
+    route: '/blueprints'
+  },
+  {
     icon: CompassIcon,
     title: t('nav.tutorial'),
     key: 'tutorial',
@@ -74,10 +80,6 @@ const routeButtons = computed<RouteButton[]>(() => [
     route: '/info'
   }
 ])
-
-const activeRouteIndex = computed(() =>
-  routeButtons.value.findIndex(item => isActiveRoute(item.key))
-)
 
 function isActiveRoute(name: string) {
   if (name === 'mod') return route.name === 'mod' || route.name === 'mod-details'
@@ -173,17 +175,13 @@ onMounted(() => {
       <div class="flex items-center justify-center mb-4">
         <div class="border bg-card-surface p-1.5 rounded-full shadow-xs"
           :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''">
-          <div class="relative grid grid-cols-3 gap-2 items-center justify-center">
-            <span aria-hidden="true" v-if="activeRouteIndex >= 0"
-              class="route-button-indicator absolute inset-y-0 left-0 rounded-full bg-blue-100/50 dark:bg-blue-950/60"
-              :class="{ 'route-button-indicator-animated': settingsStore.enableAnimations }"
-              :style="{ transform: `translateX(calc(${activeRouteIndex} * (100% + 0.5rem)))` }" />
+          <div class="relative flex flex-wrap gap-2 items-center justify-center">
             <MyCustomButton v-for="(item, index) in routeButtons" :key="index"
               class="relative z-1 rounded-full active:scale-90 select-none cursor-pointer" variant="ghost"
-              :class="{ 'text-blue-600 hover:text-blue-600 hover:bg-transparent dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-transparent': isActiveRoute(item.key) }"
+              :class="{ 'text-blue-600 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-400 dark:hover:bg-transparent bg-blue-50 hover:bg-blue-50': isActiveRoute(item.key) }"
               @click="router.push(item.route)">
               <component :is="item.icon" :size="14" />
-              {{ item.title }}
+              <span v-if="isActiveRoute(item.key)">{{ item.title }}</span>
             </MyCustomButton>
           </div>
         </div>

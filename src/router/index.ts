@@ -16,6 +16,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'blueprints',
+        name: 'blueprints',
         component: () => import("@/views/BlurPrint.vue")
       },
       {
