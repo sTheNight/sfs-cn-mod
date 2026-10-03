@@ -15,7 +15,6 @@ import { CompactButton } from '@/components/CompactButton';
 import { useSettingsStore } from '@/stores/settings';
 import { useI18n } from 'vue-i18n';
 import { isPCDevice } from '@/utils/isPCDevice';
-import { showToast } from '@/components/Toast/useToast';
 
 const shownList = shallowRef<ModInfo[]>([])
 const isLoading = ref(true)

@@ -15,6 +15,10 @@ const routes: RouteRecordRaw[] = [
         redirect: "/"
       },
       {
+        path: 'blueprints',
+        component: () => import("@/views/BlurPrint.vue")
+      },
+      {
         path: 'mods/:name',
         name: 'mod-details',
         component: () => import("@/views/ModDetails.vue")
