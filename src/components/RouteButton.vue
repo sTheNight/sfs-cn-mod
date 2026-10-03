@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { LucideIcon } from '@lucide/vue';
+import { useElementSize } from '@vueuse/core';
+import { useTemplateRef } from 'vue';
 import RippleProvider from './RippleProvider.vue';
 interface RouteButtonProps {
   isChecked: boolean,
@@ -11,48 +13,24 @@ interface RouteButtonEmits {
 }
 defineProps<RouteButtonProps>()
 defineEmits<RouteButtonEmits>()
+
+const textElement = useTemplateRef('text-element')
+const { width: textWidth } = useElementSize(textElement, undefined, { box: 'border-box' })
 </script>
 <template>
-  <RippleProvider tag="div" is-dark-ripple
-    class="p-2.5 cursor-pointer active:scale-90 select-none rounded-full flex items-center text-accent-foreground transition-all"
-    :class="{ 'bg-blue-50 text-blue-500': isChecked }" @click="$emit('onRouteButtonClick')">
-    <Info :size="16" />
-    <component :is="icon" :size="16" />
-    <Transition name="toggle-fade">
-      <span v-if="isChecked" class="toggle-card">
-        <span class="toggle-text text-xs">
-          {{ text }}
-        </span>
+  <RippleProvider tag="button" type="button" is-dark-ripple :aria-label="text"
+    :aria-current="isChecked ? 'page' : undefined"
+    class="px-3 py-2 cursor-pointer select-none rounded-full flex shrink-0 items-center text-accent-foreground transition-[background-color,color,scale] duration-[180ms,180ms,160ms] ease-[ease,ease,cubic-bezier(0.22,1,0.36,1)] active:scale-96 motion-reduce:transition-none motion-reduce:active:scale-100"
+    :class="{ 'bg-blue-50 text-blue-600': isChecked }" @click="$emit('onRouteButtonClick')">
+    <component :is="icon" :size="16" class="shrink-0" aria-hidden="true" />
+    <span
+      class="flex-none overflow-hidden transition-[width] duration-260 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+      :style="{ width: `${isChecked ? textWidth : 0}px` }" aria-hidden="true">
+      <span ref="text-element"
+        class="block w-max pl-2 text-xs whitespace-nowrap transition-[opacity,translate] duration-[180ms,260ms] ease-[ease,cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+        :class="isChecked ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-1'">
+        {{ text }}
       </span>
-    </Transition>
+    </span>
   </RippleProvider>
 </template>
-<style lang="css" scoped>
-.toggle-card {
-  display: grid;
-  grid-template-columns: 1fr;
-  opacity: 1;
-  overflow: hidden;
-}
-
-.toggle-text {
-  min-width: 0;
-  margin-inline: 0.25rem;
-
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.toggle-fade-enter-active,
-.toggle-fade-leave-active {
-  transition:
-    grid-template-columns 0.2s ease,
-    opacity 0.2s ease;
-}
-
-.toggle-fade-enter-from,
-.toggle-fade-leave-to {
-  grid-template-columns: 0fr;
-  opacity: 0;
-}
-</style>
