@@ -176,7 +176,7 @@ onMounted(() => {
       <div class="flex items-center justify-center mb-4">
         <div class="border bg-card-surface p-1.5 rounded-full shadow-xs"
           :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''">
-          <div class="relative flex flex-wrap gap-2 items-center justify-center">
+          <div class="relative flex flex-wrap gap-1 items-center justify-center">
             <RouteButton v-for="(item, index) in routeButtons" :key="index" :icon="item.icon" :text="item.title"
               :is-checked="isActiveRoute(item.key)" @on-route-button-click="router.push(item.route)" />
           </div>
