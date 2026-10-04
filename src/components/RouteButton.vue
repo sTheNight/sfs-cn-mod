@@ -27,7 +27,7 @@ const { width: textWidth } = useElementSize(textElement, undefined, { box: 'bord
       class="flex-none overflow-hidden transition-[width] duration-260 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
       :style="{ width: `${isChecked ? textWidth : 0}px` }" aria-hidden="true">
       <span ref="text-element"
-        class="block w-max pl-2 text-xs whitespace-nowrap transition-[opacity,translate] duration-[180ms,260ms] ease-[ease,cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+        class="block w-max pl-2 text-sm font-medium whitespace-nowrap transition-[opacity,translate] duration-[180ms,260ms] ease-[ease,cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
         :class="isChecked ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-1'">
         {{ text }}
       </span>
