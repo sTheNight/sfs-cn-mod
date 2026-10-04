@@ -97,7 +97,7 @@ const messages = {
   },
   info: {
     aboutUs: '关于我们', introPlaceholder: '请输入文本', intro: 'SFS 汉化模组下载中心，为 Spaceflight Simulator 玩家提供优质汉化模组资源。',
-    qqGroup: 'QQ群：923038827', bilibili: 'B站：A-Future-star',
+    qqGroup: 'QQ 群', bilibili: 'Bilibili',
     originalSite: '原版站点', credits: '鸣谢名单', statements: '声明信息', assist: '协助制作', hosting: '子站点托管', testing: '模组辅助测试',
     cards: {
       downloadTitle: '关于下载', downloadDesc: '所有文件均存储于云盘，点击下载将跳转至对应网盘链接。建议使用浏览器自带下载功能以获得最佳体验。',

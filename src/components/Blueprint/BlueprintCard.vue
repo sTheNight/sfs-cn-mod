@@ -76,7 +76,7 @@ useIntersectionObserver(cardRef, ([entry]) => {
             <Calendar :size="16" class="mr-1" />{{ item.date }}
           </div>
         </div>
-        <div class="w-full grid grid-cols-1 mt-4 gap-2">
+        <div class="w-full flex justify-end mt-4 gap-2">
           <MyCustomButton @click="$emit('onDownloadButtonClicked', item.link)">
             <Download />
             {{ t("common.download") }}

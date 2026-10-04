@@ -38,7 +38,8 @@ const homeCards = computed(() => [
       <div class="flex flex-col gap-2">
         <div class="flex flex-wrap items-center gap-4">
           <img class=" w-16 h-16 rounded-full"
-            src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/A%20Future%20star.webp" width="64" height="64" decoding="async">
+            src="https://testingcf.jsdelivr.net/gh/aaaa111ssf/images@main/A%20Future%20star.webp" width="64" height="64"
+            decoding="async">
           <div>
             <h3 class="font-bold text-accent-foreground text-md">A Future Star</h3>
             <p>{{ t('info.introPlaceholder') }}</p>
@@ -46,8 +47,8 @@ const homeCards = computed(() => [
         </div>
         <p>{{ t('info.intro') }}</p>
         <div class="flex gap-1 flex-wrap">
-          <my-custom-button v-for="(item, index) in links" :key="index" class="p-4 text-accent-foreground"
-            variant="outline" @click="openUrl(item[0])">
+          <my-custom-button size="sm" v-for="(item, index) in links" :key="index"
+            class="p-4 text-xs text-accent-foreground" variant="outline" @click="openUrl(item[0])">
             <component :is="item[2]" />
             {{ item[1] }}
           </my-custom-button>
