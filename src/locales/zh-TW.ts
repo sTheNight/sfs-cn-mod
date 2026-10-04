@@ -36,6 +36,7 @@ const messages = {
     imageSource: { local: '本機', url: '自訂 URL' },
   },
   mods: {
+    pagination: '模組分頁',
     fileCount: '共 {count} 個檔案', category: '分類', searchPlaceholder: '請輸入關鍵字',
     notice: '聲明：本站所有漢化模組僅供學習交流，請於下載後 24 小時內刪除，禁止用於商業用途。部分模組可能發生載入錯誤、部件名稱或描述空白等問題',
     closeNotice: '關閉聲明', loadFailed: '載入失敗：{error}', empty: '找不到符合條件的模組',

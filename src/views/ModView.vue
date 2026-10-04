@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { files, getModInfo } from '@/data/modInfo';
 import { categoryRecord, type ModCategory } from '@/models/Category';
 import type { ModInfo } from '@/models/ModInfo';
-import { Filter, Folder, RefreshCcw, Search, X } from '@lucide/vue';
+import { ArrowLeft, ArrowRight, Filter, Folder, RefreshCcw, Search, X } from '@lucide/vue';
 import { computed, onMounted, ref, shallowRef, watch } from 'vue';
 import ModCard from '@/components/ModInfo/ModCard.vue';
 import { MyCustomButton } from '@/components/MyCustomButton';
@@ -17,6 +17,13 @@ import { useI18n } from 'vue-i18n';
 import { isPCDevice } from '@/utils/isPCDevice';
 
 const shownList = shallowRef<ModInfo[]>([])
+const pageSize = 24
+const currentPage = ref(1)
+const totalPages = computed(() => Math.ceil(shownList.value.length / pageSize))
+const paginatedList = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  return shownList.value.slice(start, start + pageSize)
+})
 const isLoading = ref(true)
 const loadError = ref("")
 const categoryFilter = ref<ModCategory>("all")
@@ -61,6 +68,7 @@ function goDownload(modInfo: ModInfo) {
 }
 
 function applyFilter() {
+  currentPage.value = 1
   const filteredList = getModListByKeyword(
     searchText.value,
     getModListByCategory(categoryFilter.value),
@@ -171,9 +179,21 @@ onMounted(() => {
     <div v-else
       class="mt-4 grid w-full grid-cols-[minmax(0,1fr)] gap-4 mx-auto tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
       <!-- 模组信息卡片 -->
-      <ModCard v-for="(item, index) in shownList" :key="index" :item="item" @open-detail="openModDetail"
+      <ModCard v-for="item in paginatedList" :key="item.name" :item="item" @open-detail="openModDetail"
         @on-download-button-clicked="goDownload(item)" />
     </div>
+    <nav v-if="!isLoading && !loadError && totalPages > 1" :aria-label="t('mods.pagination')"
+      class="mt-6 flex items-center justify-center gap-3">
+      <MyCustomButton tag="button" type="button" variant="outline" size="sm" :disabled="currentPage === 1"
+        @click="currentPage--">
+        <ArrowLeft />
+      </MyCustomButton>
+      <span class="text-sm text-muted-foreground" aria-live="polite">{{ currentPage }} / {{ totalPages }}</span>
+      <MyCustomButton tag="button" type="button" variant="outline" size="sm" :disabled="currentPage === totalPages"
+        @click="currentPage++">
+        <ArrowRight />
+      </MyCustomButton>
+    </nav>
   </div>
 </template>
 <style lang="css" scoped>
