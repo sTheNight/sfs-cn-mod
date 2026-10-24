@@ -7,6 +7,7 @@ export interface ModInfo {
   date: string;
   desc: string;
   link: string;
+  pwd: number;
   tags: string[];
   category: ModCategory;
   images?: string[];

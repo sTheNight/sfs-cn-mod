@@ -1,62 +1,85 @@
 <script setup lang="ts">
-import type { ModInfo } from '@/models/ModInfo';
-import { Calendar, Download, History, Info, Save, Share2, UserRound } from '@lucide/vue';
-import { ref, useTemplateRef } from 'vue'
+import type { ModInfo } from "@/models/ModInfo";
+import { Calendar, Download, History, Info, Save, Share2, UserRound } from "@lucide/vue";
+import { ref, useTemplateRef } from "vue";
 
 export interface ModCardProps {
-  item: ModInfo
+  item: ModInfo;
 }
 
 export interface ModCardEmits {
-  (e: 'openDetail', mod: ModInfo): void,
-  (e: 'onDownloadButtonClicked', url: string): void
+  (e: "openDetail", mod: ModInfo): void;
+  (e: "onDownloadButtonClicked", url: string): void;
 }
-defineEmits<ModCardEmits>()
-const props = defineProps<ModCardProps>()
+defineEmits<ModCardEmits>();
+const props = defineProps<ModCardProps>();
 
-import { useIntersectionObserver } from '@vueuse/core'
-import { MyCustomButton } from '../MyCustomButton';
-import RippleProvider from '../RippleProvider.vue';
-import CompactButton from '../CompactButton/CompactButton.vue';
-import { showToast } from '../Toast/useToast.ts';
-import { useSettingsStore } from '@/stores/settings.ts';
-import { useI18n } from 'vue-i18n';
+import { useIntersectionObserver } from "@vueuse/core";
+import { MyCustomButton } from "../MyCustomButton";
+import RippleProvider from "../RippleProvider.vue";
+import CompactButton from "../CompactButton/CompactButton.vue";
+import { showToast } from "../Toast/useToast.ts";
+import { useSettingsStore } from "@/stores/settings.ts";
+import { useI18n } from "vue-i18n";
 
-const cardRef = useTemplateRef<HTMLElement>('card')
-const hasEnteredViewport = ref(false)
-const setting = useSettingsStore()
-const { t } = useI18n()
+const cardRef = useTemplateRef<HTMLElement>("card");
+const hasEnteredViewport = ref(false);
+const setting = useSettingsStore();
+const { t } = useI18n();
 
-useIntersectionObserver(
-  cardRef,
-  ([entry]) => {
-    hasEnteredViewport.value = entry?.isIntersecting ?? false
-  }
-)
+useIntersectionObserver(cardRef, ([entry]) => {
+  hasEnteredViewport.value = entry?.isIntersecting ?? false;
+});
 
 async function share() {
-  const baseUrl = window.location.origin
-  const modDetailUrl = `${baseUrl}/mods/${props.item.name}`
+  const baseUrl = window.location.origin;
+  const modDetailUrl = `${baseUrl}/mods/${props.item.name}`;
   if (navigator.clipboard) {
-    await navigator.clipboard.writeText(modDetailUrl)
-    showToast(t('mods.copied'))
+    await navigator.clipboard.writeText(modDetailUrl);
+    showToast(t("mods.copied"));
   } else {
-    showToast(t('mods.nfclipboard'))
+    showToast(t("mods.nfclipboard"));
   }
 }
 </script>
 <template>
-  <RippleProvider :is-dark-ripple='true' tag="div" ref="card"
+  <RippleProvider
+    :is-dark-ripple="true"
+    tag="div"
+    ref="card"
     class="bg-card-surface relative fade-in-card border text-card-foreground select-none rounded-2xl shadow-xs duration-150 transition-all overflow-hidden hover:shadow-xl hover:-translate-y-1 flex flex-col"
-    :class="{ 'fade-in-card--visible': hasEnteredViewport, 'backdrop-blur-lg': setting.cardBlurEffect }">
-    <CompactButton backdrop class="absolute right-0 top-0 m-2" :aria-label="t('common.share')" @click="share">
+    :class="{
+      'fade-in-card--visible': hasEnteredViewport,
+      'backdrop-blur-lg': setting.cardBlurEffect,
+    }"
+  >
+    <CompactButton
+      backdrop
+      class="absolute right-0 top-0 m-2"
+      :aria-label="t('common.share')"
+      @click="share"
+    >
       <Share2 />
     </CompactButton>
-    <img :draggable="false" @click="$emit('openDetail', item)" class="w-full h-50 object-cover shrink-0"
-      v-if="item.images?.length" :src="item.images[0]" :alt="t('mods.coverAlt', { name: item.name })" width="320"
-      height="200" loading="lazy" decoding="async" />
-    <div @click="$emit('openDetail', item)" v-else
-      class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl select-none">📦</div>
+    <img
+      :draggable="false"
+      @click="$emit('openDetail', item)"
+      class="w-full h-50 object-cover shrink-0"
+      v-if="item.images?.length"
+      :src="item.images[0]"
+      :alt="t('mods.coverAlt', { name: item.name })"
+      width="320"
+      height="200"
+      loading="lazy"
+      decoding="async"
+    />
+    <div
+      @click="$emit('openDetail', item)"
+      v-else
+      class="h-50 flex bg-amber-100 dark:bg-amber-950/60 justify-center items-center text-6xl select-none"
+    >
+      📦
+    </div>
     <div class="p-4 flex flex-col flex-1 min-h-0">
       <div class="flex-1 min-h-0">
         <h2 class="mod-title-transition min-w-0 truncate font-bold text-xl">
@@ -72,18 +95,31 @@ async function share() {
           </span>
         </div>
         <div class="flex gap-2 mt-2">
-          <div class="inline-block text-[12px] rounded-full bg-muted text-muted-foreground px-2 py-0.5"
-            v-for="(tag, index) in item.tags" :key="index">
+          <div
+            class="inline-block text-[12px] rounded-full bg-muted text-muted-foreground px-2 py-0.5"
+            v-for="(tag, index) in item.tags"
+            :key="index"
+          >
             {{ tag }}
           </div>
         </div>
-        <p class="my-4 text-muted-foreground text-sm">
-          <span v-if="item.category === 'dll'"
-            class="mt-0.5 w-fit text-[11px] leading-4 px-1.5 rounded-full border border-red-500/20 bg-red-500/8 text-red-700 dark:text-red-300">
+        <div class="my-4 text-muted-foreground text-sm flex flex-col gap-1">
+          <span
+            v-if="item.category === 'dll'"
+            class="w-fit text-[11px] leading-4 px-1.5 rounded-full border border-red-500/20 bg-red-500/8 text-red-700 dark:text-red-300"
+          >
             {{ t("common.pcOnly") }}
           </span>
-          {{ item.desc }}
-        </p>
+          <div>
+            {{ item.desc }}
+          </div>
+          <div
+            class="border rounded-xl p-2 border-amber-500/20 bg-amber-500/8 text-amber-700 dark:text-amber-300"
+            v-if="item.pwd"
+          >
+            密码：afs
+          </div>
+        </div>
       </div>
       <div class="shrink-0">
         <div class="flex justify-evenly gap-2 text-muted-foreground">
@@ -97,11 +133,11 @@ async function share() {
         <div class="w-full grid grid-cols-2 mt-4 gap-2">
           <MyCustomButton class="shadow-none" variant="outline" @click="$emit('openDetail', item)">
             <Info />
-            {{ t('common.details') }}
+            {{ t("common.details") }}
           </MyCustomButton>
           <MyCustomButton @click="$emit('onDownloadButtonClicked', item.link)">
             <Download />
-            {{ t('common.download') }}
+            {{ t("common.download") }}
           </MyCustomButton>
         </div>
       </div>
@@ -113,7 +149,7 @@ async function share() {
   min-width: 0;
   opacity: 0;
   transform: scale(0.8);
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .fade-in-card--visible {
