@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ModInfo } from "@/models/ModInfo";
-import { Calendar, Download, History, Info, Save, Share2, UserRound } from "@lucide/vue";
+import { Calendar, Copy, Download, History, Info, Save, Share2, UserRound } from "@lucide/vue";
 import { ref, useTemplateRef } from "vue";
 
 export interface ModCardProps {
@@ -36,6 +36,15 @@ async function share() {
   const modDetailUrl = `${baseUrl}/mods/${props.item.name}`;
   if (navigator.clipboard) {
     await navigator.clipboard.writeText(modDetailUrl);
+    showToast(t("mods.copied"));
+  } else {
+    showToast(t("mods.nfclipboard"));
+  }
+}
+
+async function copyPassword() {
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText("afs");
     showToast(t("mods.copied"));
   } else {
     showToast(t("mods.nfclipboard"));
@@ -114,10 +123,13 @@ async function share() {
             {{ item.desc }}
           </div>
           <div
-            class="border rounded-xl p-2 border-amber-500/20 bg-amber-500/8 text-amber-700 dark:text-amber-300"
+            class="border rounded-xl flex justify-between items-center p-2 border-amber-500/20 bg-amber-500/8 text-amber-700 dark:text-amber-300"
             v-if="item.pwd"
           >
-            密码：afs
+            <div>密码：afs</div>
+            <CompactButton @click="copyPassword" class="text-xs" size="sm">
+              <Copy />
+            </CompactButton>
           </div>
         </div>
       </div>
