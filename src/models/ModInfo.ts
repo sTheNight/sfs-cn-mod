@@ -1,5 +1,9 @@
 import type { ModCategory } from "./Category";
 
+export interface ModData {
+  files: ModInfo[];
+}
+
 export interface ModInfo {
   name: string;
   type: string;

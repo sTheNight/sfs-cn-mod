@@ -1,4 +1,4 @@
-import type { ModInfo } from "@/models/ModInfo";
+import type { ModData, ModInfo } from "@/models/ModInfo";
 import axios from "axios";
 
 export const files: ModInfo[] = [];
@@ -13,13 +13,13 @@ export async function getModInfo(forceRefresh = false): Promise<ModInfo[]> {
   if (hasLoaded && !forceRefresh) return files;
 
   loadingPromise = axios
-    .get<ModInfo[]>(MOD_INFO_URL)
+    .get<ModData>(MOD_INFO_URL)
     .then(({ data }) => {
-      if (!Array.isArray(data)) {
+      if (!Array.isArray(data.files)) {
         throw new TypeError("模组信息格式错误：接口没有返回数组");
       }
 
-      files.splice(0, files.length, ...data);
+      files.splice(0, files.length, ...data.files);
       hasLoaded = true;
       return files;
     })
