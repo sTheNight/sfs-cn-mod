@@ -123,7 +123,7 @@ async function copyPassword() {
             {{ item.desc }}
           </div>
           <div
-            class="border rounded-xl flex justify-between items-center p-2 border-amber-500/20 bg-amber-500/8 text-amber-700 dark:text-amber-300"
+            class="border rounded-xl flex justify-between items-center p-2 border-amber-100 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300"
             v-if="item.pwd"
           >
             <div>密码：afs</div>
