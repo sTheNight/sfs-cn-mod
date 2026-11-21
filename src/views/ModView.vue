@@ -1,126 +1,120 @@
 <script setup lang="ts">
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
-import { files, getModInfo } from '@/data/modInfo';
-import { categoryRecord, type ModCategory } from '@/models/Category';
-import type { ModInfo } from '@/models/ModInfo';
-import { ArrowLeft, ArrowRight, Filter, Folder, RefreshCcw, Search, X } from '@lucide/vue';
-import { computed, onMounted, ref, shallowRef, watch } from 'vue';
-import ModCard from '@/components/ModInfo/ModCard.vue';
-import { MyCustomButton } from '@/components/MyCustomButton';
-import AlertMessage from '@/components/AlertMessage.vue';
-import { useRouter } from 'vue-router';
-import CollapseTransition from '@/components/CollapseTransition.vue';
-import { CompactButton } from '@/components/CompactButton';
-import { useSettingsStore } from '@/stores/settings';
-import { useI18n } from 'vue-i18n';
-import { isPCDevice } from '@/utils/isPCDevice';
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { files, getModInfo } from "@/data/modInfo";
+import { categoryRecord, type ModCategory } from "@/models/Category";
+import type { ModInfo } from "@/models/ModInfo";
+import { ArrowLeft, ArrowRight, Filter, Folder, RefreshCcw, Search, X } from "@lucide/vue";
+import { computed, onMounted, ref, shallowRef, watch } from "vue";
+import ModCard from "@/components/ModInfo/ModCard.vue";
+import { MyCustomButton } from "@/components/MyCustomButton";
+import AlertMessage from "@/components/AlertMessage.vue";
+import { useRouter } from "vue-router";
+import CollapseTransition from "@/components/CollapseTransition.vue";
+import { CompactButton } from "@/components/CompactButton";
+import { useSettingsStore } from "@/stores/settings";
+import { useI18n } from "vue-i18n";
 
-const shownList = shallowRef<ModInfo[]>([])
-const pageSize = 24
-const currentPage = ref(1)
-const totalPages = computed(() => Math.ceil(shownList.value.length / pageSize))
+const shownList = shallowRef<ModInfo[]>([]);
+const pageSize = 24;
+const currentPage = ref(1);
+const totalPages = computed(() => Math.ceil(shownList.value.length / pageSize));
 const paginatedList = computed(() => {
-  const start = (currentPage.value - 1) * pageSize
-  return shownList.value.slice(start, start + pageSize)
-})
-const isLoading = ref(true)
-const loadError = ref("")
-const categoryFilter = ref<ModCategory>("all")
-const searchText = ref("")
-const isWarningAlertShow = ref(true)
-const isPC = ref(isPCDevice())
-const router = useRouter()
-const settingsStore = useSettingsStore()
-const { t } = useI18n()
-const categoryKeys = Object.keys(categoryRecord) as ModCategory[]
-const visibleCategoryKeys = computed(() =>
-  isPC.value ? categoryKeys : categoryKeys.filter((key) => key !== 'dll')
-)
+  const start = (currentPage.value - 1) * pageSize;
+  return shownList.value.slice(start, start + pageSize);
+});
+const isLoading = ref(true);
+const loadError = ref("");
+const categoryFilter = ref<ModCategory>("all");
+const searchText = ref("");
+const isWarningAlertShow = ref(true);
+const router = useRouter();
+const settingsStore = useSettingsStore();
+const { t } = useI18n();
+const categoryKeys = Object.keys(categoryRecord) as ModCategory[];
 
 function getModListByCategory(category: ModCategory, source: ModInfo[] = files): ModInfo[] {
-  if (category == "all") return source
-  return source.filter((mod) => mod.category == category)
+  if (category == "all") return source;
+  return source.filter((mod) => mod.category == category);
 }
 
 function getModListByKeyword(keyword: string, source: ModInfo[] = files): ModInfo[] {
-  keyword = keyword.trim().toLowerCase()
-  if (keyword === "") return source
-  return source.filter((mod) =>
-    mod.author.toLowerCase().includes(keyword) ||
-    mod.name.toLowerCase().includes(keyword) ||
-    mod.desc.toLowerCase().includes(keyword) ||
-    mod.tags.some((tag) => tag.toLowerCase().includes(keyword))
-  )
+  keyword = keyword.trim().toLowerCase();
+  if (keyword === "") return source;
+  return source.filter(
+    (mod) =>
+      mod.author.toLowerCase().includes(keyword) ||
+      mod.name.toLowerCase().includes(keyword) ||
+      mod.desc.toLowerCase().includes(keyword) ||
+      mod.tags.some((tag) => tag.toLowerCase().includes(keyword)),
+  );
 }
 
 // 常规事件
 function openModDetail(mod: ModInfo) {
-  void router.push({ name: 'mod-details', params: { name: mod.name } })
+  void router.push({ name: "mod-details", params: { name: mod.name } });
 }
 
 function goDownload(modInfo: ModInfo) {
-  // if (modInfo.category === 'dll' && !isPC.value) {
-  //   showToast("此模组仅 PC 可用")
-  //   return
-  // }
-  window.open(modInfo.link, "_blank")
+  window.open(modInfo.link, "_blank");
 }
 
 function applyFilter() {
-  currentPage.value = 1
-  const filteredList = getModListByKeyword(
+  currentPage.value = 1;
+  shownList.value = getModListByKeyword(
     searchText.value,
     getModListByCategory(categoryFilter.value),
-  )
-
-  shownList.value = isPC.value
-    ? filteredList
-    : filteredList.filter((mod) => mod.category !== 'dll')
+  );
 }
 
 function handleKeywordFilterKeyDown(e: KeyboardEvent) {
-  if (e.key == "Enter") applyFilter()
+  if (e.key == "Enter") applyFilter();
 }
 
 async function loadModInfo(forceRefresh = false) {
-  isLoading.value = true
-  loadError.value = ""
+  isLoading.value = true;
+  loadError.value = "";
 
   try {
-    await getModInfo(forceRefresh)
-    applyFilter()
+    await getModInfo(forceRefresh);
+    applyFilter();
   } catch (error) {
-    shownList.value = []
-    loadError.value = error instanceof Error ? error.message : t('mods.loadFailed', { error: '' })
+    shownList.value = [];
+    loadError.value = error instanceof Error ? error.message : t("mods.loadFailed", { error: "" });
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 }
 
-watch(categoryFilter, applyFilter)
+watch(categoryFilter, applyFilter);
 
 onMounted(() => {
-  isPC.value = isPCDevice()
-
-  if (!isPC.value && categoryFilter.value === 'dll') {
-    categoryFilter.value = 'all'
-  }
-
-  void loadModInfo()
-})
+  void loadModInfo();
+});
 </script>
 <template>
   <div>
     <!-- 检索栏 -->
-    <div :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''"
-      class="grid gap-3 text-sm sm:flex sm:items-center sm:justify-between select-none border p-3 rounded-2xl bg-card-surface shadow-xs">
+    <div
+      :class="settingsStore.cardBlurEffect ? 'backdrop-blur-lg' : ''"
+      class="grid gap-3 text-sm sm:flex sm:items-center sm:justify-between select-none border p-3 rounded-2xl bg-card-surface shadow-xs"
+    >
       <div class="flex items-center flex-wrap justify-between gap-2 sm:justify-start">
         <div
-          class="border-input bg-card flex h-9 w-fit items-center gap-3 rounded-md border px-3 py-2 text-sm whitespace-nowrap shadow-xs">
+          class="border-input bg-card flex h-9 w-fit items-center gap-3 rounded-md border px-3 py-2 text-sm whitespace-nowrap shadow-xs"
+        >
           <Folder :size="16" />
           <Transition name="switch-fade" mode="out-in">
-            <span :key="shownList.length">{{ t('mods.fileCount', { count: shownList.length }) }}</span>
+            <span :key="shownList.length">{{
+              t("mods.fileCount", { count: shownList.length })
+            }}</span>
           </Transition>
         </div>
         <Select v-model:model-value="categoryFilter">
@@ -133,8 +127,8 @@ onMounted(() => {
           </SelectTrigger>
           <SelectContent class="bg-popover/80 backdrop-blur-xs">
             <SelectGroup>
-              <SelectLabel>{{ t('mods.category') }}</SelectLabel>
-              <SelectItem v-for="key in visibleCategoryKeys" :key="key" :value="key">
+              <SelectLabel>{{ t("mods.category") }}</SelectLabel>
+              <SelectItem v-for="key in categoryKeys" :key="key" :value="key">
                 {{ t(`mods.categories.${key}`) }}
               </SelectItem>
             </SelectGroup>
@@ -142,8 +136,12 @@ onMounted(() => {
         </Select>
       </div>
       <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-        <Input v-model="searchText" class="min-w-0 text-sm bg-card dark:bg-card"
-          :placeholder="t('mods.searchPlaceholder')" @keydown="handleKeywordFilterKeyDown" />
+        <Input
+          v-model="searchText"
+          class="min-w-0 text-sm bg-card dark:bg-card"
+          :placeholder="t('mods.searchPlaceholder')"
+          @keydown="handleKeywordFilterKeyDown"
+        />
         <MyCustomButton class="px-3 w-9 h-9" :aria-label="t('common.search')" @click="applyFilter">
           <Search />
         </MyCustomButton>
@@ -151,46 +149,79 @@ onMounted(() => {
     </div>
     <CollapseTransition :show="isWarningAlertShow" scale>
       <AlertMessage class="mt-4 relative" type="warning">
-        <span class="pr-7">{{ t('mods.notice') }}</span>
-        <CompactButton class="absolute top-2 right-2 text-accent-foreground" size="sm"
-          :aria-label="t('mods.closeNotice')" @click="isWarningAlertShow = false">
+        <span class="pr-7">{{ t("mods.notice") }}</span>
+        <CompactButton
+          class="absolute top-2 right-2 text-accent-foreground"
+          size="sm"
+          :aria-label="t('mods.closeNotice')"
+          @click="isWarningAlertShow = false"
+        >
           <X />
         </CompactButton>
       </AlertMessage>
     </CollapseTransition>
-    <div v-if="isLoading || loadError || shownList.length === 0"
-      class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-muted-foreground select-none">
+    <div
+      v-if="isLoading || loadError || shownList.length === 0"
+      class="p-16 ml-auto mr-auto w-full max-w-2xl flex items-center justify-center text-sm text-muted-foreground select-none"
+    >
       <div v-if="isLoading">
-        {{ t('common.loading') }}
+        {{ t("common.loading") }}
       </div>
-      <div v-else-if="loadError" class="text-red-600 dark:text-red-400 flex flex-col justify-center items-center gap-2">
-        <div>{{ t('mods.loadFailed', { error: loadError }) }}</div>
+      <div
+        v-else-if="loadError"
+        class="text-red-600 dark:text-red-400 flex flex-col justify-center items-center gap-2"
+      >
+        <div>{{ t("mods.loadFailed", { error: loadError }) }}</div>
         <div>
           <MyCustomButton size="sm" @click="loadModInfo(true)">
             <RefreshCcw />
-            {{ t('common.retry') }}
+            {{ t("common.retry") }}
           </MyCustomButton>
         </div>
       </div>
       <div v-else-if="shownList.length === 0">
-        {{ t('mods.empty') }}
+        {{ t("mods.empty") }}
       </div>
     </div>
-    <div v-else
-      class="mt-4 grid w-full grid-cols-[minmax(0,1fr)] gap-4 mx-auto tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
+    <div
+      v-else
+      class="mt-4 grid w-full grid-cols-[minmax(0,1fr)] gap-4 mx-auto tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4"
+    >
       <!-- 模组信息卡片 -->
-      <ModCard v-for="item in paginatedList" :key="item.name" :item="item" @open-detail="openModDetail"
-        @on-download-button-clicked="goDownload(item)" />
+      <ModCard
+        v-for="item in paginatedList"
+        :key="item.name"
+        :item="item"
+        @open-detail="openModDetail"
+        @on-download-button-clicked="goDownload(item)"
+      />
     </div>
-    <nav v-if="!isLoading && !loadError && totalPages > 1" :aria-label="t('mods.pagination')"
-      class="mt-6 flex items-center justify-center gap-3">
-      <MyCustomButton tag="button" type="button" variant="outline" size="sm" :disabled="currentPage === 1"
-        @click="currentPage--">
+    <nav
+      v-if="!isLoading && !loadError && totalPages > 1"
+      :aria-label="t('mods.pagination')"
+      class="mt-6 flex items-center justify-center gap-3"
+    >
+      <MyCustomButton
+        tag="button"
+        type="button"
+        variant="outline"
+        size="sm"
+        :disabled="currentPage === 1"
+        @click="currentPage--"
+      >
         <ArrowLeft />
       </MyCustomButton>
-      <span class="text-sm text-muted-foreground" aria-live="polite">{{ currentPage }} / {{ totalPages }}</span>
-      <MyCustomButton tag="button" type="button" variant="outline" size="sm" :disabled="currentPage === totalPages"
-        @click="currentPage++">
+      <span class="text-sm text-muted-foreground" aria-live="polite"
+        >{{ currentPage }} / {{ totalPages }}</span
+      >
+      <MyCustomButton
+        tag="button"
+        type="button"
+        variant="outline"
+        size="sm"
+        :disabled="currentPage === totalPages"
+        @click="currentPage++"
+      >
         <ArrowRight />
       </MyCustomButton>
     </nav>
@@ -199,7 +230,7 @@ onMounted(() => {
 <style lang="css" scoped>
 .switch-fade-enter-active,
 .switch-fade-leave-active {
-  transition: all .2s;
+  transition: all 0.2s;
 }
 
 .switch-fade-enter-from {
@@ -214,7 +245,7 @@ onMounted(() => {
 
 .card-fade-enter-active,
 .card-fade-leave-ective {
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .card-fade-enter-from {
