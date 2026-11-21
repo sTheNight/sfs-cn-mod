@@ -39,6 +39,7 @@ const showBackTop = computed(() => y.value >= 400);
 const isSponsorDialogShow = ref(false);
 const isNeverShowDialogCheck = ref(false);
 const isSettingDrawerShow = ref(false);
+const isDeprecatedDomain = ref(false);
 
 const settingsStore = useSettingsStore();
 const { transition } = storeToRefs(settingsStore);
@@ -109,6 +110,9 @@ function closeWarningDialog() {
 onMounted(() => {
   if (floatGroupRef.value?.offsetHeight) {
     safePadding.value = floatGroupRef.value.offsetHeight;
+  }
+  if (window.location.hostname === "izako.cc") {
+    isDeprecatedDomain.value = true;
   }
 });
 </script>
@@ -200,6 +204,9 @@ onMounted(() => {
       </DialogContent>
     </Dialog>
     <div class="w-full max-w-7xl min-h-screen ml-auto mr-auto px-4">
+      <AlertMessage v-if="isDeprecatedDomain" class="mt-4" type="error">
+        <p>你访问的域名已被弃用，请使用新域名访问本站：sfs-mod.nannoimi.cn</p>
+      </AlertMessage>
       <header class="w-full box-border flex items-center justify-center flex-col relative">
         <h2 class="animated-title my-24 text-2xl sm:text-3xl font-bold">{{ t("layout.title") }}</h2>
         <h2
