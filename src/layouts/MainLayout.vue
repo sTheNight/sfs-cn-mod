@@ -111,7 +111,7 @@ onMounted(() => {
   if (floatGroupRef.value?.offsetHeight) {
     safePadding.value = floatGroupRef.value.offsetHeight;
   }
-  if (window.location.hostname === "izako.cc") {
+  if (window.location.hostname.includes("izako.cc")) {
     isDeprecatedDomain.value = true;
   }
 });
